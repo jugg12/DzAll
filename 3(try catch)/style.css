@@ -1,0 +1,32 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+
+
+body{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.ta{
+  margin-top: 30px;
+  box-shadow: 0px 0px 10px 2px blue;
+  text-align: center;
+  padding-top: 10px;
+}
+
+.click{
+margin-top: 5px;
+padding: 10px 10px;
+background-color: aqua;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.click:hover{
+  background-color:rgb(49, 126, 126);
+  transition: background-color .1s linear;
+}

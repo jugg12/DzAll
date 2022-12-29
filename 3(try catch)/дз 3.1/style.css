@@ -1,0 +1,19 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+html.black{
+  --color-bg:#000000;
+  --color-text:#ffffff;
+}
+
+html.light{
+  --color-text:#000000;
+  --color-bg:#ffffff;
+}
+
+body{
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}

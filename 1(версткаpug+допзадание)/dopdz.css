@@ -1,0 +1,195 @@
+*{
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  
+}
+
+.blockAll{
+  display: flex;
+  justify-content: center;
+}
+
+.conteiner{
+  width: 1440px;
+}
+
+.polojenie{
+
+}
+
+/* osn */
+
+.text{
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 700;
+  top:50%
+}
+
+.textall{
+  height: auto;
+  display: flex;
+  align-items: center;
+  vertical-align: center;
+}
+
+.headmenu{
+  display: flex;
+  align-items: center;
+  height: 45px;
+}
+
+.header{
+  color: #fff;
+  background-color: #0f1428;
+  width: 25%;
+  height: 100%;
+
+
+}
+
+.Menu{
+  color: #fff;
+  background-color: #ee3d4f;
+  width: 75%;
+  height: 100%;
+
+}
+
+.Hero{
+  background-color: #4c86c6;
+  color: #fff;
+  height: 500px;
+}
+
+.flex{
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  height: 250px;
+  align-items: center;
+}
+
+.main{
+  background-color: #24344b;
+  width: 50%;
+  height: 100%;
+}
+.imgextra{
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+}
+
+.image{
+  background-color: #c2e4e6;
+  color: #000;
+  height: 100%;
+
+}
+
+.extra{
+  color: #000;
+  background-color: #4dbd97;
+  height: 100%;
+
+}
+
+.banner{
+  background-color: #fed269;
+  color: #000;
+  height: 85px;
+}
+
+@media(max-width:768px){
+  .conteiner{
+    width: 768px;
+  }
+
+  .headmenu{
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header{
+    width: 100%;
+  }
+
+  .Menu{
+    width: 25%;
+    height: 66.5%;
+    position: absolute;
+    left:0;
+    bottom: 0;
+  }
+
+  .Hero{
+    height: 250px;
+  }
+
+  .main{
+    margin-left: 182px;
+    width: 75.8%;
+  }
+
+  .flex{
+    flex-direction: column;
+  }
+
+  .textall{
+    display: block;
+  }
+  
+  .banner {
+    height: 86px;
+  }
+
+  .imgextra{
+    position: absolute;
+    flex-direction: row-reverse;
+    bottom: 0;
+    width: 100%;
+    right: 0;
+  }
+
+  .image{
+    width: 25%;
+  }
+
+  .extra{
+    width: 50%;
+  }
+}
+
+@media(max-width:414px){
+
+  .conteiner{
+    width: 414px;
+    display: flex;
+    flex-direction: column;
+  }
+  .Menu{
+    position: relative;
+    width: 100%;
+  }
+
+  .main{
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .imgextra{
+    flex-direction: column;
+  }
+
+  .image{
+    width: 100%;
+  }
+
+  .extra{
+    width: 100%;
+  }
+}

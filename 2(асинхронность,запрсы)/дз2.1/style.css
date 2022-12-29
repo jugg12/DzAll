@@ -1,0 +1,50 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.chislo{
+  height: 500px;
+  width: 500px;
+  background-color:aliceblue;
+  border-radius: 10px;
+  align-items: center;
+  margin-left: 35%;
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cifra{
+  height: 25px;
+  margin-top: 50%;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+
+}
+
+.vvod{
+  width: 40%;
+  margin-top: 10px;
+  height: 10%;
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  background-color:darkgreen;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.vvod:hover{
+  background-color:chartreuse;
+  color: rgb(29, 29, 29);
+  transition: background-color 0.2s linear;
+}
+
+.vivodoshibki{
+  font-size: 20px;
+  margin-top: 10px;
+  text-align: center;
+}
