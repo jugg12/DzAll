@@ -26,3 +26,6 @@ ____________________________________________________________
 
 "7(Next)" - В ней находятся файлы по занятиям 15-17 на тему "Next.js".
 Ссылка на занятие с дз: 17 занятие : https://www.youtube.com/watch?v=t4QiXifMZws&feature=youtu.be
+
+"8(PropTypes)" -  В ней находятся файлы по занятиям 18 на тему "React. Статическая типизация. PropTypes".
+Ссылка на занятие с дз: 18 занятие : https://www.youtube.com/watch?v=o6gJa2FQycg&feature=youtu.be
