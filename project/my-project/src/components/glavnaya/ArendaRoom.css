@@ -11,10 +11,10 @@
 
 .slick-list{
   z-index: 1;
+  height: 596px;
 }
 
 .slick-slide.slick-cloned{
-
   max-width: 406px;
 }
 
