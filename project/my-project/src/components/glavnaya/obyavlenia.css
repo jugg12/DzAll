@@ -1,0 +1,51 @@
+.proverka{
+  z-index: -1;
+}
+
+.colorProverka{
+  position: relative;
+    margin-top: 73%;
+    transform: rotate(33deg);
+    right: -12%;
+    opacity: .3;
+    font-size: 44px;
+    width: 500px;
+    text-align: center;
+    z-index: -1;
+}
+
+.Rassmotrenie{
+  color: #FFD54F;
+}
+
+.Dobavleno{
+  color: #27f120;
+}
+
+.Otkaz{
+  color: #ee451b;
+}
+
+.change{
+  height: 34px;
+    width: 34px;
+    cursor: pointer;
+    background: rgba(240, 255, 27, 0.1);
+    border-radius: 22px;
+}
+
+.change:hover{
+}
+
+.change__pancil{
+  padding:6px 8px;
+}
+
+.change__pancilFill{
+  transition: .2s fill linear;
+}
+
+.change:hover .change__pancilFill{
+  fill: #664EF9;
+  transition: .2s fill linear;
+}

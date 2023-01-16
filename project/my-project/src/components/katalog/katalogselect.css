@@ -1,0 +1,103 @@
+.conteinerKatalogSelect{
+  width: 844px;
+}
+
+/* first section */
+
+
+
+.KatalogSelect{
+  margin-bottom: 25px;
+}
+
+
+.ArendaInnerTextkatalogSelect{
+  margin-bottom: 30px;
+}
+
+.allKatalogselect{
+  margin-bottom: 20px;
+}
+
+/* categories */
+
+.categories{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btnsarrows.btnsarrows2{
+  display: none;
+}
+
+.adressInfoKataloSelect{
+  padding: 10px 16px;
+  background: rgba(102, 78, 249, 0.1);
+  border-radius: 18px;
+  width: max-content;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #664EF9;
+}
+
+/* osnova */
+
+.osnova{
+  display: flex;
+  justify-content: center;
+}
+
+.imgKatalogSelect{
+  margin-top: -44px;
+  width: 844px;
+  height: 563.24px;
+  filter: drop-shadow(0px 20px 40px rgba(39, 95, 158, 0.1));
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+/* 2 delenie Givemeall */
+
+.Givemeall{
+  display: flex;
+  align-items: center;
+}
+
+.textPodelitsya{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #1E2123;
+  margin-right: 15px;
+}
+
+.iconsockatalogselect{
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.iconsockatalogselect__hover{
+  transition: .2s fill linear;
+}
+
+.iconsockatalogselect:hover .iconsockatalogselect__hover{
+  fill:#664EF9;
+  transition: .2s fill linear;
+}
+
+.iconsockatalogselect:last-child{
+  margin-right: 0 ;
+}
+
+/* last section */
+
+.last{
+  margin-top: 0;
+  height: 737px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+}

@@ -1,0 +1,12 @@
+.last{
+  background: rgba(148, 175, 255, .1);
+}
+
+.last.last2{
+  margin-top: 65px;
+  margin-bottom: 0;
+}
+
+.opisanieKatalogSelect{
+  white-space:pre-wrap;
+}
