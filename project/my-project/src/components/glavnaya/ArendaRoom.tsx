@@ -69,7 +69,7 @@ const ArendaRoom=()=>{
   },[filterCityRayon.city,filterCityRayon.rayon])
 
   return(
-    <div className="slider-wrapper">
+    <div className="slider-wrapper" style={{height:"595px"}}>
     <Slider {...settings} ref={sliderRef} className="Slider">
       {
       Loading?

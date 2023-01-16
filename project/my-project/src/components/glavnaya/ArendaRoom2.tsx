@@ -6,7 +6,7 @@ import Slider from "react-slick";
 import btnclick from "./clickbtnkontakti";
 import CardSkeleton from "./CardSkeleton";
 import AwesomeSlider from "react-awesome-slider";
-import 'react-awesome-slider/dist/styles.css';
+import 'react-awesome-slider/dist/styles.css';  
 
 const ArendaRoom=(link)=>{
   const sliderRef = useRef<any>(null);
@@ -42,7 +42,7 @@ const ArendaRoom=(link)=>{
   },[])
     
   return(
-    <div className="slider-wrapper">
+    <div className="slider-wrapper" style={{height:"595px"}}>
     <Slider {...settings} ref={sliderRef} className="Slider" >
       {
       Loading?<>
