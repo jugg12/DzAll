@@ -9,12 +9,12 @@
   justify-content: center;
 }
 
-.NewsDelenie{
+.NewsDivision{
 display: flex;
 justify-content: space-between;
 }
 
-/* Pervoe delenie */
+/* First Division */
 
 
 .InnerTextNews{
@@ -25,9 +25,9 @@ justify-content: space-between;
   margin-bottom: 60px;
 }
 
-/* Vtoroe delenie */
+/* Second Division */
 
-.VtoroeDelenieNews{
+.SecondDivisionNews{
   position: absolute;
   height: 1000px;
   right: 0%;
@@ -58,7 +58,7 @@ justify-content: space-between;
   border: none;
 }
 
-.Spisok__dropdown2{
+.List__dropdown2{
   z-index: 10;
   opacity: 1;
   position: absolute;
@@ -82,7 +82,7 @@ justify-content: space-between;
 
 /* Section 2 */
 
-.SecondNewsOsnova{
+.SecondNewsMain{
   display: flex;
   justify-content: center;
 }

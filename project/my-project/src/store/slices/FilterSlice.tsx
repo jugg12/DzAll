@@ -23,8 +23,8 @@ const initialState = {
   filterAll:{
     rayon:"Выберите",
     rooms:"Выберите",
-    priceMin:"",
-    priceMax:"",
+    priceMin:null,
+    priceMax:null,
     sleepPlaces:"Выберите",
     metro:"Выберите",
     inputCheckboxInfo:"",
@@ -32,11 +32,11 @@ const initialState = {
   },
   cityRayon:{
     city:"Минск",
-    rayon:"Шабаны р.",
-    length,
+    rayon:"",
+    length:null,
   },
   city: "Минск",
-  kvartiri:"Квартиры на сутки"
+  Rooms:"Квартиры на сутки"
 }
 
 const FilterSlice = createSlice({
@@ -52,8 +52,8 @@ const FilterSlice = createSlice({
     setCity(state,action){
       state.city = action.payload
     },
-    setKvartiri(state,action){
-      state.kvartiri = action.payload
+    setRooms(state,action){
+      state.Rooms = action.payload
     },
     setFilterAll(state,action){
       state.filterAll={
@@ -81,8 +81,8 @@ const FilterSlice = createSlice({
       state.filterAll={
         rayon:"Выберите",
         rooms:"Выберите",
-        priceMin:"",
-        priceMax:"",
+        priceMin:null,
+        priceMax:null,
         sleepPlaces:"Выберите",
         metro:"Выберите",
         inputCheckboxInfo:"",
@@ -92,6 +92,6 @@ const FilterSlice = createSlice({
   }
   }  
 )
-export const {setCategoryId,setKvartiri,setCategoryInfoId,setCityRayonHomePage,setSort,setFilterAll,setCity,clearFilter} = FilterSlice.actions
+export const {setCategoryId,setRooms,setCategoryInfoId,setCityRayonHomePage,setSort,setFilterAll,setCity,clearFilter} = FilterSlice.actions
 
 export default FilterSlice.reducer;

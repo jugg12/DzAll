@@ -1,33 +1,35 @@
-import React,{Children, useEffect,useState} from "react";
-
-
+import React,{useEffect,useState} from "react";
+import Header from "../../Header/Header";
+import Footer from "../../Footer/Footer";
 import { Col,Row } from "react-bootstrap"
-import "./NewsSelect.css"
-import NewsRoom from "../News/NewsInfo/NewsRoom";
-import { NewsItem } from "../../interfaces";
-import img7 from "../../img/footer/8.svg"
+import ArendaRoomSelect from "../../Catalog/ArendaInfo/ArendaRoomSelect";
+import img7 from "../../../img/footer/8.svg"
+import "./testAdvertisement.css"
 import { useParams,useNavigate,Link} from "react-router-dom";
-import axios from "../../axios"
+import axios from "../../../axios"
+import { cityIn } from "lvovich";
+import { advertisementItem } from "../../../interfaces";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 
-
-export default function NewsSelect(){
+export default function test(){
+  const id = localStorage.getItem("id");
   const navigate=useNavigate();
-  const params=useParams()
-  const [news,setNews]=useState<NewsItem>()
-  useEffect(()=>{
-    axios.get(`/NewsCard/${params.id}`).then
-    (({data})=>{
-      setNews(data);
-    }).catch(()=>navigate("/404"))
-  },[])
+  const params=useParams();
+  const [test,setTest]=useState<advertisementItem>()
 
+  useEffect(()=>{
+    axios.get(`/users/${id}`).then
+    (({data})=>{
+        setTest(data.advertisement[params.id]);
+    })
+  },[])
   return(
-    news?
+    test!==undefined?
     <>
     
     <section className="firstCatalog">
+    <h1 className="Test">Тестовый предосмотр</h1>
       <div className="filterInfo">
           <div className="conteinerCatalogSelect">
             <div className="Crumbs">
@@ -39,9 +41,9 @@ export default function NewsSelect(){
                   </svg>
                 </div>
               </Link>
-              <Link to="/news" style={{textDecoration:"none"}}>
+              <Link to="/catalog" style={{textDecoration:"none"}}>
                 <div className="catalogLink">
-                  <p className="LinkText" style={{color:"#4E64F9"}}>Новости</p>
+                  <p className="LinkText" style={{color:"#4E64F9"}}>Квартиры в {cityIn(test.city?test.city:"")}</p>
                 </div>
               </Link>
               <div className="HomeLink " style={{margin:"0px 7px",paddingBottom:"5px"}}>
@@ -49,20 +51,22 @@ export default function NewsSelect(){
                   <circle cx="1.5" cy="2" r="1.5" fill="#4E64F9"/>
                 </svg>
               </div>
-                <div className="catalogLink" style={{cursor:"pointer"}}>
-                  <p className="LinkText">{news.title}</p>
+              <Link to="/catalog/" style={{textDecoration:"none"}}>
+                <div className="catalogLink">
+                  <p className="LinkText">{test.adress}</p>
                 </div>
+              </Link>
             </nav>
             </div>
             <div className="allCatalogselect">
               <div className="textFilterInfo">
                 <div className="ArendaInnerText ArendaInnerTextcatalogSelect">
-                  <h1>{news.title}</h1>
+                  <h1>Аренда квартиры в {cityIn(test.city?test.city:"")}</h1>
                 </div>
               </div>
               <div className="categories">
                 <div className="">
-                  <p className="adressInfoKataloSelect">{news.data}</p>
+                  <p className="adressInfoKataloSelect">{test.adress}</p>
                 </div>
                 <div className="Givemeall">
                   <p className="textPodelitsya">Поделиться</p>
@@ -141,30 +145,28 @@ export default function NewsSelect(){
           </div>
       </div>
     </section>
-
     <section className="main">
-      <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
+    <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
         <div className="conteinerCatalogSelect">
           <div className="allInfoStructure">
             <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} style={{width:"844px",height:"563px"}} className="imgCatalogSelect">
               {
-                news.url.map((itemImg)=>(
+                test.url.map((itemImg)=>(
                   <SwiperSlide>
                       <img src={itemImg} style={{width:"100%",height:"100%"}}/>
                   </SwiperSlide>
                 ))
               }
             </Swiper>
-            <p className="descriptionCatalogSelect">{news.fullInfo}</p>
+            <p className="descriptionCatalogSelect">{test.description}</p>
           </div>
         </div>
     </section>
-
     <section className="last last2">
       <div className="Takje">
         <div className="conteiner">
           <div className="ArendaSecText">
-            <h2 style={{marginLeft:"20px"}}>Читайте также</h2>
+            <h2 style={{marginLeft:"20px"}}>Схожие предложения</h2>
           </div>
           <div className="card__list">
             <div className="Card">
@@ -172,7 +174,7 @@ export default function NewsSelect(){
                 <div className="cards" style={{display:"flex",justifyContent:"space-between"}}>
                   <Row>
                     <Col>
-                      <NewsRoom>{"/NewsCard"}</NewsRoom>
+                      <ArendaRoomSelect>{"/ArendaCard"}</ArendaRoomSelect>
                     </Col>
                   </Row>
                 </div>
@@ -182,9 +184,8 @@ export default function NewsSelect(){
         </div>
       </div>
     </section>
-
     
     </>
-  :""
+    :""
   )
 }

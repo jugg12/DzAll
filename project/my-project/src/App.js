@@ -1,52 +1,55 @@
-import Homepage from "./components/glavnaya/Homepage";
-import Map from "./components/glavnaya/Map";
-import Oshibka from "./components/glavnaya/Oshibka";
-import Vhod from "./components/vhod/vhod";
-import Registraciya from "./components/vhod/registraciya/registraciya";
-import Otpravka from "./components/vhod/registraciya/otpravka";
-import Kontakti from "./components/glavnaya/kontakti";
-import Katalog from "./components/katalog/katalog";
-import News from "./components/news/News";
-import Zakladki from "./components/glavnaya/Zakladki";
-import NewsSelect from "./components/news/NewsSelect";
-import Obyavlenia from "./components/glavnaya/obyavlenia"
-import Katalogselect from "./components/katalog/katalogselect"
+import Homepage from "./components/MainPage/Homepage";
+import Map from "./components/MapPage/Map";
+import Error from "./components/ErrorPage/error";
+import SignIn from "./components/SignIn_SignUp/signIn";
+import SignUp from "./components/SignIn_SignUp/signUp/signUp";
+import Send from "./components/SignIn_SignUp/signUp/send";
+import Contacts from "./components/ContactsPage/contacts";
+import Catalog from "./components/Catalog/catalog";
+import News from "./components/News/News";
+import Favourites from "./components/Favourites/Favourites";
+import NewsSelect from "./components/News/NewsSelect";
+import Advertisement from "./components/AdvertisementsPage/advertisement"
+import CatalogSelect from "./components/Catalog/catalogSelect"
 import "./App.css";
-import Skeleton,{SkeletonTheme} from "react-loading-skeleton";
-import React,{useState} from "react";
-import { Routes, Route, Switch, useLocation} from "react-router-dom";
-import { createBrowserHistory } from "history";
-import Test from "./components/glavnaya/testObyavlenia/test";
+import React from "react";
+import { Routes, Route} from "react-router-dom";
+import TestAdvertisement from "./components/AdvertisementsPage/TestAdvertisement/testAdvertisement";
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+import ScrollButton from "./components/Functions/scrollUp";
 
 
 
 function App() {
-  const CustomHistory = createBrowserHistory();
   return (
     <>
       <div className="App">
+        <Header/>
           <Routes>
             <Route exact path="/" element={<Homepage/>}/>
-            <Route exact path="/Vhod" element={<Vhod/>}/>
-            <Route exact path="/kontakti" element={<Kontakti/>}/>
-            <Route exact path="/Otpravka" element={<Otpravka/>} />
-            <Route exact path="/registraciya/registraciya" element={<Registraciya/>}/>
-            <Route exact path="/katalog/city=?/" element={<Katalog/>} />
-            <Route exact path="/katalog/city?/:city/:id" element={<Katalogselect/>} />
-            <Route exact path="/News" element={<News/>} />
-            <Route exact path="/News/:id" element={<NewsSelect/>} />
-            <Route exact path="/Map" element={<Map/>} />
+            <Route exact path="/signIn" element={<SignIn/>}/>
+            <Route exact path="/contacts" element={<Contacts/>}/>
+            <Route exact path="/send" element={<Send/>} />
+            <Route exact path="/signIn/signUp" element={<SignUp/>}/>
+            <Route exact path="/catalog/city=?/" element={<Catalog/>} />
+            <Route exact path="/catalog/city?/:city/:id" element={<CatalogSelect/>} />
+            <Route exact path="/news" element={<News/>} />
+            <Route exact path="/news/:id" element={<NewsSelect/>} />
+            <Route exact path="/map" element={<Map/>} />
             <Route path='/instagram.com' element={() => window.location = 'https://instagram.com'}/>
             <Route path='/vk.com' element={() => window.location = 'https://vk.com'}/>
             <Route path='/facebook.com' element={() => window.location = 'https://facebook.com'}/>
             <Route path='/whatsapp.com' element={() => window.location = 'https://whatsapp.com'}/>
             <Route path='/telegram.org' element={() => window.location = 'https://telegram.org'}/>
             <Route path='/viber.com' element={() => window.location = 'https://viber.com'}/>
-            <Route exact path = "/Zakladki" element = {<Zakladki/>} />
-            <Route exact path = "/obyavlenia" element = {<Obyavlenia/>} />
-            <Route exact path = "/obyavlenia/test/:id" element = {<Test/>} />
-            <Route exact path="*" element={<Oshibka/>} />
-          </Routes>        
+            <Route exact path = "/favourites" element = {<Favourites/>} />
+            <Route exact path = "/advertisement" element = {<Advertisement/>} />
+            <Route exact path = "/advertisement/test/:id" element = {<TestAdvertisement/>} />
+            <Route exact path="*" element={<Error/>} />
+          </Routes> 
+        <Footer/>   
+        <ScrollButton/>    
       </div>
     </>
       

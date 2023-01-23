@@ -1,0 +1,87 @@
+.oshhead{
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+.oshhead .btndob{
+  background: linear-gradient(90deg, #585EE6 -0.04%, #5039BD 99.96%);
+}
+
+.oshhead .btndob:hover{
+  background: linear-gradient(90deg, #434be4 -0.04%, #371dbd 99.96%);
+  transition: .2s background linear;
+}
+
+.DivisionOshibki{
+  display: flex;
+  justify-content: space-between;
+}
+
+.Forma.formaoshibki{
+  min-height: 62vh;
+}
+
+
+.pervoeDivision{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  max-width: 427px;
+  margin-left: 117px;
+}
+
+.Text{
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 73px;
+  color: #FFFFFF;
+  text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.25);
+  margin-bottom: 20px;
+}
+
+.SecondText{
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #FFFFFF;
+  margin-bottom: 50px;
+}
+
+.SecondDivision{
+  align-items: top;
+}
+
+.tochkiblock{
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 135px;
+}
+
+.block404{
+  margin-right: 145px;
+  
+}
+
+.Home{
+  margin-right: 10px;
+}
+
+.Voyti.back{
+  padding: 0;
+  padding: 12px 21px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  max-width: 249px;
+}
+
+.tochki{
+  margin-top: 96px;
+
+}
+
+footer{
+  margin-top: 0;
+}

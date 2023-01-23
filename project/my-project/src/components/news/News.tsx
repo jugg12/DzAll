@@ -1,51 +1,61 @@
 import React,{useState,useEffect} from "react";
-import Header from "../glavnaya/Header"
-import Footer from "../glavnaya/Footer"
+import Header from "../Header/Header"
+import Footer from "../Footer/Footer"
 import "./News.css"
 import {useLocation,useNavigate,Link} from "react-router-dom"
-import axios from "../../axios"
-import Pagination from "../katalog/osnovnoy/pagination";
-import { Card,Button,Col,Row } from "react-bootstrap"
-import btnclick from "../glavnaya/clickbtnkontakti"
+import axios from "../../axios";
+import { Card,Button,Col,Row } from "react-bootstrap";
+import { NewsItem } from "../../interfaces";
 import ReactPaginate from "react-paginate";
+import CardSkeleton from "../Catalog/ArendaInfo/CardSkeleton";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper";
+
 
 export default function News(){
 
-  const [currentPage,setCurrentPage] = useState([]);
-  const [KatalogPerPage,setKatalogPerPage]= useState(9)
-  const [value,setValue] = useState<any>("")
-  const [itemOffset,setItemOffset] = useState(0)
-  const [pageCount,setCountPage]= useState(0)
-  const history=useNavigate();
+  const [currentPage,setCurrentPage] = useState<NewsItem[]>([]);
+  const [CatalogPerPage,setCatalogPerPage]= useState<number>(9)
+  const [value,setValue] = useState<string>("")
+  const [itemOffset,setItemOffset] = useState<number>(0)
+  const [pageCount,setCountPage]= useState<number>(0)
+  const [Loading,setLoading]=useState<boolean>(true);
+  const navigate=useNavigate();
 
   const handlepageclick = (e) =>{
-    const newOffset = (e.selected*KatalogPerPage)%News.length;
+    const newOffset = (e.selected*CatalogPerPage)%filter.length;
     setItemOffset(newOffset)
   }
 
-  const push = (item) =>{
-    window.scroll(0,0)
-    history(`/News/${item}`)
+  const search = (value) => {
+    setNews(News.filter((newsItem)=>(newsItem.title.toLowerCase().includes(value.toLowerCase()))))
   }
 
-  const [News,setNews]=useState<any>([]);
+  const push = (item) =>{
+    window.scrollTo({top:0,behavior:"smooth"})
+    navigate(`/news/${item}`)
+  }
+
+  const [News,setNews]=useState<NewsItem[]>([]);
   useEffect(()=>{
     axios.get("/NewsCard").then(({data})=>{
       setNews(data);
     })
+    setLoading(false)
   },[])
   
-  const [Open,setOpen]=useState(true)
+  const [Open,setOpen]=useState<boolean>(false)
 
   const filter = News.filter(item=>{
-    return item.title.toLowerCase().includes(value.toLowerCase())
+    return (item.title.toLowerCase().includes(value.toLowerCase()));
   })
 
   useEffect(()=>{
-    const endoffset=itemOffset+KatalogPerPage
+    const endoffset=itemOffset+CatalogPerPage
     setCurrentPage(filter.slice(itemOffset,endoffset));
-    setCountPage(Math.ceil(filter.length/KatalogPerPage))
-  },[itemOffset,KatalogPerPage,News,currentPage])
+    setCountPage(Math.ceil(filter.length/CatalogPerPage));
+    setLoading(false)
+  },[itemOffset,CatalogPerPage,value,News])
 
   const itemClickHandler=(e)=>{
     setValue(e.target.textContent)
@@ -59,13 +69,13 @@ export default function News(){
 
   return(
     <>
-      <Header/>
+      
         <section className="FirstNews">
           <div className="FirstNewsDiv">
             <div className="conteiner">
-              <div className="NewsDelenie">
-                <div className="PervoeDelenieNews">
-                  <div className="hlebnie">
+              <div className="NewsDivision">
+                <div className="FirstDivisionNews">
+                  <div className="Crumbs">
                   <nav className="breadcrumbs" style={{display:"flex"}}>
                     <Link to="/">
                       <div className="HomeLink" style={{marginRight:"7px"}}>
@@ -74,8 +84,8 @@ export default function News(){
                         </svg>
                       </div>
                     </Link>
-                    <Link to="/News" style={{textDecoration:"none"}}>
-                      <div className="katalogLink">
+                    <Link to="/news" style={{textDecoration:"none"}}>
+                      <div className="catalogLink">
                         <p className="LinkText">Новости</p>
                       </div>
                     </Link>
@@ -83,7 +93,7 @@ export default function News(){
                   </div>
                   <h1 className="InnerTextNews">Новости</h1>
                 </div>
-                <div className="VtoroeDelenieNews" style={(currentPage.length<=0 && currentPage!==null)?{height:"622px"}:{height:"1000px"}}>
+                <div className="SecondDivisionNews" style={(currentPage.length<=0 && currentPage!==null)?{height:"622px"}:{height:"1000px"}}>
                   <div className="">
                     <input type="text" className='InputSerch' value={value} placeholder='Поиск по статьям' onClick={inputHandler} onChange={e=>setValue(e.target.value)}/>
                     <button className="Search">
@@ -91,13 +101,15 @@ export default function News(){
                         <path d="M16.8676 15.2581L13.5441 11.9344C13.3941 11.7844 13.1907 11.7011 12.9774 11.7011H12.434C13.3541 10.5243 13.9008 9.04417 13.9008 7.43401C13.9008 3.60364 10.7973 0.5 6.96711 0.5C3.13693 0.5 0.0334473 3.60364 0.0334473 7.43401C0.0334473 11.2644 3.13693 14.368 6.96711 14.368C8.57718 14.368 10.0573 13.8213 11.234 12.9012V13.4446C11.234 13.658 11.3173 13.8613 11.4673 14.0113L14.7908 17.335C15.1042 17.6483 15.6108 17.6483 15.9209 17.335L16.8642 16.3916C17.1776 16.0782 17.1776 15.5715 16.8676 15.2581ZM6.96711 11.7011C4.61033 11.7011 2.70024 9.79424 2.70024 7.43401C2.70024 5.07711 4.607 3.16693 6.96711 3.16693C9.32388 3.16693 11.234 5.07378 11.234 7.43401C11.234 9.79091 9.32722 11.7011 6.96711 11.7011Z" fill="white"/>
                       </svg>
                     </button>
-                      <ul className="Spisok__dropdown2">
+                      <ul className="List__dropdown2">
                         {
-                          value && Open? (News.length)? currentPage.map((item)=>{
-                            return(
-                              <li className="dropdown__item" key={item.id} onClick={itemClickHandler}>{item.title}</li>
-                            )
-                          }): <h1>Значений не найдено</h1>
+                          value!=="" && Open==true? 
+                            (filter.length)? 
+                              filter.map((item)=>{
+                                return(
+                                  <li className="dropdown__item" key={item.id} onClick={itemClickHandler}>{item.title}</li>
+                                )
+                            }): <h1></h1>
                           :null
                         }
                         </ul>
@@ -109,17 +121,43 @@ export default function News(){
         </section>
 
         <section className="SecondNews">
-          <div className="SecondNewsOsnova">
+          <div className="SecondNewsMain">
             <div className="conteiner">
               <div className="CardsNews">
                 {
-                  (News.length && currentPage.length) >0?
+                   Loading?
+                   <div className="" style={{display:"flex",width:"1378px",flexDirection:"column"}}>
+                     <div className="" style={{display:"flex",marginBottom:"50px"}}>
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton/>
+                     </div>
+                     <div className="">
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton/>
+                     </div>
+                     <div className="">
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton style={{marginRight:"50px"}}/>
+                       <CardSkeleton/>
+                     </div>
+                   </div>:
+                  (News.length && currentPage.length) > 0?
                   currentPage.map((item)=>( 
                   <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
                     <Card className="card__style" style={{width:"406px",height:"500px"}}>
-                      <div className="SpisokInformKontakti">   
-                        <div className="CardOsnova">
-                          <Card.Img variant="top" className="imgCard" src={item.url}/>
+                      <div className="ListInformContacts">   
+                        <div className="CardMain">
+                          <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCard">
+                            {
+                              item.url.map((itemImg)=>(
+                                <SwiperSlide>
+                                    <Card.Img variant="top" src={itemImg} style={{ height: "300px",width: "444px"}}/>
+                                </SwiperSlide>
+                              ))
+                            }
+                          </Swiper>
                           <Card.Body className="bodyCard" >
                             <Card.Title className="card__title">
                               <div className="InnerText">{item.title}</div>
@@ -127,13 +165,13 @@ export default function News(){
                             <Card.Text className="card__text card__text2">
                               {item.secondTitle}
                             </Card.Text>  
-                            <div className="btnkontaktiOsnova">
-                              <div className="kolvoludey DataNews">
+                            <div className="btnContactsMain">
+                              <div className="totalPeople DataNews">
                                 {item.data}
                               </div>
                               <Button variant="primary" className="ReadButton">
-                              <div className="Podrobnee">
-                                  <p className="textPodrobnee ReadBtn" onClick={(e)=>push(item.id)}>Читать</p>
+                              <div className="More">
+                                  <p className="textMore ReadBtn" onClick={(e)=>push(item.id)}>Читать</p>
                               </div>
                               </Button>
                             </div>
@@ -142,9 +180,9 @@ export default function News(){
                       </div>
                     </Card>
                   </Col>
-                  )):News.length<=0?<h4 style={{height:"337px"}}>Значений не найдено</h4>:<h4 style={{height:"337px"}}>Значений не найдено</h4>
+                  )):<h4 style={{height:"337px"}}>Значений не найдено</h4>
                 }
-                <div style={{width:"100%"}}>
+                <div style={{width:"100%",marginBottom:"75px"}}>
                 <ReactPaginate
                   breakLabel={"..."}
                   containerClassName="pagination"
@@ -163,7 +201,7 @@ export default function News(){
             </div>
           </div>
         </section>
-      <Footer/>
+      
       
     </>
   )
