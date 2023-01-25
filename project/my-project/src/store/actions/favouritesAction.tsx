@@ -1,13 +1,11 @@
 import {createSlice,PayloadAction} from "@reduxjs/toolkit"
+import { FavouritesPropsRedux } from "../../interfaces";
 
-interface Item{
-  length: number;
-  favourites:[]
-}
 
-const initialState={
+const initialState:FavouritesPropsRedux={
   length:0,
   value:null,
+  valueFromFavourites:null,
   favourites:[]
 }
 
@@ -17,6 +15,9 @@ initialState,
 reducers:{
   setValue(state,action){
     state.value = action.payload;
+  },
+  setValueFromFavourites(state,action){
+    state.valueFromFavourites = action.payload;
   },
   setLengthFavourites(state,action){
     state.length = action.payload;
@@ -30,6 +31,6 @@ reducers:{
 }
 })
 
-export const {setValue,setLengthFavourites,increment,decrement} = FavouritesAction.actions
+export const {setValue,setValueFromFavourites,setLengthFavourites,increment,decrement} = FavouritesAction.actions
 
 export default FavouritesAction.reducer;

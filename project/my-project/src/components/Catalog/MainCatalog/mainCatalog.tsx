@@ -1,19 +1,18 @@
 import React,{useState,useEffect} from "react";
 import {ToastContainer} from 'react-toastify';
-import {useLocation,useNavigate, Link} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "../../../axios";
 import { Card,Button,Col,Row } from "react-bootstrap";
 import btnclick from "../../Functions/clickbtnContacts";
 import "./mainCatalog.css";
 import ReactPaginate from "react-paginate";
-import CardSkeleton from "../../Catalog/ArendaInfo/CardSkeleton";
+import CardSkeleton from "../../Skeletons/arendaWithHeartSkeletonMain";
 import { useSelector,useDispatch } from "react-redux";
-import { increment,setLengthFavourites,decrement,setValue } from "../../../store/actions/favouritesAction";
-
-import { notifySuccessFavourites,notifyErrorAuthorization, notifyDeleteFavourites } from "../../Toasts/ToastsContent";
 import { ArendaCardProduct } from "../../../interfaces";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
+import { clickHeartAddMainCatalog } from "../../Functions/HeartChangesActions";
+import { setLengthFavourites } from "../../../store/actions/favouritesAction";
 
 export default function mainCatalog(link){
   
@@ -22,72 +21,21 @@ export default function mainCatalog(link){
   const login = localStorage.getItem("login");
   const id = localStorage.getItem("id");
   const [currentPage,setCurrentPage] = useState<ArendaCardProduct[]>([]);
-  const [modalActive,setModalActive] = useState<boolean>(false);
-  const [data2, setData2] = useState<boolean>(true);
   const [CatalogPerPage,setCatalogPerPage]= useState<number>(6)
   const [itemOffset,setItemOffset] = useState<number>(0)
-  const [pageCount,setCountPage]= useState<number>(0)
+  const [pageCount,setCountPage]= useState<number>(0);
   const [Loading,setLoading]=useState<boolean>(true);
   const [favourites,setFavourites] = useState<ArendaCardProduct[]>([]);
-
-  const lengthFavourites = useSelector((state:any) => state.zakladkiAction.length);
-  const sort = useSelector((state:any) => state.filter.sort);
-  const value = useSelector((state:any) => state.zakladkiAction.value);
-
-  // кол-во закладок
-  useEffect(()=>{
-    if (login){
-      axios.get(`/users?login=${login}`).then((data) => {
-        if (data.data[0].favourites.length>0){
-          dispatch(setLengthFavourites(data.data[0].favourites.length))
-        }
-      })
-    }
-  },[]);
-
-  const clickHeart = (value,item)=>{
-    const heart= document.getElementById(`heart__svg-${value}`);
-    if (login){
-      if(heart.classList.value=="heart__svg active"){ //Удаление закладки одной
-        heart.classList.remove("active");
-        dispatch(setValue(value));
-        dispatch(decrement(lengthFavourites));
-        notifyDeleteFavourites();
-      }
-      else{
-        setData2(true);
-        dispatch(increment(lengthFavourites));
-        heart.classList.add("active");
-        axios.patch(`/users/${id}`, favourites.length?{
-          "favourites":
-            [...favourites,item]
-        }:{
-          "favourites":
-            [item]
-          }
-        ).catch(err => console.error(err));
-        notifySuccessFavourites();
-      }
-    }
-    else{
-      notifyErrorAuthorization();
-    }
-  }
-
+  const lengthFavourites = useSelector((state:any) => state.favouritesAction.length);
+  const value = useSelector((state:any) => state.favouritesAction.value);
   const handlepageclick = (e) =>{
     const newOffset = (e.selected*CatalogPerPage)%link.children.length;
     setItemOffset(newOffset);
+    window.scrollTo({top:360,behavior:"smooth"});
   }
-
   const push = (item,item2) =>{ 
     navigate(`/catalog/city=${item2}/${item}`)
   }
-
-  useEffect(()=>{
-    const endoffset=itemOffset+CatalogPerPage;
-    setCurrentPage(link.children.slice(itemOffset,endoffset));
-    setCountPage(Math.ceil(link.children.length/CatalogPerPage));
-  },[itemOffset,CatalogPerPage,link,sort]);
 
   useEffect(() => {
     if (login){
@@ -101,11 +49,10 @@ export default function mainCatalog(link){
           }
         }
         setFavourites(data.data[0].favourites);
-        setData2(false)
       });
     } 
-  },[data2,login,value]);
-  
+  },[login,lengthFavourites]);
+
   useEffect(()=>{
     if(login){
       axios.get(`/users?login=${login}`).then((data2) => {
@@ -122,7 +69,10 @@ export default function mainCatalog(link){
       })
     }
     setLoading(false);
-},[data2,login,itemOffset,CatalogPerPage])
+    const endoffset=itemOffset+CatalogPerPage;
+    setCurrentPage(link.children.slice(itemOffset,endoffset));
+    setCountPage(Math.ceil(link.children.length/CatalogPerPage));
+  },[Loading,itemOffset,CatalogPerPage,link,login]);
 
   return(
     <>
@@ -192,7 +142,7 @@ export default function mainCatalog(link){
                             <path d="M13.6852 11.6969C13.5832 11.4418 13.4471 11.2037 13.2941 10.9826C12.5118 9.82616 11.3043 9.06086 9.94376 8.87378C9.7737 8.85679 9.58663 8.89077 9.45056 8.99282C8.73627 9.52004 7.88595 9.79214 7.00157 9.79214C6.1172 9.79214 5.26687 9.52004 4.55258 8.99282C4.41651 8.89077 4.22944 8.83976 4.05938 8.87378C2.69884 9.06086 1.47436 9.82616 0.709058 10.9826C0.555998 11.2037 0.419931 11.4588 0.317913 11.6969C0.266903 11.799 0.283896 11.918 0.334905 12.0201C0.470972 12.2582 0.641024 12.4963 0.794084 12.7003C1.03217 13.0235 1.28728 13.3126 1.57641 13.5847C1.81449 13.8228 2.0866 14.0439 2.35873 14.265C3.70225 15.2684 5.31791 15.7956 6.98458 15.7956C8.65125 15.7956 10.2669 15.2684 11.6104 14.265C11.8825 14.0609 12.1546 13.8228 12.3927 13.5847C12.6649 13.3126 12.937 13.0235 13.1751 12.7003C13.3451 12.4793 13.4982 12.2582 13.6343 12.0201C13.7192 11.918 13.7362 11.7989 13.6852 11.6969Z" fill="#686868"/>
                             </svg>
                           </div>
-                          <div className="totalPeople">{item.total}</div>
+                          <div>{item.total}</div>
                         </div>
                         <div className="totalPeople rooms"><span className="totalRooms">{item.rooms}</span></div>
                         <div className="totalPeople square">{item.square}<sup style={{lineHeight:"5px"}}><small>2</small></sup></div>
@@ -231,14 +181,14 @@ export default function mainCatalog(link){
                       {item.description}
                     </Card.Text>  
                       <div className="btnContactsMain">
-                      <div className="heart" id={`heart-${item.id}`} onClick={()=>clickHeart(item.id,item)}>
+                      <div className="heart" id={`heart-${item.id}`} onClick={()=>clickHeartAddMainCatalog(login,id,item.id,item,lengthFavourites,favourites,dispatch,axios,setFavourites)}>
                         <svg className="heart__svg" id={`heart__svg-${item.id}`} xmlns="http://www.w3.org/2000/svg" height="13px" viewBox="0 0 24 24" fill="none" width="15px">
                           <path d="M0 0h24v24H0z" fill="none"/>
                           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="#EB5757"/>
                         </svg>
                       </div>
                         <div className="dropdownContacts">
-                          <button className="ContactsBtn ContactsBtn2" id={item.id} onClick={()=>btnclick(item.id)}>
+                          <button className="ContactsBtn ContactsBtn2" id={`${item.id}`} onClick={()=>btnclick(item.id)}>
                               <div className="btnall" style={{alignItems:"center"}}>
                                 <div className="btniconContacts">
                                   <svg className="telbtnicon" width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -248,7 +198,7 @@ export default function mainCatalog(link){
                                 <p className="textContacts">Контакты</p>    
                               </div> 
                           </button>
-                          <div className="informContacts" id={item.id}>
+                          <div className="informContacts" id={`${item.id}`}>
                       <img src={item.imageOwner} className="circleIcon" alt="" />
                       <p className="Owner">Владелец</p>
                       <div className="NameOwner">

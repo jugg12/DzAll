@@ -1,19 +1,15 @@
 import React,{useState,useEffect} from "react";
-import Header from "../Header/Header"
-import Footer from "../Footer/Footer"
 import "./News.css"
-import {useLocation,useNavigate,Link} from "react-router-dom"
+import {useNavigate,Link} from "react-router-dom"
 import axios from "../../axios";
 import { Card,Button,Col,Row } from "react-bootstrap";
 import { NewsItem } from "../../interfaces";
 import ReactPaginate from "react-paginate";
-import CardSkeleton from "../Catalog/ArendaInfo/CardSkeleton";
+import CardSkeleton from "../Skeletons/newsItemsSkeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 
-
 export default function News(){
-
   const [currentPage,setCurrentPage] = useState<NewsItem[]>([]);
   const [CatalogPerPage,setCatalogPerPage]= useState<number>(9)
   const [value,setValue] = useState<string>("")
@@ -24,11 +20,8 @@ export default function News(){
 
   const handlepageclick = (e) =>{
     const newOffset = (e.selected*CatalogPerPage)%filter.length;
-    setItemOffset(newOffset)
-  }
-
-  const search = (value) => {
-    setNews(News.filter((newsItem)=>(newsItem.title.toLowerCase().includes(value.toLowerCase()))))
+    setItemOffset(newOffset);
+    window.scrollTo({top:100,behavior:"smooth"});
   }
 
   const push = (item) =>{
@@ -40,8 +33,8 @@ export default function News(){
   useEffect(()=>{
     axios.get("/NewsCard").then(({data})=>{
       setNews(data);
+      setLoading(false);
     })
-    setLoading(false)
   },[])
   
   const [Open,setOpen]=useState<boolean>(false)
@@ -65,7 +58,6 @@ export default function News(){
   const inputHandler=()=>{
     setOpen(true)
   }
-  
 
   return(
     <>
@@ -125,14 +117,14 @@ export default function News(){
             <div className="conteiner">
               <div className="CardsNews">
                 {
-                   Loading?
+                  Loading?
                    <div className="" style={{display:"flex",width:"1378px",flexDirection:"column"}}>
-                     <div className="" style={{display:"flex",marginBottom:"50px"}}>
+                     <div className="" style={{display:"flex",marginBottom:"30px"}}>
                        <CardSkeleton style={{marginRight:"50px"}}/>
                        <CardSkeleton style={{marginRight:"50px"}}/>
                        <CardSkeleton/>
                      </div>
-                     <div className="">
+                     <div className="" style={{display:"flex",marginBottom:"30px"}}>
                        <CardSkeleton style={{marginRight:"50px"}}/>
                        <CardSkeleton style={{marginRight:"50px"}}/>
                        <CardSkeleton/>

@@ -204,6 +204,7 @@ select {
 .List__dropdown{
   z-index: -10;
   opacity: 0;
+  scale: 0;
   position: absolute;
   background: #FFFFFF;
   align-items: center;
@@ -224,6 +225,7 @@ select {
 
 .List__dropdown.visible{
   display: block;
+  scale: 1;
   opacity: 1;
   z-index: 1;
   transition: .2s opacity linear;

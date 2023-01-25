@@ -1,31 +1,31 @@
 import React, { useState, useEffect} from "react";
 import { ToastContainer} from 'react-toastify';
+import img from "../../img/Loading/Logo512.png";
 import "./advertisement.css";
 import { Link,useNavigate } from "react-router-dom";
 import { Card,Button,Col,Row } from "react-bootstrap";
 import axios from "../../axios";
-
-
 import btnclick from "../Functions/clickbtnContacts";
 import ReactPaginate from "react-paginate";
-import CardSkeleton from "../Catalog/ArendaInfo/CardSkeleton";
-import defaultClickDropDown from "../Functions/Homepagejs";
+import CardSkeleton from "../Skeletons/advertisementSkeleton";
+import { defaultClickDropDown } from "../Functions/Homepagejs";
 import Modal from "../Modules/module";
 import ClickCheckbox from "../Functions/ClickCheckBox";
 import InputMask from 'react-input-mask';
 import { Form, Formik,Field } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { decrementAdvertisement, setIdItem, setIdItemChange } from "../../store/actions/advertisementAction"; 
+import { decrementAdvertisement, incrementAdvertisement, setIdItem, setIdItemChange, setLength } from "../../store/actions/advertisementAction"; 
 import { setCity, setRooms } from "../../store/slices/FilterSlice";
 import { notifyEditingAdvertisement, notifyDeleteAdvertisement } from "../Toasts/ToastsContent";
-import { advertisementItem, ArendaCardProduct } from "../../interfaces";
-
+import { advertisementItem } from "../../interfaces";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination,Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { FileObjectAdvertisementFromAdvertisement, OwnerImgAdvertisementFromAdvertisement } from "../Functions/btnChooseFile";
+import { downLoadImgAdvertisements, downLoadImgOwner, handleCityInfo, handleDescriptionInfo, handleDopNamesInfo, handleLinkMailInfo, handleLinkViberInfo, handleLinkWhatsInfo, handleMailInfo, handleMetroInfo, handleNameInfo, handleNumberInfo, handleRayonInfo, handleRoomsInfo, handleSentInfo, handleSquareInfo, handleTotalInfo } from "../HandlersOnChanges/handleOnChange";
+import { clickChangeAdvertisement, clickDeleteAdvertisement } from "../Functions/clickChange";
 
 export default function advertisement() {
   const navigate=useNavigate();
@@ -36,16 +36,13 @@ export default function advertisement() {
   const [CatalogPerPage,setCatalogPerPage]= useState<number>(6)
   const [itemOffset,setItemOffset] = useState<number>(0)
   const [pageCount,setCountPage]= useState<number>(0)
-  const [data2, setData2] = useState<boolean>(true);
-  const [data3, setData3] = useState<boolean>(true);
-  const [data4, setData4] = useState<boolean>(true);
-  const[modalActive1,setModalActive1] = useState<boolean>(false);
+  const[modalAdvertisements,setModalAdvertisements] = useState<boolean>(false);
   const [itemInfo,setItemInfo] = useState<advertisementItem>();
   const [imgUrl,setImgUrl] = useState <any>();
   const [imgUrl2,setImgUrl2] = useState <any>();
   const fileReader = new FileReader();
   const fileReader2 = new FileReader();
-  const [idInfo,setIdInfo] = useState<string>(null);
+  const [idInfo,setIdInfo] = useState<number>(null);
   const [cityInfo,setCityInfo] = useState<string>(null);
   const [sentInfo,setSentInfo] = useState<any>(null);
   const [roomsInfo,setroomsInfo] = useState<string>(null);
@@ -64,216 +61,88 @@ export default function advertisement() {
   const [linkWatsInfo,setLinkWatsInfo] = useState<string>(null);
   const [dopNames,setDopNames] = useState<string>(null);
   const [sleepPlaces,setsleepPlaces] = useState<string>(null);
-  const [checkbox,setCheckbox] = useState<string>(null);
   const [Loading,setLoading]=useState<boolean>(true);
+  const [LoadingInfo,setLoadingInfo]=useState<boolean>(true);
+  const [ToggleState,setToggleState] = useState<number>(1);
   
   const checkboxInputValue_moduleChange = document.getElementById("checkboxInputValue_moduleChange");
   const FiltersleepPlacesDop = document.getElementById("FiltersleepPlacesDop");
-  let Massive2;
   let CloneInfo = [];
   const dispatch = useDispatch();
   const idItem = useSelector((state:any)=>state.advertisementAction.idItem);
   const idItemChange = useSelector((state:any) => state.advertisementAction.idItemChange);
-  const LengthAdvertisements = useSelector((state:any) => state.advertisementAction.length)
+  const LengthAdvertisements = useSelector((state:any) => state.advertisementAction.length);
+  
+  const push = (item) =>{
+    navigate(`/advertisement/test/${item-1}`)
+  }
 
-  useEffect(()=>{
+  useEffect(()=>{ // Получение данных редакс
     dispatch(setIdItem(null));
     dispatch(setIdItemChange(null))
     dispatch(setCity("Минск"));
     dispatch(setRooms("Квартиры на сутки"));
   },[]);
 
+  useEffect(()=>{ // Фиксация изменений в объявлениях
+    if (login){
+      axios.get(`/users?login=${login}`).then((data) => { 
+        setadvertisementChange(data.data[0].advertisement);
+        setLoading(false);
+      })
+    }
+  },[LengthAdvertisements]);
+
   useEffect(()=>{
-    if(modalActive1==true){
+    if(modalAdvertisements==true){
       document.body.style.overflow="hidden";
     }
     else{
       document.body.style.overflow="auto";
     }
-  },[modalActive1])
+  },[modalAdvertisements])
 
-  const clickHeart = (value)=>{ //Клик на изменение
-    dispatch(setIdItemChange(value));
-    setData2(true);
-    setModalActive1(true);
-  }
-
-  const clickDelete = (value) => {
-    const deleteInfoConfirm = confirm("Вы уверены, что хотите удалить данное объявление?");
-    if(deleteInfoConfirm===true){
-      setData4(true);
-      dispatch(setIdItem(value));
-    }
-  }
-
-  useEffect(()=>{
-    if(login){
-      axios.get(`/users?login=${login}`).then((data) => {
-        for (let i = 0; i < data.data[0].advertisement.length; i++) {
-          if(data.data[0].advertisement[i].id==idItem && data4==true){
-            data.data[0].advertisement.splice(i,1);
-            notifyDeleteAdvertisement()
-            axios.patch(`/users/${id}`,{"advertisement":data.data[0].advertisement});
-          }
-        };
-        dispatch(decrementAdvertisement(LengthAdvertisements))
-        setadvertisementChange(data.data[0].advertisement);
-        setData2(false);
-      });
-    };
-    setData4(false);
-  },[data4])
-
-  fileReader.onloadend = () => {
-    let item;
-    imgUrl?item = [...imgUrl,fileReader.result]:item = [...urlInfo,fileReader.result]
-    setImgUrl(item);
-  }
-
-  fileReader2.onloadend = () => {
-    setImgUrl2(fileReader2.result);
-  }
-
-  const handleOnChange = (e) => {
-    console.log(e)
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader.readAsDataURL(file);
-  }
-
-  const handleOnChange2 = (e) => {
-    console.log(e)
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader2.readAsDataURL(file);
-  }
-
-  // change info all items //////////////////////
-
-  const handleOnChange3 = (e) => {
-    const result = e.target.value;
-    setCityInfo(result);
-  }
-
-  const handleOnChange4 = (e) => {
-    const result = e.target.value.replace(/\D/g, '');;
-    setSentInfo(result);
-  }
-
-  const handleOnChange5 = (e) => {
-    const result = e.target.value;
-    setroomsInfo(result);
-  }
-
-  const handleOnChange18 = (e) => {
-    const result = e.target.value;
-    settotalInfo(result);
-  }
-
-  const handleOnChange6 = (e) => {
-    const result = e.target.value.replace(/\D/g, '');;
-    setsquareInfo(result);
-  }
-
-  const handleOnChange7 = (e) => {
-    const result = e.target.value;
-    setMetroInfo(result);
-  }
-
-  const handleOnChange8 = (e) => {
-    const result = e.target.value;
-    setRayonInfo(result);
-  }
-
-  const handleOnChange9 = (e) => {
-    const result = e.target.value;
-    setdescriptionInfo(result);
-  }
-
-  const handleOnChange11 = (e) => {
-    const result = e.target.value;
-    setImageOwnerInfo(result);
-  }
-
-  const handleOnChange12 = (e) => {
-    const result = e.target.value;
-    setNameInfo(result);
-  }
-
-  const handleOnChange13 = (e) => {
-    const result = e.target.value;
-    setNumberInfo(result);
-  }
-
-  const handleOnChange14 = (e) => {
-    const result = e.target.value;
-    setMailInfo(result);
-  }
-
-  const handleOnChange15 = (e) => {
-    const result = e.target.value;
-    setLinkViberInfo(result);
-  }
-
-  const handleOnChange17 = (e) => {
-    const result = e.target.value;
-    setLinkMailInfo(result);
-  }
-
-  const handleOnChange16 = (e) => {
-    const result = e.target.value;
-    setLinkWatsInfo(result);
-  }
-
-  const handleOnChange19 = (e) => {
-    if ((checkboxInputValue_moduleChange as HTMLInputElement).value!==""){
-      const result = e.target.value;
-      setDopNames(result);
-    }
-  }
-
-  const handleOnChange20 = (e) => {
-    if ((checkboxInputValue_moduleChange as HTMLInputElement).value!==""){
-      const result = e.target.value;
-      setdescriptionInfo(result);
-    }
-  }
-
-  const [ToggleState,setToggleState] = useState<number>(1);
-  const toggleTab = (index) =>{
+  const toggleTab = (index) =>{ // Изменение таба
     setToggleState(index)
   }
 
-
   const handlepageclick = (e) =>{
     const newOffset = (e.selected*CatalogPerPage)%advertisementChange.length;
-    setItemOffset(newOffset)
+    setItemOffset(newOffset);
+    window.scrollTo({top:100,behavior:"smooth"});
   }
 
-  const push = (item) =>{
-    navigate(`/advertisement/test/${item-1}`)
-  }
+  useEffect(()=>{ // Удаление объекта
+    if(login){
+      for (let i = 0; i < advertisementChange.length; i++) {
+        if(advertisementChange[i].id==idItem){
+          advertisementChange.splice(i,1);
+          notifyDeleteAdvertisement();
+          dispatch(decrementAdvertisement(LengthAdvertisements))
+          axios.patch(`/users/${id}`,{"advertisement":advertisementChange});
+        }
+      };
+    };
+  },[idItem])
 
-  useEffect(() => {
+  useEffect(() => { // Получение информации
     if (login){
       axios.get(`/users?login=${login}`).then((data) => {
         for (let i = 0; i < data.data[0].advertisement.length; i++) {
-          if(data.data[0].advertisement[i].id==idItemChange && data2==true){
+          if(data.data[0].advertisement[i].id==idItemChange){
             setItemInfo(data.data[0].advertisement[i]);
           }
         }
-        setLoading(false);
-        setadvertisementChange(data.data[0].advertisement);
-        setData2(false);
       })
     }
-  },[data2,LengthAdvertisements]);
+  },[idItemChange]);
 
-  useEffect(() => {
+  useEffect(() => { // Получение полей карточки и автоматическое заполнение
     if (login){
+    setLoadingInfo(true);
     axios.get(`/users?login=${login}`).then((data) => {
       for (let i = 0; i < data.data[0].advertisement.length; i++) {
-        if(data.data[0].advertisement[i].id==idItemChange && data2==false && itemInfo!==undefined){
+        if(data.data[0].advertisement[i].id==idItemChange && itemInfo!==undefined){
             setIdInfo(itemInfo.id)
             setCityInfo(itemInfo.city);
             setSentInfo(itemInfo.sent);
@@ -296,59 +165,17 @@ export default function advertisement() {
             setImgUrl("");
             setImgUrl2("");
             CloneInfo = [];
+            setLoadingInfo(false);
         }
       }
-      setadvertisementChange(data.data[0].advertisement);
-      setData2(false);
-      setData3(true)
     });
   }
-    
-  },[data2]);
+  },[idItemChange,itemInfo]);
 
-  useEffect( () => {
-    if ((document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement)!==null && checkbox!==(document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value){
-      Massive2=(document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value.split(",");
-      if(Massive2.length>0){
-        for (let j = 0; j < Massive2.length; j++){
-          for(let i = 1; i <= 30;i++){
-            if(((document.getElementById(`checkbox_moduleChange${i}`) as HTMLInputElement).value == Massive2[j])){
-              (document.getElementById(`checkbox_moduleChange${i}`) as HTMLInputElement).checked=true;   
-            }
-          }
-        }
-
-        for (let j = 0; j < Massive2.length; j++){
-          for(let i = 1; i <= 30;i++){
-            if(((document.getElementById(`checkbox_moduleChange${i}`) as HTMLInputElement).value !== Massive2[j])){
-              (document.getElementById(`checkbox_moduleChange${i}`) as HTMLInputElement).checked=false;      
-            }
-          }
-        }
-      
-      setCheckbox((document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value);
-    }
-  }
-    else  if ((document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement)!==null && (document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value==""){
-      Massive2=[];
-        for(let i = 1; i <= 30;i++){
-          (document.getElementById(`checkbox_moduleChange${i}`) as HTMLInputElement).checked=false;             
-        }
-    }
-    setData3(false);
-  },[data3])
-
-  useEffect(()=>{
-    const endoffset=itemOffset+CatalogPerPage;
-    setCurrentPage(advertisementChange.slice(itemOffset,endoffset));
-    setCountPage(Math.ceil(advertisementChange.length/CatalogPerPage));
-  },[itemOffset,CatalogPerPage,advertisementChange,LengthAdvertisements])
-
-
-  const addArenda3 = () => {
-    const vibor = confirm("Вы уверены, что хотите изменить Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
-    if(vibor==true){
-      const item = {
+  const ChangeInfoAdvertisement = () => { // Обновление данных
+    const choose = confirm("Вы уверены, что хотите изменить Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
+    if(choose==true){
+      const itemAdvertisement = {
         "id":idInfo,
         "city":cityInfo,  
         "sent":sentInfo,
@@ -378,8 +205,8 @@ export default function advertisement() {
       }
       
       advertisementChange.map((itemClone)=>{
-        if(itemClone.id == item.id){
-          itemClone=item;
+        if(`${itemClone.id}` == `${itemAdvertisement.id}`){
+          itemClone=itemAdvertisement;
           CloneInfo.push(itemClone)
         }
         else{
@@ -389,14 +216,21 @@ export default function advertisement() {
      
       axios.patch(`/users/${id}`,{
         "advertisement":CloneInfo
-      })
-      notifyEditingAdvertisement();       
+      });
+      setModalAdvertisements(false);
+      notifyEditingAdvertisement();    
+      dispatch(incrementAdvertisement(LengthAdvertisements));   
    }
   }
 
+  useEffect(()=>{ // Данные на странице
+    const endoffset=itemOffset+CatalogPerPage;
+    setCurrentPage(advertisementChange.slice(itemOffset,endoffset));
+    setCountPage(Math.ceil(advertisementChange.length/CatalogPerPage));
+  },[itemOffset,CatalogPerPage,advertisementChange])
+
   return (
     <>
-      
       <section className="firstCatalog">
         <div className="filterInfo">
           <div className="conteiner">
@@ -525,7 +359,7 @@ export default function advertisement() {
                               </Card.Text>  
                                 <div className="btnContactsMain" style={{marginTop:"80px"}}>
                                 <div className="" style={{display:"flex"}}>
-                                  <div className="change" id={`change-${item.id}`} onClick={()=>clickHeart(item.id)}>
+                                  <div className="change" id={`change-${item.id}`} onClick={()=>clickChangeAdvertisement(item.id,dispatch,setModalAdvertisements)}>
                                     <svg className="change__pancil" viewBox="0 0 80 80" width="20" height="20" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                       <title/>
                                       <g id="Layer_2">
@@ -536,7 +370,7 @@ export default function advertisement() {
                                       </g>
                                     </svg>
                                   </div>
-                                  <div className="delete" id={`delete-${item.id}`} onClick={()=>{clickDelete(item.id)}}>
+                                  <div className="delete" id={`delete-${item.id}`} onClick={()=>{clickDeleteAdvertisement(item.id,dispatch)}}>
                                     <svg className="deleteIcon" height="20" viewBox="0 0 48 48" width="20" xmlns="http://www.w3.org/2000/svg">
                                       <path className="delete__Fill" d="M12 38c0 2.21 1.79 4 4 4h16c2.21 0 4-1.79 4-4v-24h-24v24zm26-30h-7l-2-2h-10l-2 2h-7v4h28v-4z"/>
                                       <path  d="M0 0h48v48h-48z" fill="none"/>
@@ -544,7 +378,7 @@ export default function advertisement() {
                                   </div>
                                 </div>
                                   <div className="dropdownContacts">
-                                    <button className="ContactsBtn ContactsBtn4" id={item.id} onClick={()=>btnclick(item.id)}>
+                                    <button className="ContactsBtn ContactsBtn4" id={`${item.id}`} onClick={()=>btnclick(item.id)}>
                                         <div className="btnall" style={{alignItems:"center"}}>
                                           <div className="btniconContacts">
                                             <svg className="telbtnicon" width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -554,7 +388,7 @@ export default function advertisement() {
                                           <p className="textContacts">Контакты</p>    
                                         </div> 
                                     </button>
-                                    <div className="informContacts" id={item.id}>
+                                    <div className="informContacts" id={`${item.id}`}>
                                 <img src={item.imageOwner} className="circleIcon" alt="" />
                                 <p className="Owner">Владелец</p>
                                 <div className="NameOwner">
@@ -644,7 +478,7 @@ export default function advertisement() {
           </div>
         </div>
       </section>    
-      <Modal active={modalActive1} setActive={setModalActive1}>
+      <Modal active={modalAdvertisements} setActive={setModalAdvertisements}>
       {
           <>
              <h1 style={{textAlign:"center", marginBottom:"15px"}} className="textBreath">Редактирование Вашего объявления</h1>
@@ -652,19 +486,27 @@ export default function advertisement() {
               <div className="infoAdvertisement">
                 <div className="conteiner" style={{width:"1150px"}}>
                   <div className="exit">
-                    <svg onClick={()=>setModalActive1(false)} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                    <svg onClick={()=>{setModalAdvertisements(false);setToggleState(1);}} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                       <path d="M255.997,460.351c112.685,0,204.355-91.668,204.355-204.348S368.682,51.648,255.997,51.648  c-112.68,0-204.348,91.676-204.348,204.355S143.317,460.351,255.997,460.351z M255.997,83.888  c94.906,0,172.123,77.209,172.123,172.115c0,94.898-77.217,172.117-172.123,172.117c-94.9,0-172.108-77.219-172.108-172.117  C83.888,161.097,161.096,83.888,255.997,83.888z"/>
                       <path d="M172.077,341.508c3.586,3.523,8.25,5.27,12.903,5.27c4.776,0,9.54-1.84,13.151-5.512l57.865-58.973l57.878,58.973  c3.609,3.672,8.375,5.512,13.146,5.512c4.658,0,9.316-1.746,12.902-5.27c7.264-7.125,7.369-18.793,0.242-26.051l-58.357-59.453  l58.357-59.461c7.127-7.258,7.021-18.92-0.242-26.047c-7.252-7.123-18.914-7.018-26.049,0.24l-57.878,58.971l-57.865-58.971  c-7.135-7.264-18.797-7.363-26.055-0.24c-7.258,7.127-7.369,18.789-0.236,26.047l58.351,59.461l-58.351,59.453  C164.708,322.715,164.819,334.383,172.077,341.508z"/>
                     </svg>
                   </div>
-                      {itemInfo?
+
+                      {
+                      LoadingInfo?
+                      <>
+                        <div className="LoadingAnimation">
+                          <img className="LoadingImg" src={img} alt="" />
+                        </div>
+                      </>
+                      :itemInfo?
                       <Formik 
                         initialValues={{
                           url:"",
                           imageOwner:"",
                         }} 
                         validateOnBlur
-                        onSubmit={addArenda3}>
+                        onSubmit={ChangeInfoAdvertisement}>
                         {({values,errors,touched,handleChange,handleBlur,isValid,handleSubmit,dirty})=>(
                         <Form>
                           <div className="block__tabs" style={{justifyContent:"center",marginBottom:"20px"}}>
@@ -705,13 +547,13 @@ export default function advertisement() {
                                   </Swiper>
                               }
                               <button onClick={FileObjectAdvertisementFromAdvertisement} type="button" className="Voyti choose">Выберите файл</button>
-                              <Field id="file-input5" accept="image/*,.png,.jpg,.gif,.web," type="file" value={values.url} onChange={handleOnChange} style={{display:"none"}} />
+                              <Field id="file-input5" accept="image/*,.png,.jpg,.gif,.web," type="file" value={values.url} onChange={()=>downLoadImgAdvertisements(event.target,fileReader,imgUrl,setImgUrl,urlInfo)} style={{display:"none"}} />
                             </div>
                             <div className="partTwoAdvertisement" style={{display:"flex"}}>
                               <div className="InformObject" style={{marginRight:"40px"}}>
                                 <h2 style={{marginRight:"17px",marginBottom:"20px",textAlign:"center",fontSize:"16px"}}>Информация об объекте</h2>
                                 <div className="LOGIN">
-                                    <Field className={(cityInfo==="")? "login__error cityArenda":"login cityArenda"} name = "city" type="text"  value={cityInfo} onBlur={handleBlur} onChange={handleOnChange3} placeholder="Город"/>
+                                    <Field className={(cityInfo==="")? "login__error cityArenda":"login cityArenda"} name = "city" type="text"  value={cityInfo} onBlur={handleBlur} onChange={()=>handleCityInfo(event.target,setCityInfo)} placeholder="Город"/>
                                     <svg className={(cityInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                       <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                     </svg>
@@ -721,7 +563,7 @@ export default function advertisement() {
                                 </div>
 
                               <div className="LOGIN"> 
-                                <Field className={(sentInfo === "")? "login__error cityArenda":"login cityArenda"}  name = "sent" type="text" value={sentInfo} onBlur={handleBlur} onChange={handleOnChange4} placeholder="Цена(в BYN за сутки)"/>
+                                <Field className={(sentInfo === "")? "login__error cityArenda":"login cityArenda"}  name = "sent" type="text" value={sentInfo} onBlur={handleBlur} onChange={()=>handleSentInfo(event.target,setSentInfo)} placeholder="Цена(в BYN за сутки)"/>
                                 <svg className={(sentInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" />
                                 </svg>
@@ -732,7 +574,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(roomsInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "rooms" type="text" value={roomsInfo} onChange={handleOnChange5} placeholder="Комнаты"/>
+                                <Field className={(roomsInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "rooms" type="text" value={roomsInfo} onChange={()=>handleRoomsInfo(event.target,setroomsInfo)} placeholder="Комнаты"/>
                                 <svg className={(roomsInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
                                 </svg>
@@ -744,7 +586,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(totalInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "total" type="text" value={totalInfo} onChange={handleOnChange18} placeholder="Кол-во людей"/>
+                                <Field className={(totalInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "total" type="text" value={totalInfo} onChange={()=>handleTotalInfo(event.target,settotalInfo)} placeholder="Кол-во людей"/>
                                 <svg className={(totalInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -760,7 +602,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(squareInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "square" type="text" value={squareInfo} onChange={handleOnChange6} placeholder="Площадь объекта"/>
+                                <Field className={(squareInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "square" type="text" value={squareInfo} onChange={()=>handleSquareInfo(event.target,setsquareInfo)} placeholder="Площадь объекта"/>
                                 <svg className={(squareInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
                                 </svg>
@@ -778,7 +620,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(metroInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "metro" type="text" value={metroInfo} onChange={handleOnChange7} placeholder="Метро(ближайшее)"/>
+                                <Field className={(metroInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "metro" type="text" value={metroInfo} onChange={()=>handleMetroInfo(event.target,setMetroInfo)} placeholder="Метро(ближайшее)"/>
                                 <svg className={(metroInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -788,7 +630,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(rayonInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "rayon" type="text" value={rayonInfo} onChange={handleOnChange8} placeholder="Район"/>
+                                <Field className={(rayonInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "rayon" type="text" value={rayonInfo} onChange={()=>handleRayonInfo(event.target,setRayonInfo)} placeholder="Район"/>
                                 <svg className={(rayonInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -800,7 +642,7 @@ export default function advertisement() {
                             <div className="informOwner">
                             <h2 style={{marginRight:"17px",marginBottom:"20px",textAlign:"center",fontSize:"16px"}}>Информация о владельце</h2>
                             <div className="LOGIN">
-                                <Field className={(nameInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "name" type="text" value={nameInfo} onChange={handleOnChange12}  placeholder="ФИО"/>
+                                <Field className={(nameInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "name" type="text" value={nameInfo} onChange={()=>handleNameInfo(event.target,setNameInfo)}  placeholder="ФИО"/>
                                 <svg className={(nameInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -818,7 +660,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <InputMask mask = "+7\ - 999 999 99 99" maskChar="_" className={(numberInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "number" type="text" value={numberInfo} onChange={handleOnChange13} placeholder="Телефон"/>
+                                <InputMask mask = "+7\ - 999 999 99 99" maskChar="_" className={(numberInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "number" type="text" value={numberInfo} onChange={()=>handleNumberInfo(event.target,setNumberInfo)} placeholder="Телефон"/>
                                 <svg className={(numberInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -828,7 +670,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="MAIL">
-                                <Field className={(mailInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "mail" type="mail" value={mailInfo} onChange={handleOnChange14}  placeholder="Электронная почта"/>
+                                <Field className={(mailInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "mail" type="mail" value={mailInfo} onChange={()=>handleMailInfo(event.target,setMailInfo)}  placeholder="Электронная почта"/>
                                 <svg className={(mailInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -848,7 +690,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(linkViberInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkViber" type="text" value={linkViberInfo} onChange={handleOnChange15}  placeholder="Ваш Viber"/>
+                                <Field className={(linkViberInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkViber" type="text" value={linkViberInfo} onChange={()=>handleLinkViberInfo(event.target,setLinkViberInfo)}  placeholder="Ваш Viber"/>
                                 <svg className={(linkViberInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -859,7 +701,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(linkWatsInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkWats" type="text" value={linkWatsInfo} onChange={handleOnChange16} placeholder="Ваш Watsup"/>
+                                <Field className={(linkWatsInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkWats" type="text" value={linkWatsInfo} onChange={()=>handleLinkWhatsInfo(event.target,setLinkWatsInfo)} placeholder="Ваш Watsup"/>
                                 <svg className={(linkWatsInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -870,7 +712,7 @@ export default function advertisement() {
                               </div>
 
                               <div className="LOGIN">
-                                <Field className={(linkMailInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkMail" type="mail" value={linkMailInfo} onChange={handleOnChange17} placeholder="Ваша рабочая почта"/>
+                                <Field className={(linkMailInfo==="")? "login__error cityArenda":"login cityArenda"}  name = "linkMail" type="mail" value={linkMailInfo} onChange={()=>handleLinkMailInfo(event.target,setLinkMailInfo)} placeholder="Ваша рабочая почта"/>
                                 <svg className={(linkMailInfo==="")? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
                                 </svg>
@@ -894,7 +736,7 @@ export default function advertisement() {
                             <h2 style={{fontSize:"22px"}}>Ваше фото</h2>
                             <img className="IconImgAdvertisement"src={imgUrl2?imgUrl2:imageOwnerInfo} alt="" />
                             <button onClick={OwnerImgAdvertisementFromAdvertisement} type="button" className="Voyti choose">Выберите файл</button>
-                            <Field id="file-input4" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={handleOnChange2} style={{display:"none"}} />
+                            <Field id="file-input4" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={()=>downLoadImgOwner(event.target,fileReader2,setImgUrl2)} style={{display:"none"}} />
                           </div>
                         </div>
                         <div className={ToggleState===2?"DopInfo":"DopInfoNone"}>
@@ -912,9 +754,9 @@ export default function advertisement() {
                                 </ul>
                                 <Field type="text" name="select__category" className="drodown__item__hiden" />
                               </div>
-                              <input type="text" id="checkboxInputValue_moduleChange" value={dopNames} onChange={handleOnChange19} className="drodown__item__hiden" />
+                              <input type="text" id="checkboxInputValue_moduleChange" value={dopNames} onChange={()=>handleDopNamesInfo(event.target,setDopNames,checkboxInputValue_moduleChange)} className="drodown__item__hiden checkboxInputValue_moduleChange" />
                               <div className="checkbox" style={{display:"flex",marginBottom:"10px",marginTop:"30px"}}>
-                                <input type="checkbox" value={"Газоваяплита"} id="checkbox_moduleChange1" onChange={() => ClickCheckbox(1)} className="checkBoxOptions3"/> 
+                                <input type="checkbox" value={"Газоваяплита"} defaultValue={"Газоваяплита"} id="checkbox_moduleChange1" onChange={() => ClickCheckbox(1)} className="checkBoxOptions3"/> 
                                 <label htmlFor="checkbox_moduleChange1" className="textCheckboxOptions">Газовая плита</label>
                               </div>
                               <div className="" style={{display:"flex",marginBottom:"10px"}}>
@@ -1076,7 +918,7 @@ export default function advertisement() {
                         <div className={ToggleState===3?"DopInfo":"DopInfoNone"}>
                           <div className="Message">
                             <p className="Contacts__text">Описание объявления</p>
-                              <textarea name="textArea" className={(descriptionInfo=="")?"TextAreaMes__error":"TextAreaMes"} onChange={handleOnChange20} value={descriptionInfo} placeholder="Описание" cols={30} rows={10}></textarea>
+                              <textarea name="textArea" className={(descriptionInfo=="")?"TextAreaMes__error":"TextAreaMes"} onChange={()=>handleDescriptionInfo(event.target,setdescriptionInfo)} value={descriptionInfo} placeholder="Описание" cols={30} rows={10}></textarea>
                           </div>
                         </div>
                         <div className="" style={{display:"flex",justifyContent:"center"}}>

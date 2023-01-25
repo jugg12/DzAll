@@ -1,9 +1,9 @@
 import { cityIn } from 'lvovich';
-import { clearFilter, setCity, setCityRayonHomePage, setRooms } from '../../store/slices/FilterSlice';
+import { clearFilter, setCity, setCityRayonHomePage, setRooms, setSort } from '../../store/slices/FilterSlice';
 import qs from "qs";
 
 
-export default function defaultClickDropDown(){ // Кастомный выпадающий список
+export function defaultClickDropDown(){ // Кастомный выпадающий список
   document.querySelectorAll(".dropdown").forEach(function(dropdownWrapper){
     const listitemclick=dropdownWrapper.querySelectorAll(".dropdown__item");
     const btn = dropdownWrapper.querySelector(".List");
@@ -161,7 +161,32 @@ export function UserInfoClick(login,setModalActive,navigate){ // Нажатие 
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-
+export function sortInfo(dispatch){ //Сортировка данных на странице "Каталог"
+  document.querySelectorAll(".dropdown2").forEach(function(dropdownWrapper){
+    const listitemclick=dropdownWrapper.querySelectorAll(".dropdown__item");
+    const btn = dropdownWrapper.querySelector(".List");
+    const imgSort = dropdownWrapper.querySelectorAll(".imgSort");
+    const btnclick = dropdownWrapper.querySelector(".List__dropdown");
+    if(btnclick!==null){
+      btnclick.classList.toggle("visible");
+    }
+    listitemclick.forEach(function(listitem){
+      listitem.addEventListener("click",(e)=>{
+        imgSort.forEach((img)=>{
+          img.classList.add("active")
+        });
+        dispatch(setSort(listitem.textContent));
+        btnclick.classList.remove("visible");
+      })
+    })
+    document.addEventListener('click',(e)=>{
+      if(e.target !== btn && btnclick!==null){
+        btnclick.classList.remove("visible");
+      }
+    })
+  
+  })
+}
 
 
 

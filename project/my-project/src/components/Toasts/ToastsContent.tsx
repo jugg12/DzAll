@@ -38,13 +38,22 @@ export function notifySuccessFavourites(){
     autoClose:2000,
   });
 }
-
+// Доп. информация
 export function notifyEditingAdvertisement(){
   toast.info("Ваше объявление изменено",{
     position:"top-center",
     closeOnClick:true,
     pauseOnHover:false,
     autoClose:2000,
+  });
+}
+
+export function notifyInfoPrice(){
+  toast.info("Для поиска, по заданному значению стоимости, необходимо заполнить оба поля ввода.",{
+    position:"top-center",
+    closeOnClick:true,
+    pauseOnHover:false,
+    autoClose:3000,
   });
 }
 

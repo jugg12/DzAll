@@ -1,4 +1,5 @@
 import { cityIn, cityFrom, cityTo } from 'lvovich';
+import { notifyInfoPrice } from '../Toasts/ToastsContent';
 
 export default function ShowSort(priceMin,priceMax,category,setCategory,setCategory2,setValue,setpriceMax,axios,setArenda,Arenda,gorod){
   const h1= document.querySelector(".ArendaInnerTextH1");
@@ -15,6 +16,12 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
   let results2;
   let k=0;
   let z=0;
+  if(priceMin==0){
+    priceMin=null;
+  }
+  if(priceMax==0){
+    priceMax=null
+  }
 
   // Список чексов скрыт
   if(Options && DopOptions!==null && checkboxInputValue==null){
@@ -47,34 +54,32 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       DopOptionsCategory=false;
     }
 
-    if ((priceMin=="" && priceMax!=="") || (priceMin!=="" && priceMax=="")){
-      alert("Для поиска, по заданному значению стоимости, необходимо заполнить оба поля ввода.")
+    if ((priceMin==null && priceMax!==null) || (priceMin!==null && priceMax==null)){
+      notifyInfoPrice();
     }
 
     // Multiple filter
-    if((priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите" && DopOptionsCategory==false){ //Без опций чисто цена
-      console.log(Number(priceMin),Number(priceMax))
+    if((priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите" && DopOptionsCategory==false){ //Без опций чисто цена
       if(Number(priceMin) < Number(priceMax)){
         results = data.filter((item)=>
         (Number(priceMax)>Number(item.sent)) && (Number(item.sent)>Number(priceMin)));
-        console.log(results);
         setArenda(results);
       }
       else{
         results = data.filter((item)=>
         (Number(item.sent)>=Number(priceMax)) && (Number(priceMin)>= Number(item.sent) ));
-        console.log(results)
+  
         setArenda(results);
       }    
     }
 
-    else if(filterRooms.textContent!=="Выберите" && (priceMin=="" && priceMax=="") && DopOptionsCategory==false){ // Filter rooms
+    else if(filterRooms.textContent!=="Выберите" && (priceMin==null && priceMax==null) && DopOptionsCategory==false){ // Filter rooms
       results = data.filter((item)=>
       (item.rooms==(filterRooms.textContent.substring(0,6)+".")));
       setArenda(results); 
     }
 
-    else if ((priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите" && DopOptionsCategory==false){ //Без опций квартиры+цена
+    else if ((priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите" && DopOptionsCategory==false){ //Без опций квартиры+цена
       if(Number(priceMax) > Number(priceMin)){
         results = data.filter((item)=>
         (Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&(item.rooms==(filterRooms.textContent.substring(0,6)+".")));
@@ -87,7 +92,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       }    
     }
     else if(DopOptionsCategory==true){
-      if((priceMin=="" && priceMax=="") && filterRooms.textContent=="Выберите"){ //Чисто опции
+      if((priceMin==null && priceMax==null) && filterRooms.textContent=="Выберите"){ //Чисто опции
         // Spalnie sleepPlaces одиночное
 
         if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" && checkboxInputValue.value==""){
@@ -378,7 +383,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       // *2 elementa
       // sleepPlaces+priceMin
       if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results = data.filter(((item)=>(Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&(item.options.length!==0 && item.options[0].sleepPlaces==(filterSleepPlaces.textContent))));
           setArenda(results);
@@ -391,7 +396,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // sleepPlaces+rooms
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         results = data.filter((item)=>
         (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.options.length!==0 && item.options[0].sleepPlaces==(filterSleepPlaces.textContent)));
         setArenda(results); 
@@ -399,7 +404,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // Rayon + priceMin (item.rayon==(filterRayon.textContent + " р.")));
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results = data.filter(((item)=>(Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&(item.rayon==(filterRayon.textContent + " р."))));
           setArenda(results);
@@ -412,7 +417,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // Rayon + rooms 
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         results = data.filter((item)=>
         (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.rayon==(filterRayon.textContent + " р.")));
         setArenda(results); 
@@ -420,7 +425,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // Metro+priceMin item.metro==(filterMetro.textContent))
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent!=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results = data.filter(((item)=>(Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&item.metro==(filterMetro.textContent)));
           setArenda(results);
@@ -433,7 +438,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // Metro+rooms
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent!=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         results = data.filter((item)=>
         (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && item.metro==(filterMetro.textContent));
         setArenda(results); 
@@ -441,7 +446,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // checkbox+priceMin
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+      && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           if(Number(priceMax) > Number(priceMin)){
@@ -494,7 +499,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       
       // checkbox+rooms
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value!=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value!=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           results2 = data.filter((item)=>
@@ -543,7 +548,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,priceMin s rayonom
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results2 = data.filter((item)=>((Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&
           (item.rayon==(filterRayon.textContent + " р.")) && (item.rooms==(filterRooms.textContent.substring(0,6)+"."))));
@@ -558,7 +563,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,priceMin s sleepPlaces
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results2 = data.filter((item)=>((Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&
           (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.options[0].sleepPlaces==(filterSleepPlaces.textContent))));
@@ -573,7 +578,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,priceMin s metro
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent!=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
         if(Number(priceMax) > Number(priceMin)){
           results2 = data.filter((item)=>((Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) &&
           (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.metro==(filterMetro.textContent))));
@@ -588,7 +593,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,priceMin s checkbox
       else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent =="Выберите" 
-      && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){ 
+      && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){ 
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           if(Number(priceMax) > Number(priceMin)){
@@ -641,7 +646,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,rayona s sleepPlaces
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         results = data.filter((item)=>
         (item.options[0].sleepPlaces==(filterSleepPlaces.textContent) && (item.rayon==(filterRayon.textContent + " р.")) && (item.rooms==(filterRooms.textContent.substring(0,6)+"."))));
         setArenda(results); 
@@ -649,7 +654,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,rayona s metro  
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent!=="Выберите" 
-      && checkboxInputValue.value=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         results = data.filter((item)=>
         (item.metro==(filterMetro.textContent) && (item.rayon==(filterRayon.textContent + " р.")) && (item.rooms==(filterRooms.textContent.substring(0,6)+"."))));
         setArenda(results); 
@@ -657,7 +662,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       
       // filter rooms,rayona s chekboxom
       else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value!=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value!=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           results2 = data.filter((item)=>(item.options[0].length!==0 && 
@@ -687,7 +692,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,sleepPlaces i metro
       else if(filterRayon.textContent == "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-      filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin=="" && priceMax=="")){
+      filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin==null && priceMax==null)){
         results = data.filter((item)=>
         (item.rooms==(filterRooms.textContent.substring(0,6)+"."))&&(item.options[0].sleepPlaces==(filterSleepPlaces.textContent) && (item.metro==(filterMetro.textContent))));
         setArenda(results); 
@@ -695,7 +700,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
       // filter rooms,sleepPlaces s checkboxom
       else if(filterRayon.textContent == "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-      filterMetro.textContent =="Выберите" && checkboxInputValue.value !=="" && (priceMin=="" && priceMax=="")){
+      filterMetro.textContent =="Выберите" && checkboxInputValue.value !=="" && (priceMin==null && priceMax==null)){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           results2 = data.filter((item)=>(item.options[0].length!==0 && 
@@ -724,7 +729,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
       // filter rooms,metro s chekboxom 
 
       else if(filterRayon.textContent == "Выберите" && filterSleepPlaces.textContent == "Выберите" && 
-      filterMetro.textContent !=="Выберите" && checkboxInputValue.value !=="" && (priceMin=="" && priceMax=="")){
+      filterMetro.textContent !=="Выберите" && checkboxInputValue.value !=="" && (priceMin==null && priceMax==null)){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           results2 = data.filter((item)=>(item.options[0].length!==0 && 
@@ -754,7 +759,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     //filter rooms,priceMin,rayon,checkbox -
     else if(filterRayon.textContent!=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent=="Выберите" 
-      && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+      && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
         const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           if(Number(priceMax) > Number(priceMin)){
@@ -807,7 +812,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     //filter rooms,priceMin,sleepPlaces,checkbox -
     else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent!=="Выберите" && filterMetro.textContent=="Выберите" 
-    && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+    && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){
@@ -860,7 +865,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     //filter rooms,priceMin,metro,checkbox -
     else if(filterRayon.textContent=="Выберите" && filterSleepPlaces.textContent=="Выберите" && filterMetro.textContent!=="Выберите" 
-    && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+    && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){
@@ -913,7 +918,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
     
     // filter rooms,rayon,metro,sleepPlaces
     else if(filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
       results = data.filter((item)=>
       (item.metro==(filterMetro.textContent) && (item.rayon==(filterRayon.textContent + " р.")) && (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.options[0].sleepPlaces==(filterSleepPlaces.textContent))));
       setArenda(results); 
@@ -921,7 +926,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter rooms,rayon,sleepPlaces,checkbox
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent =="Выберите" && checkboxInputValue.value!=="" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent =="Выберите" && checkboxInputValue.value!=="" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           results2 = data.filter((item)=>
@@ -951,7 +956,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter rooms,rayon,metro,checkbox
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent == "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         results2 = data.filter((item)=>
@@ -980,7 +985,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter rooms,sleepPlaces,metro,checkbox
     else if (filterRayon.textContent == "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         results2 = data.filter((item)=>
@@ -1012,7 +1017,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
     
     // filter priceMin,rayon,metro,sleepPlaces
     else if(filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value =="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
       if(Number(priceMax) > Number(priceMin)){
         results2 = data.filter(((item)=>(Number(item.sent)>Number(priceMin) && Number(priceMax)>Number(item.sent)) && 
         item.metro==(filterMetro.textContent) && (item.rayon==(filterRayon.textContent + " р.")) && (item.rooms==(filterRooms.textContent.substring(0,6)+".")) && (item.options[0].sleepPlaces==(filterSleepPlaces.textContent))));
@@ -1026,7 +1031,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter priceMin,rayon,sleepPlaces,checkbox
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent =="Выберите" && checkboxInputValue.value!=="" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+    filterMetro.textContent =="Выберите" && checkboxInputValue.value!=="" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
         for (let i=0; i<lengthResult.length;i++){
           if(Number(priceMax) > Number(priceMin)){
@@ -1063,7 +1068,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter priceMin,rayon,metro,checkbox
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent == "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){
@@ -1099,7 +1104,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter priceMin,sleepPlaces,metro,checkbox
     else if (filterRayon.textContent == "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){
@@ -1139,7 +1144,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter 4 elementa + rooms
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin=="" && priceMax=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin==null && priceMax==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         results2 = data.filter((item)=>
@@ -1168,7 +1173,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // filter 4 elementa + priceMin
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!==null && priceMax!==null) && filterRooms.textContent=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){
@@ -1206,7 +1211,7 @@ export default function ShowSort(priceMin,priceMax,category,setCategory,setCateg
 
     // VSE ELEMENTI
     else if (filterRayon.textContent !== "Выберите" && filterSleepPlaces.textContent !== "Выберите" && 
-    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!=="" && priceMax!=="") && filterRooms.textContent!=="Выберите"){
+    filterMetro.textContent !=="Выберите" && checkboxInputValue.value !== "" && (priceMin!==null && priceMax!==null) && filterRooms.textContent!=="Выберите"){
       const lengthResult = data.filter((item)=>(item.options[0].name.length!==0));
       for (let i=0; i<lengthResult.length;i++){
         if(Number(priceMax) > Number(priceMin)){

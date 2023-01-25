@@ -51,6 +51,6 @@ export default function categoriaClick(value,priceMax,category,setCategory,setCa
     }  
   })
 
-  setpriceMin("");
-  setpriceMax("");
+  setpriceMin(null);
+  setpriceMax(null);
 }

@@ -2,19 +2,18 @@ import React,{useEffect, useState} from 'react';
 import axios from '../../axios';
 import "./mapSelect.css";
 import ymaps from "ymaps"
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { ArendaCardProduct } from '../../interfaces';
 
 export default function mapSelect() {
   const [Arenda,setArenda]=useState<ArendaCardProduct[]>([]);
-  const dispatch = useDispatch();
-  const gorod = useSelector((state:any) => state.filter.city);
+
+  const city = useSelector((state:any) => state.filter.city);
   useEffect(()=>{
-    axios.get(`/ArendaCard?city2=${gorod}`).then(({data})=>{
+    axios.get(`/ArendaCard?city2=${city}`).then(({data})=>{
       setArenda(data);
     }).catch(()=>{"Значений не найдено"})
-  },[gorod]);
-  let map
+  },[city]);
  
   ymaps.load().then((maps) => {
     const map = new maps.Map(document.querySelector('.map'), {
@@ -31,7 +30,7 @@ export default function mapSelect() {
       balloonContent:[
         `<div class="Card" style={width:"500px"}>
           <div class="balloon">Доступно ${Arenda.length} объявлений</div>
-          <a href="/catalog/city=${item.city}" onClick={()=>dispatch(setCity("Минск"))}>Посмотреть все</a>
+          <a href="/catalog/city=" onClick={dispatch(setCity("Минск"))}>Посмотреть все</a>
           </div>`]
       },    
       
@@ -52,7 +51,7 @@ export default function mapSelect() {
     
     
     Cluster.add(placemark)
-    },[gorod])
+    })
     map.geoObjects.add(Cluster); 
   }).catch(error => console.log('Failed to load Yandex Maps', error));
   

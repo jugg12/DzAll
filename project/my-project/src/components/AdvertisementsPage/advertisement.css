@@ -69,3 +69,26 @@
   fill: #664EF9;
   transition: .2s fill linear;
 }
+
+/* Окно загрузки */
+
+.LoadingAnimation{
+  display: flex;
+  justify-content: center;
+}
+
+.LoadingImg{
+  border-radius: 15px;
+  padding: 257.5px 0px;
+  width: 100px;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+      transform:rotate(0deg);
+  }
+  100% {
+      transform:rotate(360deg);
+  }
+}

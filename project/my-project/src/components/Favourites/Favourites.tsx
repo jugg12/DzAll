@@ -8,83 +8,73 @@ import axios from "../../axios";
 
 import btnclick from "../Functions/clickbtnContacts";
 import ReactPaginate from "react-paginate";
-import CardSkeleton from "../Catalog/ArendaInfo/CardSkeleton";
-import ArendaRoom from "../Catalog/ArendaInfo/ArendaRoom";
+import CardSkeleton from "../Skeletons/arendaCardSkeleton";
 import { ArendaCardProduct } from "../../interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { decrement, setLengthFavourites, setValue } from "../../store/actions/favouritesAction";
+import { decrement, setLengthFavourites, setValue, setValueFromFavourites } from "../../store/actions/favouritesAction";
 import { setCity, setRooms } from "../../store/slices/FilterSlice";
 import { notifyDeleteFavourites } from "../Toasts/ToastsContent";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
+import { clickHeartDeleteFromFavourites } from "../Functions/HeartChangesActions";
 
 
 export default function Favourites() {
   const navigate=useNavigate();
   const login = localStorage.getItem("login");
-  const [favourites, setFavourites] = useState<ArendaCardProduct[]>([]);
-  const [zakladkiChange, setFavouritesChange] = useState<ArendaCardProduct[]>([]);
-  const gorod = useSelector((state:any) => state.filter.city)
+  const [favouritesChange, setFavouritesChange] = useState<ArendaCardProduct[]>([]);
   const id = localStorage.getItem("id");
   const [currentPage,setCurrentPage] = useState<ArendaCardProduct[]>([]);
   const [CatalogPerPage,setCatalogPerPage]= useState<number>(6)
   const [itemOffset,setItemOffset] = useState<number>(0)
   const [pageCount,setCountPage]= useState<number>(0)
-  const [data2, setData2] = useState<boolean>(true);
-  const lengthFavourites = useSelector((state:any) => state.zakladkiAction.length);
-
-  const value = useSelector((state:any) => state.zakladkiAction.value);
+  const lengthFavourites = useSelector((state:any) => state.favouritesAction.length);
+  const valueFromFavourites = useSelector((state:any) => state.favouritesAction.valueFromFavourites);
   const dispatch = useDispatch();
+  const [Loading,setLoading]=useState<boolean>(true);
+
   useEffect(()=>{
-    dispatch(setValue(0));
+    dispatch(setValue(null));
     dispatch(setCity("Минск"));
     dispatch(setRooms("Квартиры на сутки"));
   },[]);
 
-  const clickHeart = (value,item)=>{
-    const heart= document.getElementById(`heart__svg-${value}`)
-      setData2(true);
-      heart.classList.remove("active");
-      dispatch(decrement(lengthFavourites));
-      dispatch(setValue(value))
-  }
-
   const handlepageclick = (e) =>{
-    const newOffset = (e.selected*CatalogPerPage)%zakladkiChange.length;
-    setItemOffset(newOffset)
+    const newOffset = (e.selected*CatalogPerPage)%favouritesChange.length;
+    setItemOffset(newOffset);
+    window.scrollTo({top:100,behavior:"smooth"});
   }
 
   const push = (item,item2) =>{
     navigate(`/catalog/city=${item2}/${item}`)
   }
 
-
   useEffect(() => {
     if(login){
       axios.get(`/users?login=${login}`).then((data) => {
         for (let i = 0; i < data.data[0].favourites.length; i++) {
-          if(data.data[0].favourites[i].id==value && data2==true){
-            notifyDeleteFavourites();
+          if(data.data[0].favourites[i].id==valueFromFavourites){
+            dispatch(setValueFromFavourites(null));
             data.data[0].favourites.splice(i,1);
             axios.patch(`/users/${id}`,{"favourites":data.data[0].favourites});
+            notifyDeleteFavourites();
           }
         }
         setFavouritesChange(data.data[0].favourites);
-        dispatch(setLengthFavourites(data.data[0].favourites.length));
-        setData2(false);
+        setLoading(false)
+        dispatch(setLengthFavourites(lengthFavourites));
       });
     }
-  },[data2,login]);
+  },[login,lengthFavourites]);
 
   useEffect(()=>{
     const endoffset=itemOffset+CatalogPerPage;
-    setCurrentPage(zakladkiChange.slice(itemOffset,endoffset));
-    setCountPage(Math.ceil(zakladkiChange.length/CatalogPerPage));
-  },[itemOffset,CatalogPerPage,zakladkiChange])
+    setCurrentPage(favouritesChange.slice(itemOffset,endoffset));
+    setCountPage(Math.ceil(favouritesChange.length/CatalogPerPage));
+  },[itemOffset,CatalogPerPage,favouritesChange,lengthFavourites])
 
   return (
-    <>
-      
+    <> 
       <section className="firstCatalog">
         <div className="filterInfo">
           <div className="conteiner">
@@ -129,8 +119,21 @@ export default function Favourites() {
         <div className="CardsFavourites">
           <div className="conteiner">
             <div className="FavouritesMain">
-              {login?(
-                (zakladkiChange.length>0)?(
+              {login?
+              Loading?
+              <div className="" style={{display:"flex",width:"1378px",flexDirection:"column"}}>
+                <div className="" style={{display:"flex",marginBottom:"50px"}}>
+                  <CardSkeleton style={{marginRight:"50px"}}/>
+                  <CardSkeleton style={{marginRight:"50px"}}/>
+                  <CardSkeleton/>
+                </div>
+                <div className="">
+                  <CardSkeleton style={{marginRight:"50px"}}/>
+                  <CardSkeleton style={{marginRight:"50px"}}/>
+                  <CardSkeleton/>
+                </div>
+              </div>:(
+                (favouritesChange.length>0)?(
                 currentPage.map((item) => {
                   return (
                     <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
@@ -221,14 +224,14 @@ export default function Favourites() {
                                 {item.description}
                               </Card.Text>  
                                 <div className="btnContactsMain">
-                                <div className="heart" id={`heart-${item.id}`} onClick={()=>clickHeart(item.id,item)}>
+                                <div className="heart" id={`heart-${item.id}`} onClick={()=>clickHeartDeleteFromFavourites(item.id,lengthFavourites,dispatch)}>
                                   <svg className="heart__svg active" id={`heart__svg-${item.id}`} xmlns="http://www.w3.org/2000/svg" height="13px" viewBox="0 0 24 24" fill="none" width="15px">
                                     <path d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="#EB5757"/>
                                   </svg>
                                 </div>
                                   <div className="dropdownContacts">
-                                    <button className="ContactsBtn ContactsBtn2" id={item.id} onClick={()=>btnclick(item.id)}>
+                                    <button className="ContactsBtn ContactsBtn2" id={`${item.id}`} onClick={()=>btnclick(item.id)}>
                                         <div className="btnall" style={{alignItems:"center"}}>
                                           <div className="btniconContacts">
                                             <svg className="telbtnicon" width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -238,7 +241,7 @@ export default function Favourites() {
                                           <p className="textContacts">Контакты</p>    
                                         </div> 
                                     </button>
-                                    <div className="informContacts" id={item.id}>
+                                    <div className="informContacts" id={`${item.id}`}>
                                 <img src={item.imageOwner} className="circleIcon" alt="" />
                                 <p className="Owner">Владелец</p>
                                 <div className="NameOwner">

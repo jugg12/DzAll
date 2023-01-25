@@ -1,13 +1,13 @@
 
 export interface ArendaCardProduct {
-    id:string ,
+    id:number,
     imageOwner:string,
     mail:string,
     name:string,
     number:string,
     options:{
-      [key:string]:any
-    },
+              [key:string]:any
+            },
     description:string,
     square:any,
     rayon:string,
@@ -47,6 +47,7 @@ export interface NewsItem{
 }
 
 export interface advertisementItemRedux{
+  id:number,
   city:string,
   sent:number,
   rooms:string,
@@ -71,5 +72,32 @@ export interface formPropsSignIn{
   signIn:(login:string,password:string)=>void
 }
 
+export interface FilterPropsRedux{
+  category:number,
+  categoryInfoId:number,
+  sort:string,
+  city:string,
+  filterAll:{ rayon:string,
+              rooms:string,
+              priceMin:number,
+              priceMax:number,
+              sleepPlaces:string,
+              metro:string,
+              inputCheckboxInfo:string,
+              city:string
+            },
+  cityRayon:{ city:string,
+              rayon:string,
+              length:number,
+            },
+  Rooms:string
+}
+
+export interface FavouritesPropsRedux{
+  length: number;
+  value:number,
+  valueFromFavourites:number,
+  favourites:ArendaCardProduct[]
+}
 
 

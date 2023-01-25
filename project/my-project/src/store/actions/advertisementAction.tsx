@@ -2,11 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { advertisementItemRedux } from "../../interfaces";
 
 const initialState:advertisementItemRedux = {
+  id:null,
   city:"",
-  sent:0,
+  sent:null,
   rooms:"",
   people:"",
-  square:0,
+  square:null,
   metro:"",
   rayon:"",
   FIO:"",
@@ -30,7 +31,7 @@ const advertisementAction=createSlice({
   initialState,
   reducers:{
     changeInfo(state,action){
-      state.city=action.payload;
+      state.city=action.payload[0];
       state.sent=action.payload[1];
       state.rooms=action.payload[2];
       state.people=action.payload[3];

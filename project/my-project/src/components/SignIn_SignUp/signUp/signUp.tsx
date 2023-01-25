@@ -3,7 +3,7 @@ import "./signUp.css";
 import {Link,useNavigate} from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha"
 import axios from "../../../axios"
-import {Formik,Form,Field, ErrorMessage} from "formik"
+import {Formik,Form,Field} from "formik"
 import { validationSchemaSignUp } from "../../../ValidationSchema";
 
 const signUp = () =>{
@@ -58,18 +58,12 @@ const signUp = () =>{
     "login": value.login,
     "email": value.email,
     "password": value.password,
-    "url":"https://avatars.dzeninfra.ru/get-zen_doc/1328418/pub_5afc8d5957906adae97b6337_5afc90a157906adae97b6353/scale_1200",
+    "url":"https://mypremo.com/placeholder-profile.jpeg",
     "favourites":[],
     "advertisement":[]
   }).then((res)=>{
-    console.log(res.data);
-    navigate("/otpravka")
-    
-  }).catch((er)=>{ 
-    if (er.response){
-      console.log(er.response)
-    }});
-    
+    navigate("/send")
+  })  
 }
 
 return(

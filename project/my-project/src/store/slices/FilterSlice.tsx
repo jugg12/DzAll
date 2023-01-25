@@ -1,22 +1,9 @@
 
 import {createSlice,PayloadAction} from "@reduxjs/toolkit"
+import { FilterPropsRedux } from "../../interfaces"
 
-interface FilterProp{
-  category:number,
-  categoryInfoId:number,
-  filterAll:{},
-  cityRayon:{},
-  metro:string,
-  city:string,
-  rayon:string,
-  rooms:string,
-  priceMin:number,
-  priceMax:number,
-  sleepPlaces:string,
-  inputCheckboxInfo:string,
-}
 
-const initialState = {
+const initialState:FilterPropsRedux = {
   category : 1,
   categoryInfoId : 1,
   sort:"По умолчанию",
@@ -77,17 +64,8 @@ const FilterSlice = createSlice({
     setSort(state,action){
       state.sort = action.payload
     },
-    clearFilter(state,action){
-      state.filterAll={
-        rayon:"Выберите",
-        rooms:"Выберите",
-        priceMin:null,
-        priceMax:null,
-        sleepPlaces:"Выберите",
-        metro:"Выберите",
-        inputCheckboxInfo:"",
-        city:"Выберите",
-      }
+    clearFilter(state){
+      state.filterAll=initialState.filterAll
     }
   }
   }  

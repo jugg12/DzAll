@@ -4,13 +4,15 @@ import {Link,useNavigate} from "react-router-dom";
 import axios from "../../axios";
 import {Formik,Form,Field} from "formik"
 import { formPropsSignIn } from "../../interfaces";
+import { useDispatch } from "react-redux";
 
 const signIn : FC<formPropsSignIn>= () =>{
+  const dispatch = useDispatch();
   const login = localStorage.getItem('login');
   const navigate=useNavigate();
   useEffect(()=>{
     if(login){
-      navigate("/")
+      navigate("/");
     }
     else if(document.querySelector(".head") && !login){
       document.querySelector(".head").classList.add("headerHide");
@@ -18,6 +20,7 @@ const signIn : FC<formPropsSignIn>= () =>{
       document.querySelector("footer").classList.add("headerHide");
     }
   },[])
+  
   async function signIN(value){
   await axios.get("/users",{
     params:{
@@ -34,19 +37,12 @@ const signIn : FC<formPropsSignIn>= () =>{
 
     }
     else{
-      console.log();
       localStorage.setItem("login",res.data[0].login);
-      localStorage.setItem("url",res.data[0].url);
       localStorage.setItem("id",res.data[0].id)
       navigate("/");
-      console.log("Вы вошли!")
-  
+      window.location.reload();
     }
-  }).catch((er)=>{ 
-    if (er.response){
-      console.log(er.response)
-    }})   
-    
+  })
   }
 
   return(

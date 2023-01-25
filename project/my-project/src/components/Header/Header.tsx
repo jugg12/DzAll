@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import { ToastContainer } from 'react-toastify';
 import {Link,NavLink,useNavigate} from "react-router-dom";
 import "./Header.css";
-import defaultClickDropDown, { MouseLeaveMouseEnterList, UserInfoClick } from "../Functions/Homepagejs";
+import {defaultClickDropDown, MouseLeaveMouseEnterList, UserInfoClick } from "../Functions/Homepagejs";
 import axios from "../../axios";
 import {Formik,Form,Field} from "formik";
 import { cityIn } from 'lvovich';
@@ -22,20 +22,21 @@ import "swiper/css/navigation";
 import { incrementAdvertisement, setLength } from "../../store/actions/advertisementAction";
 import { FileObjectAdvertisement, OwnerImgAdvertisement, UserImg } from "../Functions/btnChooseFile";
 import { setLengthFavourites } from "../../store/actions/favouritesAction";
+import { downLoadImgAdvertisements, downLoadImgOwner, downLoadImgUser } from "../HandlersOnChanges/handleOnChange";
+import UserSkeleton from "../Skeletons/userSkeleton";
 
 const Header = () => {
-  const[modalActive,setModalActive] = useState<boolean>(false);
-  const[modalActive2,setModalActive2] = useState<boolean>(false);
+  const[modalUserChange,setModalUserChange] = useState<boolean>(false);
+  const[modalAdvertisements,setModalAdvertisements] = useState<boolean>(false);
   const navigate=useNavigate();
-  const lengthFavourites = useSelector((state:any) => state.zakladkiAction.length);
-  const AdvertisementRedux = useSelector((state:any) => state.advertisementAction);
   let login=localStorage.getItem("login");
   let id = localStorage.getItem("id");
   const [Login,setLogin]=useState<boolean>(true);
   const [imgUrl,setImgUrl] = useState <any>();
   const [imgUrl2,setImgUrl2] = useState <any>();
   const [imgUrlUser,setimgUrlUser] = useState <any>();
-  const [Rayon,setRayon] = useState<any>([]);
+  const [favourites,setFavourites] = useState<number>(null);
+  const [Loading,setLoading] = useState<any>(true);
   const [userImg,setUserImg] = useState<any>();
   const [advertisement,setadvertisement] = useState<advertisementItem[]>([]);
   const fileReader = new FileReader();
@@ -44,68 +45,56 @@ const Header = () => {
   const checkboxInputValue_module = document.getElementById("checkboxInputValue_module");
   const FiltersleepPlacesDop = document.getElementById("FiltersleepPlacesDop");
   const dispatch = useDispatch();
-  let gorod = useSelector((state:any) => state.filter.city);
+  let city = useSelector((state:any) => state.filter.city);
   let filterFromHome = useSelector((state:any) => state.filter.filterAll);
   const rooms = useSelector((state:any) => state.filter.Rooms);
   const LengthAdvertisements = useSelector((state:any) => state.advertisementAction.length)
-
+  const lengthFavourites = useSelector((state:any) => state.favouritesAction.length);
   const [ToggleState,setToggleState] = useState<number>(1);
+  const heart = document.querySelector(".item3");
   const toggleTab = (index) =>{
     setToggleState(index)
   }
 
-  fileReader.onloadend = () => {
-    let item;
-    imgUrl?item = [...imgUrl,fileReader.result]:item = [fileReader.result]
-    setImgUrl(item);
-  }
+  useEffect(()=>{ // данные закладк
+    if(login){
+      axios.get(`/users?login=${login}`).then((data) => {
+        setFavourites(data.data[0].favourites.length);
+        setLoading(false);
+      });
+    }
+  },[login])
 
-  fileReader2.onloadend = () => {
-    setImgUrl2(fileReader2.result)
-  }
-
-  fileReader3.onloadend = () => {
-    setimgUrlUser(fileReader3.result);
-  }
-
-  const handleOnChange = (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader.readAsDataURL(file);
-  }
-
-  const handleOnChange2 = (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader2.readAsDataURL(file);
-  }
-
-  const handleOnChange3 = (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader3.readAsDataURL(file);
-  }
-
+  useEffect(() => { // данные объявлений
+    if(login){
+      axios.get(`/users?login=${login}`).then((data) => {
+        setadvertisement(data.data[0].advertisement);
+        dispatch(setLength(data.data[0].advertisement.length));
+      });
+    }
+  },[login,LengthAdvertisements]);
 
   useEffect(() => {
     if (login){
-    const heart = document.querySelector(".item3");
-    axios.get(`/users?login=${login}`).then((data) => {
-      setUserImg(data.data[0].url);
-      dispatch(setLengthFavourites(data.data[0].favourites.length))
-    });
-    if(lengthFavourites>0 && heart!==undefined) {
+      axios.get(`/users?login=${login}`).then((data) => {
+        setUserImg(data.data[0].url);
+      });
+      dispatch(setLengthFavourites(favourites));
+    }
+  },[login,favourites]);
+
+  useEffect(() => {
+    if(lengthFavourites>0 && heart!==null) {
       heart.classList.add("pulse");
     }
-    else{
+    else if(lengthFavourites==0 && heart!==null){
       heart.classList.remove("pulse");
     }
-  }
-  },[login,lengthFavourites,imgUrlUser]);
+  },[lengthFavourites,login,favourites])
 
   function validateLogin(value){
     axios.get(`/users?login=${value}`).then((res)=>{
-    if(res.data.length==0){
+    if(res.data.length===0){
       setLogin(true)
     }
     else if (res.data.length!==0){
@@ -115,31 +104,24 @@ const Header = () => {
 }
 
   useEffect(()=>{
-    if(modalActive==true || modalActive2==true){
+    if(modalUserChange==true || modalAdvertisements==true){
       document.body.style.overflow="hidden"
      }
-     else if(modalActive==false && modalActive2==false){
+     else if(modalUserChange==false && modalAdvertisements==false){
        document.body.style.overflow="auto"
      }
-  },[modalActive,modalActive2])
+  },[modalUserChange,modalAdvertisements])
 
-  useEffect(() => {
-    axios.get("/categories?categoria=rayon").then((data) => {
-      setRayon(data.data);
-    });
-  },[]);
-
-  const changeUser = (value) =>{
+  const changeUser = (value) =>{ // Изменения пользователя
+    setLoading(true);
     axios.patch(`/users/${id}`, {
       login:`${value.login}`,
       url:`${imgUrlUser?imgUrlUser:userImg}`
-  })
-    .then((res)=>console.log(res))
-    .catch((res)=>console.log(res))
+  }).then(()=>{setLoading(false)})
     localStorage.setItem('login',value.login);
     login=value.login;
     setUserImg(imgUrlUser)
-    setModalActive(false);
+    setModalUserChange(false);
     notifySuccessEditing();
   }
 
@@ -153,6 +135,13 @@ const Header = () => {
       else{
         header.classList.remove("UpNav__fixed");
       }
+      
+      if(lengthFavourites>0 && heart!==null) { //Пульсация сердца
+        heart.classList.add("pulse");
+      }
+      else if(lengthFavourites==0 && heart!==null){
+        heart.classList.remove("pulse");
+      }
     }
   }
 
@@ -162,17 +151,8 @@ const Header = () => {
       setCities(data);
     })
    },[]);
-
-   useEffect(() => {
-    if(login){
-      axios.get(`/users?login=${login}`).then((data) => {
-        setadvertisement(data.data[0].advertisement);
-        dispatch(setLength(data.data[0].advertisement.length));
-      });
-    }
-  },[login]);
   
-   const addArenda = (value) => {
+   const addArenda = (value) => { //Добавление объявления
     const vibor = confirm("Вы уверены, что введенные Вами данные верны и хотите разместь Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
     if(vibor==true){
           const item = {
@@ -203,8 +183,7 @@ const Header = () => {
             "total":value.total,
             "check":"На рассмотрении",
           }
-          dispatch(incrementAdvertisement(LengthAdvertisements));
-          axios.patch(`/users/${id}`, advertisement.length?{
+          axios.patch(`/users/${id}`, advertisement?{
             "advertisement":
               [...advertisement,item]
           }:{
@@ -213,6 +192,7 @@ const Header = () => {
             }
           ).catch(err => console.error(err));
           notifySuccess();
+          dispatch(incrementAdvertisement(LengthAdvertisements));
           value.city="";
           value.sent="";
           value.rooms="";
@@ -231,12 +211,13 @@ const Header = () => {
           (checkboxInputValue_module as HTMLInputElement).value="";
           FiltersleepPlacesDop.textContent="Выберите";
           value.total="";
-          setModalActive2(false);
+          setModalAdvertisements(false);
           setToggleState(1);
+          document.querySelectorAll(".checkBoxOptions2").forEach((item)=>{
+            (item as HTMLInputElement).checked=false;
+          })
       }
-
    } 
-
   return(
     <>
     <header>
@@ -267,9 +248,17 @@ const Header = () => {
                   (login)!==null?
                     <div className="UserLink">
                       <div className="dropdown2">
-                        <button className="List" onClick={()=>UserInfoClick(login,setModalActive,navigate)} style={{padding:"0px 69px 0px 12px",margin:"1px 0px"}}>
+                        <button className="List" onClick={()=>UserInfoClick(login,setModalUserChange,navigate)} style={{padding:"0px 69px 0px 12px",margin:"1px 0px"}}>
                           <div style={{display:"flex",alignItems:"center",boxSizing:"border-box",position:"absolute",marginTop:"-15px"} } >
-                            <img className="ImgUser" src={userImg?userImg:"https://cdn.onlinewebfonts.com/svg/download_83482.png"} alt="" />
+                            {
+                              Loading?
+                              <>
+                              <div className="" style={{display:"flex",marginBottom:"50px",width:"1308px",height:"300px"}}>
+                                <UserSkeleton/>
+                              </div>
+                              </>
+                              :<img className="ImgUser" src={userImg} alt="" />
+                            }
                             <span className="max">{login}</span>
                           </div>
                         </button >
@@ -305,7 +294,7 @@ const Header = () => {
               <NavLink to={`/catalog/city=`} onClick={()=>{dispatch(setRooms(""))}} className="Items" style={{marginRight:"39px",padding:0}}>
                 <div className="dropdown4" onMouseEnter={()=>MouseLeaveMouseEnterList(dispatch,filterFromHome)}>
                   <div className="group Items" style={{marginRight:"0px"}}>
-                    <p className="rooms">{rooms=="Квартиры на сутки"?rooms:`Квартиры в ${cityIn(gorod)}`}</p>
+                    <p className="rooms">{rooms=="Квартиры на сутки"?rooms:`Квартиры в ${cityIn(city)}`}</p>
                     <svg style={{marginLeft:"15px"}}width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.0069 2.61628C9.90811 0.941861 8.09415 0 6.05346 0C4.0302 0 2.21625 0.941861 1.08253 2.61628C-0.0511958 4.25581 -0.312824 6.34884 0.384851 8.18023C0.576711 8.6686 0.873223 9.17442 1.25694 9.62791L5.66973 14.8256C5.77439 14.9302 5.87904 15 6.03601 15C6.19299 15 6.29764 14.9302 6.40229 14.8256L10.8325 9.62791C11.2162 9.17442 11.5302 8.68605 11.7046 8.18023C12.4023 6.34884 12.1407 4.25581 11.0069 2.61628ZM6.05346 8.7907C4.55346 8.7907 3.31508 7.55233 3.31508 6.05233C3.31508 4.55233 4.55346 3.31395 6.05346 3.31395C7.55346 3.31395 8.79183 4.55233 8.79183 6.05233C8.79183 7.55233 7.5709 8.7907 6.05346 8.7907Z" fill="#FFD54F"/>
                     </svg>
@@ -330,16 +319,16 @@ const Header = () => {
           <NavLink to="123456"className="Items">Коттеджи и усадьбы</NavLink>
           <NavLink to="1234567"className="Items">Бани и Сауны</NavLink>
           <NavLink to="12345678"className="Items">Авто напрокат</NavLink>
-          <button className="btndob" onClick={()=>login?setModalActive2(true):notifyErrorAuthorization()}>+ Разместить объявление</button>
+          <button className="btndob" onClick={()=>login?setModalAdvertisements(true):notifyErrorAuthorization()}>+ Разместить объявление</button>
           </div>
         </div>
         </div>
         {/* forma redactirovania user*/}
-        <Modal active={modalActive} setActive={setModalActive}>
+        <Modal active={modalUserChange} setActive={setModalUserChange}>
             {
               <>
               <div className="exit" style={{top:"-1.5em"}}>
-                <svg onClick={()=>setModalActive(false)} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                <svg onClick={()=>setModalUserChange(false)} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                   <path d="M255.997,460.351c112.685,0,204.355-91.668,204.355-204.348S368.682,51.648,255.997,51.648  c-112.68,0-204.348,91.676-204.348,204.355S143.317,460.351,255.997,460.351z M255.997,83.888  c94.906,0,172.123,77.209,172.123,172.115c0,94.898-77.217,172.117-172.123,172.117c-94.9,0-172.108-77.219-172.108-172.117  C83.888,161.097,161.096,83.888,255.997,83.888z"/>
                   <path d="M172.077,341.508c3.586,3.523,8.25,5.27,12.903,5.27c4.776,0,9.54-1.84,13.151-5.512l57.865-58.973l57.878,58.973  c3.609,3.672,8.375,5.512,13.146,5.512c4.658,0,9.316-1.746,12.902-5.27c7.264-7.125,7.369-18.793,0.242-26.051l-58.357-59.453  l58.357-59.461c7.127-7.258,7.021-18.92-0.242-26.047c-7.252-7.123-18.914-7.018-26.049,0.24l-57.878,58.971l-57.865-58.971  c-7.135-7.264-18.797-7.363-26.055-0.24c-7.258,7.127-7.369,18.789-0.236,26.047l58.351,59.461l-58.351,59.453  C164.708,322.715,164.819,334.383,172.077,341.508z"/>
                 </svg>
@@ -358,7 +347,7 @@ const Header = () => {
                       <h2 style={{marginLeft:"67px"}}>Ваше фото</h2>
                       <img style={{borderRadius:"145px"}} className="IconImgAdvertisement"src={imgUrlUser?imgUrlUser:userImg} alt="" />
                         <button style={{marginLeft:"59px",marginTop:"10px"}} onClick={UserImg} className="Voyti choose" type="button">Выберите файл</button>
-                      <Field id="file-input3" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={handleOnChange3} value={values.urlImg} style={{display:"none"}} />
+                      <Field id="file-input3" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={()=>downLoadImgUser(event.target,fileReader3,setimgUrlUser)} value={values.urlImg} style={{display:"none"}} />
                     </div>
                     <div className="LOGIN" style={{alignItems:"center"}}>
                       <div className="" style={{marginTop:"-115px",position:"fixed"}}><h2>Ваш логин</h2></div>
@@ -401,7 +390,7 @@ const Header = () => {
 
             {/* forma redactirovania advertisement*/}
 
-          <Modal active={modalActive2} setActive={setModalActive2}>
+          <Modal active={modalAdvertisements} setActive={setModalAdvertisements}>
           {
             login?
             <>
@@ -410,7 +399,7 @@ const Header = () => {
               <div className="infoAdvertisement">
                 <div className="conteiner" style={{width:"1150px"}}>
                 <div className="exit">
-                    <svg onClick={()=>setModalActive2(false)} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+                    <svg onClick={()=>setModalAdvertisements(false)} height="30" viewBox="0 0 512 512" width="30  " xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                       <path d="M255.997,460.351c112.685,0,204.355-91.668,204.355-204.348S368.682,51.648,255.997,51.648  c-112.68,0-204.348,91.676-204.348,204.355S143.317,460.351,255.997,460.351z M255.997,83.888  c94.906,0,172.123,77.209,172.123,172.115c0,94.898-77.217,172.117-172.123,172.117c-94.9,0-172.108-77.219-172.108-172.117  C83.888,161.097,161.096,83.888,255.997,83.888z"/>
                       <path d="M172.077,341.508c3.586,3.523,8.25,5.27,12.903,5.27c4.776,0,9.54-1.84,13.151-5.512l57.865-58.973l57.878,58.973  c3.609,3.672,8.375,5.512,13.146,5.512c4.658,0,9.316-1.746,12.902-5.27c7.264-7.125,7.369-18.793,0.242-26.051l-58.357-59.453  l58.357-59.461c7.127-7.258,7.021-18.92-0.242-26.047c-7.252-7.123-18.914-7.018-26.049,0.24l-57.878,58.971l-57.865-58.971  c-7.135-7.264-18.797-7.363-26.055-0.24c-7.258,7.127-7.369,18.789-0.236,26.047l58.351,59.461l-58.351,59.453  C164.708,322.715,164.819,334.383,172.077,341.508z"/>
                     </svg>
@@ -475,7 +464,7 @@ const Header = () => {
                                 :<img className={"IconImgAdvertisement imgerror"} src={"https://cdn.dribbble.com/users/2657768/screenshots/6413526/404_43.gif"} alt="" /> 
                               }
                                 <button onClick={FileObjectAdvertisement} style={{marginTop:"10px"}} className="Voyti choose" type="button">Выберите файл</button>
-                              <Field id="file-input" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={handleOnChange} value={values.url} style={{display:"none"}} />
+                              <Field id="file-input" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={()=>downLoadImgAdvertisements(event.target,fileReader,imgUrl,setImgUrl)} value={values.url} style={{display:"none"}} />
                             </div>
                             <div className="partTwoAdvertisement" style={{display:"flex"}}>
                               <div className="InformObject" style={{marginRight:"40px"}}>
@@ -664,7 +653,7 @@ const Header = () => {
                             <h2 style={{fontSize:"22px"}}>Ваше фото</h2>
                             <img className={imgUrl2?"IconImgAdvertisement":"IconImgAdvertisement imgerror"} src={imgUrl2?imgUrl2:"https://cdn.dribbble.com/users/2657768/screenshots/6413526/404_43.gif"} alt="" />
                             <button onClick={OwnerImgAdvertisement} type="button" style={{marginTop:"10px"}} className="Voyti choose">Выберите файл</button>
-                            <Field id="file-input2" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={handleOnChange2} style={{display:"none"}} />
+                            <Field id="file-input2" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={()=>downLoadImgOwner(event.target,fileReader2,setImgUrl2)} style={{display:"none"}} />
                           </div>
                         </div>
                         <div className={ToggleState===2?"DopInfo":"DopInfoNone"}>

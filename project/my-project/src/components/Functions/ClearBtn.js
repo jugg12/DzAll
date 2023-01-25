@@ -38,7 +38,6 @@ export default function Clear(category,setCategory,setCategory2,priceMin,priceMa
   .then(({data})=>{
     setArenda(data)
   });
-
   setpriceMin("");
   setpriceMax("");
   dispatch(setSort("По умолчанию"));

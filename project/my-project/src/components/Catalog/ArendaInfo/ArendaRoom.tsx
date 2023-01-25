@@ -8,7 +8,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { settingsHomePage } from "../../settingsSlider/settings__Slider";
 import {ArendaCardProduct} from "../../../interfaces";
 import Slider from "react-slick";
-import CardSkeleton from "./CardSkeleton";
+import CardSkeleton from "../../Skeletons/arendaCardSkeleton";
 import btnclick from "../../Functions/clickbtnContacts";
 import qs from "qs"
 import { setCityRayonHomePage } from "../../../store/slices/FilterSlice";
@@ -177,7 +177,7 @@ const ArendaRoom=()=>{
               </Card.Text> 
                 <div className="btnContactsMain">
                   <div className="dropdownContacts">
-                    <button className={`ContactsBtn`} id={item.id} onClick={()=>btnclick(item.id)}>
+                    <button className={`ContactsBtn`} id={`${item.id}`} onClick={()=>btnclick(item.id)}>
                         <div className="btnall" >
                           <div className="btniconContacts">
                             <svg className="telbtnicon" width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -187,7 +187,7 @@ const ArendaRoom=()=>{
                           <p className="textContacts">Контакты</p>    
                         </div> 
                     </button>
-                    <div className="informContacts" id={item.id}>
+                    <div className="informContacts" id={`${item.id}`}>
                       <img src={item.imageOwner} className="circleIcon" alt="" />
                       <p className="Owner">Владелец</p>
                       <div className="NameOwner">

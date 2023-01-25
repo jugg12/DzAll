@@ -1,24 +1,23 @@
 import React,{useState,useEffect} from "react";
-
-
 import SecondaryCatalog from "./SecondaryCatalog/secondaryCatalog";
 import MainCatalog from "./MainCatalog/mainCatalog";
 import {useNavigate,Link, NavLink} from "react-router-dom";
 import axios from "../../axios";
 import "./MainCatalog/pagination.css";
-import defaultClickDropDown from "../Functions/Homepagejs";
+import {defaultClickDropDown, sortInfo } from "../Functions/Homepagejs";
 import ClickCheckbox from "../Functions/ClickCheckBox";
 import categoriaClick from "../Functions/CategoriaClick";
 import ShowSort from "../Functions/Filter";
 import {ArendaCardProduct} from "../../interfaces";
 import Clear from "../Functions/ClearBtn";
-import { cityIn, cityFrom, cityTo } from 'lvovich';
+import { cityIn } from 'lvovich';
 import { Row } from "react-bootstrap"
 import "./catalog.css"
 import { useDispatch, useSelector } from "react-redux";
 import { clearFilter,setCity,setFilterAll,setRooms,setSort } from "../../store/slices/FilterSlice";
 import qs from "qs";
 import OptionsClick from "../Functions/OptionsClick";
+import { handlePriceMax, handlePriceMin } from "../HandlersOnChanges/handleOnChange";
 
 
 export default function catalog(){
@@ -40,6 +39,8 @@ export default function catalog(){
   const [data2,setData2]=useState<boolean>(true);
   const [ToggleState,setToggleState] = useState<number>(2);
   const [Rayon,setRayon] = useState<any>([]);
+  const [priceMin, setpriceMin] = useState<any>(filter.priceMin?filter.priceMin:null);
+  const [priceMax, setpriceMax] = useState<any>(filter.priceMax?filter.priceMax:null);
 
   const toggleTab = (index) =>{
     setToggleState(index)
@@ -72,37 +73,7 @@ export default function catalog(){
       navigate(`/catalog/city=?${queryString}`)
     }
   },[])
-
-  // sortirovka
-  const sortirovka = () => {
-    document.querySelectorAll(".dropdown2").forEach(function(dropdownWrapper){
-      const listitemclick=dropdownWrapper.querySelectorAll(".dropdown__item");
-      const btn = dropdownWrapper.querySelector(".List");
-      const imgSort = dropdownWrapper.querySelectorAll(".imgSort");
-      const btnclick = dropdownWrapper.querySelector(".List__dropdown");
-      if(btnclick!==null){
-        btnclick.classList.toggle("visible");
-      }
-      listitemclick.forEach(function(listitem){
-        listitem.addEventListener("click",(e)=>{
-          // e.stopPropagation();
-          imgSort.forEach((img)=>{
-            img.classList.add("active")
-          });
-          dispatch(setSort(listitem.textContent));
-          setData2(!data2);
-          btnclick.classList.remove("visible");
-        })
-      })
-      document.addEventListener('click',(e)=>{
-        if(e.target !== btn && btnclick!==null){
-          btnclick.classList.remove("visible");
-        }
-      })
-    
-    })
-  }
-
+  
   // Кнопка "показать"
   const Show = (priceMin,priceMax,filterRooms,filterSleepplaces,filterRayon,filterMetro,input) => {
     const item=[filterRayon,filterRooms,priceMin,priceMax,filterSleepplaces,filterMetro,input,city]; 
@@ -127,20 +98,6 @@ export default function catalog(){
     Clear(category,setCategory,setCategory2,priceMin,priceMax,setpriceMin,setpriceMax,axios,setArenda,city,dispatch);
     navigate("/catalog/city=");
   }
-
-  // Значениея только численные в price
-  const [priceMin, setpriceMin] = useState<any>(filter.priceMin?filter.priceMin:null);
-  const handleChangePriceMin = event => {
-    const result = event.target.value.replace(/\D/g, '');
-    setpriceMin(result);
-  };
-
-  const [priceMax, setpriceMax] = useState<any>(filter.priceMax?filter.priceMax:null);
-  const handleChangePriceMax = event => {
-    const result = event.target.value.replace(/\D/g, '');
-    setpriceMax(result);
-  };
-  ///////////////////////////////////
   
   const [Arenda,setArenda]=useState<ArendaCardProduct[]>([]);
   useEffect(()=>{
@@ -216,7 +173,6 @@ export default function catalog(){
       if (category=="" && sort=="По умолчанию"){
         axios.get(`/ArendaCard?city2=${city}`).then(({data})=>{
           setArenda(data);
-          // ShowSort(priceMin,priceMax,category,setCategory,setpriceMin,setpriceMax,axios,setArenda,Arenda,city)
           setData2(false);
         })
       }
@@ -301,9 +257,9 @@ export default function catalog(){
                 {
                   categories.map((item)=>{
                     return(
-                      <div className="categoriesBtn" id={item.id} onClick={()=>{categoriaClick(item.id,item.categoria,category,setCategory,setCategory2,setpriceMin,setpriceMax,city);navigate("/catalog/city=")}}>
+                      <div className="categoriesBtn" id={`${item.id}`} onClick={()=>{categoriaClick(item.id,item.categoria,category,setCategory,setCategory2,setpriceMin,setpriceMax,city);navigate("/catalog/city=")}}>
                         <span className="textcategoriabtn">{item.value}</span>
-                        <svg id={item.id} className="xHidden" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg id={`${item.id}`} className="xHidden" width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M5.91628 5.00007L9.81017 1.10608C10.0636 0.852787 10.0636 0.443255 9.81017 0.189966C9.55688 -0.0633221 9.14735 -0.0633221 8.89406 0.189966L5.00005 4.08396L1.10617 0.189966C0.852759 -0.0633221 0.443344 -0.0633221 0.190056 0.189966C-0.0633519 0.443255 -0.0633519 0.852787 0.190056 1.10608L4.08394 5.00007L0.190056 8.89407C-0.0633519 9.14736 -0.0633519 9.55689 0.190056 9.81018C0.316285 9.93653 0.482257 10 0.648111 10C0.813965 10 0.979819 9.93653 1.10617 9.81018L5.00005 5.91618L8.89406 9.81018C9.0204 9.93653 9.18626 10 9.35211 10C9.51797 10 9.68382 9.93653 9.81017 9.81018C10.0636 9.55689 10.0636 9.14736 9.81017 8.89407L5.91628 5.00007Z" fill="#664EF9"/>
                         </svg>
                         </div>
@@ -338,19 +294,19 @@ export default function catalog(){
             <svg width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path opacity="0.1" d="M1 0L1 81" stroke="#664EF9"/>
             </svg>
-            <div className=" select__filter__item3">
+            <div className=" select__filter__item3">  
               <p className="select__filter__item__css select__filter__item__css3">Цена за сутки (BYN)</p>
               <div className="filter">
-                <input  className="filter__input" id="filter__input1" type="text" placeholder="От" value={priceMin} onChange={handleChangePriceMin}/>
+                <input  className="filter__input" id="filter__input1" type="text" placeholder="От" value={priceMin} onChange={()=>handlePriceMin(event.target,setpriceMin)}/>
                 <p className="filter__text">-</p>
-                <input className="filter__input" id="filter__input2" type="text" placeholder="До" value={priceMax} onChange={handleChangePriceMax}/>
+                <input className="filter__input" id="filter__input2" type="text" placeholder="До" value={priceMax} onChange={()=>handlePriceMax(event.target,setpriceMax)}/>
               </div>
             </div>
             <svg width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path opacity="0.1" d="M1 0L1 81" stroke="#664EF9"/>
             </svg>
             <div className=" select__filter__item3">
-              <div className="raz Options" onClick={OptionsClick}>
+              <div className="raz Options" onClick={()=>OptionsClick(true)}>
                 <p className="select__filter__item__css2" style={{marginRight:"10px"}}>Больше опций</p>
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5.91109 4.29814C5.91109 2.90551 4.937 1.73697 3.63453 1.4358V0.661897C3.63453 0.296309 3.33822 0 2.97264 0C2.60705 0 2.31074 0.296309 2.31074 0.661897V1.4358C1.00835 1.73689 0.0341797 2.90551 0.0341797 4.29814C0.0341797 5.69077 1.00827 6.85931 2.31074 7.16048V17.3381C2.31074 17.7037 2.60705 18 2.97264 18C3.33822 18 3.63453 17.7037 3.63453 17.3381V7.16048C4.937 6.85931 5.91109 5.69077 5.91109 4.29814ZM1.35805 4.29814C1.35805 3.40781 2.08238 2.68348 2.97271 2.68348C3.86303 2.68348 4.58737 3.40781 4.58737 4.29814C4.58737 5.18846 3.86303 5.9128 2.97271 5.9128C2.08238 5.9128 1.35805 5.18846 1.35805 4.29814Z" fill="#664EF9"/>
@@ -590,7 +546,7 @@ export default function catalog(){
                   </clipPath>
                   </defs>
               </svg>
-              <button className="List List2" id = "SortirovkaBtn" onClick={sortirovka}>
+              <button className="List List2" id = "SortirovkaBtn" onClick={()=>sortInfo(dispatch)}>
                 {sort}
               </button>
               <ul className="List__dropdown" id="List__dropdown">

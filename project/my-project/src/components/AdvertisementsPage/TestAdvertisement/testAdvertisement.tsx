@@ -1,6 +1,4 @@
 import React,{useEffect,useState} from "react";
-import Header from "../../Header/Header";
-import Footer from "../../Footer/Footer";
 import { Col,Row } from "react-bootstrap"
 import ArendaRoomSelect from "../../Catalog/ArendaInfo/ArendaRoomSelect";
 import img7 from "../../../img/footer/8.svg"
@@ -11,23 +9,31 @@ import { cityIn } from "lvovich";
 import { advertisementItem } from "../../../interfaces";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
+import TestAdvertisementSkeleton from "../../Skeletons/testAdvertisementSkeleton";
 
 export default function test(){
   const id = localStorage.getItem("id");
   const navigate=useNavigate();
   const params=useParams();
+  const [Loading,setLoading] = useState<boolean>(true);
   const [test,setTest]=useState<advertisementItem>()
 
   useEffect(()=>{
     axios.get(`/users/${id}`).then
     (({data})=>{
         setTest(data.advertisement[params.id]);
+        setLoading(false);
     })
   },[])
   return(
-    test!==undefined?
+    Loading?
     <>
-    
+      {
+        <TestAdvertisementSkeleton/>
+      }
+    </>
+    :
+    <>
     <section className="firstCatalog">
     <h1 className="Test">Тестовый предосмотр</h1>
       <div className="filterInfo">
@@ -145,6 +151,7 @@ export default function test(){
           </div>
       </div>
     </section>
+
     <section className="main">
     <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
         <div className="conteinerCatalogSelect">
@@ -184,8 +191,7 @@ export default function test(){
         </div>
       </div>
     </section>
-    
     </>
-    :""
+    
   )
 }

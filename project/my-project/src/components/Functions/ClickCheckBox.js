@@ -10,7 +10,6 @@ export default function ClickCheckbox(value){
 
     if(checkbox.checked==true && checkbox.id == `checkbox${value}`){
         Massive.push(checkbox.value.replace(/\s/g, ""));
-        console.log(Massive);
     }
 
     else if (checkbox.checked==false && checkbox.id ==`checkbox${value}` ){
@@ -31,7 +30,6 @@ export default function ClickCheckbox(value){
 
     if(checkbox.checked==true && checkbox.id == `checkbox_module${value}`){
         Massive3.push(checkbox.value.replace(/\s/g, ""));
-        console.log(Massive3);
     }
 
     else if (checkbox.checked==false && checkbox.id ==`checkbox_module${value}` ){
@@ -60,8 +58,6 @@ export default function ClickCheckbox(value){
 
 
       else if (checkbox.checked==false && checkbox.id ==`checkbox_moduleChange${value}` ){
-        console.log(Massive2.length);
-        console.log(Massive2)
         for (let i = 0; i < Massive2.length; i++) {
           if(Massive2[i]==checkbox.value||Massive2[i]==checkbox.value.replace(/\s/g, "")){
             Massive2.splice(i,1);

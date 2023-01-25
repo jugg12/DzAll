@@ -5,13 +5,12 @@ import { ToastContainer } from 'react-toastify';
 import { useSelector,useDispatch } from "react-redux";
 import { Col, Row } from "react-bootstrap";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import qs from "qs";
 import "slick-carousel/slick/slick.css";
 import axios from "../../axios";
 import ClickCheckbox from "../Functions/ClickCheckBox";
 import ArendaRoom from "../Catalog/ArendaInfo/ArendaRoom";
 import "./Homepage.css";
-import defaultClickDropDown, { FilterFromHomePage, MouseLeaveMouseEnterList } from "../Functions/Homepagejs";
+import {defaultClickDropDown, FilterFromHomePage, MouseLeaveMouseEnterList } from "../Functions/Homepagejs";
 import img8 from "../../img/footer/11.svg";
 import img5 from "../../img/footer/7.svg";
 import img6 from "../../img/footer/9.svg";
@@ -24,12 +23,14 @@ import Modal from "../Modules/module";
 import {advertisementItem, ArendaCardProduct,cities,NewsItem} from "../../interfaces";
 import InputMask from 'react-input-mask';
 import { notifyConfirm,notifyErrorAuthorization,notifyErrorCity } from "../Toasts/ToastsContent";
-import {setCategoryId,setCategoryInfoId,setCity,setCityRayonHomePage,setFilterAll,clearFilter, setRooms, setSort} from "../../store/slices/FilterSlice";
+import {setCategoryId,setCategoryInfoId,setCity,setFilterAll,clearFilter, setRooms, setSort} from "../../store/slices/FilterSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import { validationSchemaAdvertisements } from "../../ValidationSchema";
 import { FileObjectAdvertisementFromAdvertisement, OwnerImgAdvertisementFromAdvertisement } from "../Functions/btnChooseFile";
 import OptionsClick from "../Functions/OptionsClick";
+import { downLoadImgAdvertisements, downLoadImgOwner, handlePriceMax, handlePriceMin } from "../HandlersOnChanges/handleOnChange";
+import NewsHomePage from "../Skeletons/newsItemsHomePage";
 
 export default function Homepage(){
   const [arendaLength,setArendaLength]=useState<number>();
@@ -46,6 +47,9 @@ export default function Homepage(){
   const [currentPage] = useState<number>(1);
   const [news,setNews]=useState<NewsItem[]>([]);
   const [data2,setData2]=useState<boolean>(true);
+  const [priceMin, setpriceMin] = useState<number>(null);
+  const [priceMax, setpriceMax] = useState<number>(null);
+  const [Loading,setLoading] = useState<boolean>(true);
   const navigate=useNavigate();
   const [NewsPerPage]=useState<number>(5);
   const[modalActive,setModalActive] = useState<boolean>(false);
@@ -75,6 +79,8 @@ export default function Homepage(){
   // redux info
   const dispatch = useDispatch();
   const filter = useSelector((state:any) => state.filter);
+  const filterAll = useSelector((state:any) => state.filter.filterAll);
+  dispatch(clearFilter(filterAll));
   // end redux info
 
   const Show = (value,priceMax,filterrooms,filtersleepPlaces,filterRayon,filterMetro,input)=>{
@@ -84,7 +90,6 @@ export default function Homepage(){
     else {
       dispatch(setRooms(""))
       dispatch(setCity(inputCity.textContent));
-      console.log(input)
       const item=[filterRayon,filterrooms,value,priceMax,filtersleepPlaces,filterMetro,input,inputCity.textContent]; 
       dispatch(setFilterAll(item));
       navigate("/catalog/city=?")
@@ -127,6 +132,7 @@ export default function Homepage(){
     })
     axios.get(`/NewsCard`).then(({data})=>{
       setNews(data);
+      setLoading(false)
     })
     axios.get(`/Cities`).then(({data})=>{
       setCities(data);
@@ -136,26 +142,14 @@ export default function Homepage(){
     });
     dispatch(setCity("Минск"))
     dispatch(setRooms("Квартиры на сутки"));
-    dispatch(setSort("По умолчанию"))
+    dispatch(setSort("По умолчанию"));
   },[]);
-
-  const [priceMin, setpriceMin] = useState<number>(null);
-  const handleChange = event => {
-    const result = event.target.value.replace(/\D/g, '');
-    setpriceMin(result);
-  };
-
-  const [priceMax, setpriceMax] = useState<number>(null);
-  const handleChange2 = event => {
-    const result = event.target.value.replace(/\D/g, '');
-    setpriceMax(result);
-  };
   
   const push = (item) =>{
     navigate(`/news/${item}`)
   }
 
-  const push2 = (item,item2) =>{
+  const push2 = (item) =>{
     dispatch(setCity(item));
     dispatch(setRooms(""))
     window.scrollTo({top:0,behavior:"smooth"});
@@ -235,28 +229,6 @@ export default function Homepage(){
       }
   }
 
-  fileReader.onloadend = () => {
-    let item;
-    imgUrl?item = [...imgUrl,fileReader.result]:item = [fileReader.result]
-    setImgUrl(item);
-  }
-
-  fileReader2.onloadend = () => {
-    setImgUrl2(fileReader2.result);
-  }
-
-  const handleOnChange = (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader.readAsDataURL(file);
-  }
-
-  const handleOnChange2 = (e) => {
-    e.preventDefault();
-    const file = e.target.files[0];
-    fileReader2.readAsDataURL(file);
-  }
-
   return(
     <>
       <section className="first">
@@ -313,9 +285,9 @@ export default function Homepage(){
                 <div className={filter.category===1? "select__filter__item":"select__filter__item__hidden"}>
                 <p className="select__filter__item__css">Цена за сутки (BYN)</p>
                 <div className="filter">
-                  <input className="filter__input" id="filter__input1" type="text" placeholder="От" value={priceMin!==0?priceMin:null} onChange={handleChange}/>
+                  <input className="filter__input" id="filter__input1" type="text" placeholder="От" value={priceMin!==0?priceMin:null} onChange={()=>handlePriceMin(event.target,setpriceMin)}/>
                   <p className="filter__text">-</p>
-                  <input className="filter__input" id="filter__input2" type="text" placeholder="До" value={priceMax!==0?priceMax:null} onChange={handleChange2}/>
+                  <input className="filter__input" id="filter__input2" type="text" placeholder="До" value={priceMax!==0?priceMax:null} onChange={()=>handlePriceMax(event.target,setpriceMax)}/>
                 </div>
                 </div>
                 <div className={filter.category===1? "select__filter__item":"select__filter__item__hidden"}>
@@ -566,7 +538,7 @@ export default function Homepage(){
                             {
                               Cities.map((item) => {
                                 return(
-                                <button className="city" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>{item.city}</button>
+                                <button className="city" onClick={()=>push2(`${item.city}`)}>{item.city}</button>
                                 )
                               })  
                             }
@@ -589,9 +561,13 @@ export default function Homepage(){
                       <div className="pos">
                         <p className="sec__inner__text">Попариться в бане с друзьями</p>
                         <h2 className="sec__sec__text">Бани и сауны</h2>
-                        <Link to="123"><button className="arrow"><svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 14.2656L7.57143 7.6942L0.999999 1.12277" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg></button></Link>
+                        <Link to="123">
+                          <button className="arrow">
+                            <svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M1 14.2656L7.57143 7.6942L0.999999 1.12277" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                        </Link>
                       </div>             
                   </div>
                   <div className="second__block__item4">
@@ -973,29 +949,35 @@ export default function Homepage(){
               </div>
 
               <div className="secondpart">
-                <h1 className="intro">Новости</h1>
                 {
-                  currentPer.map((item)=>(
-                    <>
-                      <button className="news" onClick={()=>push(item.id)}>
-                        <div className="newstextsecClass" key={item.id}>
-                          <p className="newstextintro">{item.title}</p>
-                          <p className="newstextsec">{item.data}</p>
-                        </div>
-                      </button>
-                    </>
-                ))
+                  Loading?
+                  <NewsHomePage/>
+                  :<>
+                  <h1 className="intro">Новости</h1>
+                  {
+                    currentPer.map((item)=>(
+                      <>
+                        <button className="news" onClick={()=>push(item.id)}>
+                          <div className="newstextsecClass" key={item.id}>
+                            <p className="newstextintro">{item.title}</p>
+                            <p className="newstextsec">{item.data}</p>
+                          </div>
+                        </button>
+                      </>
+                    ))
+                  }
+                  <Link to="/news">
+                    <button className="hoverBtnVse" style={{background:"none",border:"none",cursor:"pointer",marginTop:"32px"}}>
+                    <div className="btnarrow">
+                        <p className="t">Посмотреть все</p>
+                        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path className="zalivkaStrelka" d="M1 11L6 6L1 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
+                    </button>
+                  </Link>
+              </>
                 }
-                <Link to="/news">
-                <button className="hoverBtnVse" style={{background:"none",border:"none",cursor:"pointer",marginTop:"32px"}}>
-                 <div className="btnarrow">
-                    <p className="t">Посмотреть все</p>
-                    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path className="zalivkaStrelka" d="M1 11L6 6L1 1" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                </button>
-                </Link>
               </div>
             </div>
           </div>
@@ -1103,7 +1085,7 @@ export default function Homepage(){
                                 :<img className={"IconImgAdvertisement imgerror"} src={"https://cdn.dribbble.com/users/2657768/screenshots/6413526/404_43.gif"} alt="" /> 
                               }
                                 <button onClick={OwnerImgAdvertisementFromAdvertisement} className="Voyti choose" style={{marginTop:"10px"}} type="button">Выберите файл</button>
-                              <Field id="file-input4" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={handleOnChange} value={values.url} style={{display:"none"}} />
+                              <Field id="file-input4" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={()=>downLoadImgAdvertisements(event.target,fileReader,imgUrl,setImgUrl)} value={values.url} style={{display:"none"}} />
                             </div>
                             <div className="partTwoAdvertisement" style={{display:"flex"}}>
                               <div className="InformObject" style={{marginRight:"40px"}}>
@@ -1292,7 +1274,7 @@ export default function Homepage(){
                             <h2 style={{fontSize:"22px"}}>Ваше фото</h2>
                             <img className={imgUrl2?"IconImgAdvertisement":"IconImgAdvertisement imgerror"} src={imgUrl2?imgUrl2:"https://cdn.dribbble.com/users/2657768/screenshots/6413526/404_43.gif"} alt="" />
                             <button onClick={FileObjectAdvertisementFromAdvertisement} type="button" style={{marginTop:"10px"}} className="Voyti choose">Выберите файл</button>
-                            <Field id="file-input5" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={handleOnChange2} style={{display:"none"}} />
+                            <Field id="file-input5" type="file" accept="image/*,.png,.jpg,.gif,.web," value={values.imageOwner} onChange={()=>downLoadImgOwner(event.target,fileReader2,setImgUrl2)} style={{display:"none"}} />
                           </div>
                         </div>
                         <div className={filter.categoryInfoId===2?"DopInfo":"DopInfoNone"}>

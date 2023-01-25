@@ -8,14 +8,16 @@ import payment3 from "../../img/footer/3.svg";
 import payment4 from "../../img/footer/4.svg";
 import payment5 from "../../img/footer/5.svg";
 import payment6 from "../../img/footer/6.svg";
-import { cityIn, cityFrom, cityTo } from 'lvovich';
-import { useDispatch, useSelector } from "react-redux";
-import { clearFilter,setCity,setFilterAll,setRooms,setSort } from "../../store/slices/FilterSlice";
+import { cityIn } from 'lvovich';
+import { useDispatch } from "react-redux";
+import { setCity,setRooms } from "../../store/slices/FilterSlice";
 import { cities } from "../../interfaces";
+import FooterItemsCitySkeleton from "../Skeletons/footerSkeletonCity";
 
 export default function Footer(){
   const dispatch = useDispatch();
   const navigate=useNavigate();
+  const [Loading,setLoading] = useState<boolean>(true);
   const push2 = (item,item2) =>{
     dispatch(setCity(item));
     dispatch(setRooms(""))
@@ -27,8 +29,9 @@ export default function Footer(){
   useEffect(()=>{
     axios.get(`/Cities`).then(({data})=>{
       setCities(data);
+      setLoading(false);
     })
-  },[])
+  },[]);
   const Division=Cities.length/2;
   return(
   <>
@@ -64,7 +67,19 @@ export default function Footer(){
                 <div className="info2__Division">
                   <div className="Division1">
                   {
-                    Cities.slice(0,Division).map((item)=>{
+                    Loading?
+                    <>
+                      <div className="" style={{width:"135px"}}>
+                        <div className="" style={{marginBottom:"5px"}}>
+                          <FooterItemsCitySkeleton/>
+                        </div>
+                        <div className="" style={{marginBottom:"5px"}}>
+                          <FooterItemsCitySkeleton/>
+                        </div>
+                        <FooterItemsCitySkeleton/>
+                      </div>
+                    </>
+                    :Cities.slice(0,Division).map((item)=>{
                       return(
                         <p key={item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
                       )
@@ -73,7 +88,17 @@ export default function Footer(){
                   </div>
                   <div className="Division1 Division2">
                     {
-                      Cities.slice(Division,Cities.length).map((item)=>{
+                      Loading?
+                      <div className="" style={{width:"135px"}}>
+                        <div className="" style={{marginBottom:"5px"}}>
+                          <FooterItemsCitySkeleton/>
+                        </div>
+                        <div className="" style={{marginBottom:"5px"}}>
+                          <FooterItemsCitySkeleton/>
+                        </div>
+                        <FooterItemsCitySkeleton/>
+                      </div>
+                      :Cities.slice(Division,Cities.length).map((item)=>{
                         return(
                           <p key={item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
                         )

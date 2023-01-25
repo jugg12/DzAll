@@ -9,11 +9,13 @@ import { NewsItem } from "../../../interfaces"
 import { settingsNewsSelectPage } from "../../settingsSlider/settings__Slider"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
+import CardSkeleton from "../../Skeletons/newsItemsSkeleton"
 
 const NewsRoom=(link)=>{
 
   const sliderRef = useRef<any>(null);
   const navigate=useNavigate();
+  const [Loading,setLoading] = useState<boolean>(true);
     
   const push = (item) =>{
     window.scrollTo({top:0,behavior:"smooth"})
@@ -24,6 +26,7 @@ const NewsRoom=(link)=>{
   useEffect(()=>{
     axios.get(link.children).then(({data})=>{
       setNews(data);
+      setLoading(false);
     })
   },[])
     
@@ -31,7 +34,15 @@ const NewsRoom=(link)=>{
     <div className="slider-wrapper">
     <Slider {...settingsNewsSelectPage} ref={sliderRef} className="Slider">
       {
-      news.map((item)=>(
+      Loading?
+      <div className="conteiner">
+        <div className="" style={{display:"flex",width:"1308px"}}>
+          <CardSkeleton style={{marginRight:"50px"}}/>
+          <CardSkeleton style={{marginRight:"50px"}}/>
+          <CardSkeleton/>
+        </div>
+      </div>
+      :news.map((item)=>(
         <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
         <Card className="card__style" style={{width:"406px",height:"500px"}}>
           <div className="SpisokInformKontakti">   

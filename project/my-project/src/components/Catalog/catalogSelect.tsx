@@ -8,6 +8,7 @@ import "./catalogSelect.css"
 import { useParams,useNavigate,Link} from "react-router-dom";
 import axios from "../../axios";
 import 'react-awesome-slider/dist/styles.css';
+import CatalogSelectSkeleton from "../Skeletons/catalogSelectSkeleton";
 
 import { ArendaCardProduct } from "../../interfaces";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,16 +16,21 @@ import { Navigation, Pagination } from "swiper";
 
 export default function catalogSelect(){
   const navigate=useNavigate();
-  const params=useParams()
+  const params=useParams();
+  const [Loading,setLoading] = useState<boolean>(true);
   const [arenda,setArenda]=useState<ArendaCardProduct>()
   useEffect(()=>{
     axios.get(`/ArendaCard/${params.id}`).then
     (({data})=>{
         setArenda(data);
+        setLoading(false)
     }).catch(()=>navigate("/404"))
   },[params.id])
   return(
-    arenda?
+    Loading?<>
+      <CatalogSelectSkeleton/>
+    </>
+    :arenda?
     <>
     
     <section className="firstCatalog">
