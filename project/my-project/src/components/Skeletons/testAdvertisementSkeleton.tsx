@@ -4,21 +4,22 @@ import ContentLoader from "react-content-loader"
 const testAdvertisementSkeleton = (props) => (
   <ContentLoader 
     speed={2}
-    width="1370px"
+    width="100%"
     height="100%"
-    viewBox="0 0 1080 1400"
+    viewBox="0 0 1080 1920"
     backgroundColor="#f3f3f3"
     backgroundOpacity={1}
     foregroundColor="#ecebeb"
     {...props}
   >
-    <rect x="635" y="35" rx="5" ry="5" width="230" height="20" /> 
-    <rect x="410" y="60" rx="5" ry="5" width="170" height="15" /> 
-    <rect x="410" y="100" rx="5" ry="5" width="500" height="30" /> 
-    <rect x="790" y="145" rx="5" ry="5" width="500" height="20" /> 
-    <rect x="410" y="145" rx="5" ry="5" width="120" height="20" /> 
-    <rect x="415" y="195" rx="5" ry="5" width="700" height="445" /> 
-    <rect x="415" y="670" rx="5" ry="5" width="700" height="75" /> 
+    <rect x="465" y="25" rx="5" ry="5" width="160" height="15" /> 
+    <rect x="300" y="40" rx="5" ry="5" width="100" height="15" /> 
+    <rect x="300" y="65" rx="5" ry="5" width="350" height="30" /> 
+    <rect x="580" y="105" rx="5" ry="5" width="200" height="20" /> 
+    <rect x="300" y="105" rx="5" ry="5" width="110" height="20" /> 
+    <rect x="305" y="140" rx="5" ry="5" width="475" height="320" /> 
+    <rect x="305" y="480" rx="5" ry="5" width="475" height="45" /> 
+    <rect x="0" y="585" rx="5" ry="5" width="1920" height="437" /> 
     
   </ContentLoader>
   

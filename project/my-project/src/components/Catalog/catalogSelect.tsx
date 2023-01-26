@@ -3,13 +3,12 @@ import React,{useEffect,useState} from "react";
 
 import { Card, Col,Row } from "react-bootstrap"
 import ArendaRoomSelect from "../Catalog/ArendaInfo/ArendaRoomSelect";
-import img7 from "../../img/footer/8.svg"
+import img7 from "../../img/footer/8.svg";
 import "./catalogSelect.css"
 import { useParams,useNavigate,Link} from "react-router-dom";
 import axios from "../../axios";
 import 'react-awesome-slider/dist/styles.css';
 import CatalogSelectSkeleton from "../Skeletons/catalogSelectSkeleton";
-
 import { ArendaCardProduct } from "../../interfaces";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
@@ -148,21 +147,21 @@ export default function catalogSelect(){
       </div>
     </section>
     <section className="main">
-    <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
-        <div className="conteinerCatalogSelect">
-          <div className="allInfoStructure">
-            <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} style={{width:"844px",height:"563px"}} className="imgCatalogSelect">
-                {
-                  arenda.url.map((itemImg)=>(
-                    <SwiperSlide>
-                        <img src={itemImg} style={{width:"100%",height:"100%"}}/>
-                    </SwiperSlide>
-                  ))
-                }
-              </Swiper>
-            <p className="descriptionCatalogSelect">{arenda.description}</p>
-          </div>
+      <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
+      <div className="conteinerCatalogSelect">
+        <div className="allInfoStructure">
+          <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} style={{width:"844px",height:"563px"}} className="imgCatalogSelect">
+              {
+                arenda.url.map((itemImg)=>(
+                  <SwiperSlide>
+                      <img src={itemImg} style={{width:"100%",height:"100%"}}/>
+                  </SwiperSlide>
+                ))
+              }
+            </Swiper>
+          <p className="descriptionCatalogSelect">{arenda.description}</p>
         </div>
+      </div>
     </section>
     <section className="last last2">
       <div className="Takje">

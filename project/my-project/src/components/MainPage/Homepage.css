@@ -688,6 +688,11 @@ width: 516px;
   transition: .2s opacity linear;
 }
 
+.city:active{
+  box-shadow: 0px 0px 2px #000000, inset 0px 0px 5px #3d3d3d ;
+  transition: .15s box-shadow linear;
+}
+
 
 
 .btns{

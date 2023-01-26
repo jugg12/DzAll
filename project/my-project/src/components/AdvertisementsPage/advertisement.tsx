@@ -74,7 +74,7 @@ export default function advertisement() {
   const LengthAdvertisements = useSelector((state:any) => state.advertisementAction.length);
   
   const push = (item) =>{
-    navigate(`/advertisement/test/${item-1}`)
+    navigate(`/advertisement/test/${item}`)
   }
 
   useEffect(()=>{ // Получение данных редакс

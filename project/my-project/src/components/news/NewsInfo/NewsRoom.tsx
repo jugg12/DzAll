@@ -31,18 +31,18 @@ const NewsRoom=(link)=>{
   },[])
     
   return(
-    <div className="slider-wrapper">
+    Loading?
+    <>
+      <div className="" style={{display:"flex",width:"1308px"}}>
+        <CardSkeleton style={{marginRight:"50px"}}/>
+        <CardSkeleton style={{marginRight:"50px"}}/>
+        <CardSkeleton/>
+      </div>
+    </>
+    :<div className="slider-wrapper">
     <Slider {...settingsNewsSelectPage} ref={sliderRef} className="Slider">
       {
-      Loading?
-      <div className="conteiner">
-        <div className="" style={{display:"flex",width:"1308px"}}>
-          <CardSkeleton style={{marginRight:"50px"}}/>
-          <CardSkeleton style={{marginRight:"50px"}}/>
-          <CardSkeleton/>
-        </div>
-      </div>
-      :news.map((item)=>(
+        news.map((item)=>(
         <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
         <Card className="card__style" style={{width:"406px",height:"500px"}}>
           <div className="SpisokInformKontakti">   

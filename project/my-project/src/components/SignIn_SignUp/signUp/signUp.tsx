@@ -61,7 +61,7 @@ const signUp = () =>{
     "url":"https://mypremo.com/placeholder-profile.jpeg",
     "favourites":[],
     "advertisement":[]
-  }).then((res)=>{
+  }).then(()=>{
     navigate("/send")
   })  
 }

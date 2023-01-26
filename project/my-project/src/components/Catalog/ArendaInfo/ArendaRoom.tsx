@@ -21,7 +21,9 @@ const ArendaRoom=()=>{
   const navigate=useNavigate();
   const [Loading,setLoading]=useState<boolean>(true);
   const filterCityRayon = useSelector((state:any) => state.filter.cityRayon);
-
+  const generateKey = (pre) => {
+    return `${ pre }_${ new Date().getTime() }`;
+}
   const push = (item,city2) =>{
     navigate(`/catalog/city=${city2}/${item}`);
     window.scrollTo({top:0,behavior:"smooth"})
@@ -75,21 +77,20 @@ const ArendaRoom=()=>{
   },[filterCityRayon.city,filterCityRayon.rayon])
 
   return(
-    <div className="slider-wrapper" style={{height:"595px"}}>
-    <Slider {...settingsHomePage} ref={sliderRef}>
+    Loading?
+    <div className="" style={{display:"flex",width:"1378px"}}>
+      <CardSkeleton style={{marginRight:"50px"}}/>
+      <CardSkeleton style={{marginRight:"50px"}}/>
+      <CardSkeleton/>
+    </div>
+  :
+  <>
+    <div className="slider-wrapper" key={generateKey("slider-wrapper")} style={{height:"595px"}}>
+    <Slider {...settingsHomePage} ref={sliderRef} key={generateKey("Slider")}>
       {
-      Loading?
-        <>
-        <div className="" style={{display:"flex",width:"1378px"}}>
-        <CardSkeleton style={{marginRight:"50px"}}/>
-        <CardSkeleton style={{marginRight:"50px"}}/>
-        <CardSkeleton/>
-        </div>
-        </>
-      :
       Arenda.length!==0?Arenda.map((item)=>(
-      <Card key={item.id} className="card__style" style={{width:"406px",height:"535px"}}>
-        <div className={"ListInformContacts"}>
+      <Card className="card__style" style={{width:"406px",height:"535px"}}>
+        <div className={"ListInformContacts"} key={"ArendaAlone"+item.id}>
           <div className="CardMain">
             <div className="Gold">
               <svg width="66" height="38" viewBox="0 0 66 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -113,7 +114,7 @@ const ArendaRoom=()=>{
               </defs>
               </svg>
             </div>
-            <div className="">
+            <div className="" key={"SwiperKey"+item.id+"1"}>
               <Swiper noSwiping={true} pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCard">
                 {
                   item.url.map((itemImg)=>(
@@ -251,6 +252,7 @@ const ArendaRoom=()=>{
         </button>
       </div>
     </div>
+  </>
     
   )
   

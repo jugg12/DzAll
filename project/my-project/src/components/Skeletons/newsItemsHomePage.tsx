@@ -12,13 +12,13 @@ const newsHomePage = (props) => (
     foregroundColor="#ecebeb"
     {...props}
   >
-    <rect x="0" y="0" rx="5" ry="5" width="117px" height="25px" /> 
-    <rect x="0" y="65" rx="5" ry="5" width="360px" height="56px" /> 
-    <rect x="0" y="136" rx="5" ry="5" width="360px" height="56px" /> 
-    <rect x="0" y="206" rx="5" ry="5" width="360px" height="56px" /> 
-    <rect x="0" y="276" rx="5" ry="5" width="360px" height="56px" /> 
-    <rect x="0" y="346" rx="5" ry="5" width="360px" height="56px" /> 
-    <rect x="0" y="434" rx="5" ry="5" width="117px" height="20px" /> 
+    <rect key={"1"} x="0" y="0" rx="5" ry="5" width="117px" height="25px" /> 
+    <rect key={"2"} x="0" y="65" rx="5" ry="5" width="360px" height="56px" /> 
+    <rect key={"3"} x="0" y="136" rx="5" ry="5" width="360px" height="56px" /> 
+    <rect key={"4"} x="0" y="206" rx="5" ry="5" width="360px" height="56px" /> 
+    <rect key={"5"} x="0" y="276" rx="5" ry="5" width="360px" height="56px" /> 
+    <rect key={"6"} x="0" y="346" rx="5" ry="5" width="360px" height="56px" /> 
+    <rect key={"7"} x="0" y="434" rx="5" ry="5" width="117px" height="20px" /> 
   </ContentLoader> 
   
 )

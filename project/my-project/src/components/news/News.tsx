@@ -99,7 +99,7 @@ export default function News(){
                             (filter.length)? 
                               filter.map((item)=>{
                                 return(
-                                  <li className="dropdown__item" key={item.id} onClick={itemClickHandler}>{item.title}</li>
+                                  <li className="dropdown__item" key={"dropdown__itemNews"+item.id} onClick={itemClickHandler}>{item.title}</li>
                                 )
                             }): <h1></h1>
                           :null
@@ -139,13 +139,13 @@ export default function News(){
                   currentPage.map((item)=>( 
                   <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
                     <Card className="card__style" style={{width:"406px",height:"500px"}}>
-                      <div className="ListInformContacts">   
+                      <div className="ListInformContacts" key={"ListInformContacts"+item.id}>   
                         <div className="CardMain">
                           <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCard">
                             {
                               item.url.map((itemImg)=>(
                                 <SwiperSlide>
-                                    <Card.Img variant="top" src={itemImg} style={{ height: "300px",width: "444px"}}/>
+                                    <Card.Img key={"CardImg"+itemImg} variant="top" src={itemImg} style={{ height: "300px",width: "444px"}}/>
                                 </SwiperSlide>
                               ))
                             }

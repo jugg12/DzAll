@@ -13,26 +13,26 @@ import TestAdvertisementSkeleton from "../../Skeletons/testAdvertisementSkeleton
 
 export default function test(){
   const id = localStorage.getItem("id");
-  const navigate=useNavigate();
   const params=useParams();
   const [Loading,setLoading] = useState<boolean>(true);
-  const [test,setTest]=useState<advertisementItem>()
+  const [test,setTest]=useState<advertisementItem>();
 
   useEffect(()=>{
     axios.get(`/users/${id}`).then
     (({data})=>{
-        setTest(data.advertisement[params.id]);
-        setLoading(false);
+        data.advertisement.map((item)=>{
+          if(item.id==params.id){
+            setTest(item);
+            setLoading(false);
+          }
+        })
     })
   },[])
+
   return(
     Loading?
-    <>
-      {
-        <TestAdvertisementSkeleton/>
-      }
-    </>
-    :
+    <TestAdvertisementSkeleton/>
+    :test?
     <>
     <section className="firstCatalog">
     <h1 className="Test">Тестовый предосмотр</h1>
@@ -192,6 +192,6 @@ export default function test(){
       </div>
     </section>
     </>
-    
+    :""
   )
 }

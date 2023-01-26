@@ -24,6 +24,7 @@ import { FileObjectAdvertisement, OwnerImgAdvertisement, UserImg } from "../Func
 import { setLengthFavourites } from "../../store/actions/favouritesAction";
 import { downLoadImgAdvertisements, downLoadImgOwner, downLoadImgUser } from "../HandlersOnChanges/handleOnChange";
 import UserSkeleton from "../Skeletons/userSkeleton";
+import uniqid from 'uniqid';
 
 const Header = () => {
   const[modalUserChange,setModalUserChange] = useState<boolean>(false);
@@ -153,10 +154,10 @@ const Header = () => {
    },[]);
   
    const addArenda = (value) => { //Добавление объявления
-    const vibor = confirm("Вы уверены, что введенные Вами данные верны и хотите разместь Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
-    if(vibor==true){
+    const choose = confirm("Вы уверены, что введенные Вами данные верны и хотите разместь Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
+    if(choose==true){
           const item = {
-            "id": advertisement.length+1,
+            "id": uniqid(),
             "city" : value.city,  
             "sent" : value.sent,
             "rooms":value.rooms,
@@ -304,8 +305,8 @@ const Header = () => {
                     {
                       Cities.map((item)=>{
                         return(
-                          <div className="Items3">
-                              <li key = {item.city+"2"} className="dropdown__item dropdown__item2" id={item.city}>
+                          <div className="Items3"key={item.city+item.id+"1"}>
+                              <li key = {item.city+item.id+"2"} className="dropdown__item dropdown__item2" id={item.city}>
                               Квартиры на сутки в {cityIn(item.city)}
                               </li>
                           </div>
@@ -456,7 +457,7 @@ const Header = () => {
                                     {
                                       imgUrl.map((imgItem)=>(
                                         <SwiperSlide>
-                                          <img style={{width:"250px",height:"250px"}} src={imgItem} />
+                                          <img style={{width:"250px",height:"250px"}} key={"imgUrl2{"+imgItem+"}"} src={imgItem} />
                                         </SwiperSlide>
                                       ))
                                     }

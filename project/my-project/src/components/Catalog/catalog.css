@@ -154,8 +154,8 @@
 }
 
 .clearAll:active{
-  box-shadow:0 0px 2px #000000, inset 0px 0px 2px #1E2123;
-  transition: .15s box-shadow linear;
+  box-shadow:0 0px 2px #000000, inset 0px 0px 5px #1E2123;
+  transition: .1s box-shadow linear;
 }
 
 .Show{

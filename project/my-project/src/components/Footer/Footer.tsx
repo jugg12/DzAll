@@ -65,7 +65,7 @@ export default function Footer(){
               <div className="info2">
                 <h2 className="zagInfo">Квартиры</h2>
                 <div className="info2__Division">
-                  <div className="Division1">
+                  <div className="Division1"  key={"Cities1"}>
                   {
                     Loading?
                     <>
@@ -81,12 +81,12 @@ export default function Footer(){
                     </>
                     :Cities.slice(0,Division).map((item)=>{
                       return(
-                        <p key={item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
+                        <p key={"Cities"+item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
                       )
                     })  
                   }
                   </div>
-                  <div className="Division1 Division2">
+                  <div className="Division1 Division2" key={"Cities2"}>
                     {
                       Loading?
                       <div className="" style={{width:"135px"}}>
@@ -100,7 +100,7 @@ export default function Footer(){
                       </div>
                       :Cities.slice(Division,Cities.length).map((item)=>{
                         return(
-                          <p key={item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
+                          <p key={"Cities"+item.city} className="info2__text" onClick={()=>push2(`${item.city}`,`${cityIn(item.city)}`)}>Квартиры в {cityIn(item.city)}</p>
                         )
                       })  
                     }

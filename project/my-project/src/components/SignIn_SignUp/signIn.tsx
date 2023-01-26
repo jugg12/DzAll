@@ -22,26 +22,20 @@ const signIn : FC<formPropsSignIn>= () =>{
   },[])
   
   async function signIN(value){
-  await axios.get("/users",{
-    params:{
-      login:value.login ,
-      password:value.password,
-    },
+  await axios.post("/login",{
+    login:value.login,
+    password:value.password,
   })
   .then((res)=>{  
-    if(res.data.length===0){
-      const errorClass=document.querySelector(".ErrorEnter")
-      value.login=""
-      value.password=""
-      errorClass.classList.add("fix")
-
-    }
-    else{
-      localStorage.setItem("login",res.data[0].login);
-      localStorage.setItem("id",res.data[0].id)
-      navigate("/");
-      window.location.reload();
-    }
+    localStorage.setItem("login",res.data.user.login);
+    localStorage.setItem("id",res.data.user.id)
+    navigate("/");
+    window.location.reload();
+  }).catch((err)=>{
+    const errorClass=document.querySelector(".ErrorEnter")
+    value.login=""
+    value.password=""
+    errorClass.classList.add("fix")
   })
   }
 

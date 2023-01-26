@@ -31,6 +31,7 @@ import { FileObjectAdvertisementFromAdvertisement, OwnerImgAdvertisementFromAdve
 import OptionsClick from "../Functions/OptionsClick";
 import { downLoadImgAdvertisements, downLoadImgOwner, handlePriceMax, handlePriceMin } from "../HandlersOnChanges/handleOnChange";
 import NewsHomePage from "../Skeletons/newsItemsHomePage";
+import uniqid from 'uniqid';
 
 export default function Homepage(){
   const [arendaLength,setArendaLength]=useState<number>();
@@ -80,7 +81,6 @@ export default function Homepage(){
   const dispatch = useDispatch();
   const filter = useSelector((state:any) => state.filter);
   const filterAll = useSelector((state:any) => state.filter.filterAll);
-  dispatch(clearFilter(filterAll));
   // end redux info
 
   const Show = (value,priceMax,filterrooms,filtersleepPlaces,filterRayon,filterMetro,input)=>{
@@ -143,6 +143,7 @@ export default function Homepage(){
     dispatch(setCity("Минск"))
     dispatch(setRooms("Квартиры на сутки"));
     dispatch(setSort("По умолчанию"));
+    dispatch(clearFilter(filterAll));
   },[]);
   
   const push = (item) =>{
@@ -166,10 +167,10 @@ export default function Homepage(){
   },[data2,login])
   
   const addArenda = (value) => {
-    const vibor = confirm("Вы уверены, что введенные Вами данные верны и хотите разместь Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
-    if(vibor==true){
+    const choose = confirm("Вы уверены, что введенные Вами данные верны и хотите разместь Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
+    if(choose==true){
           const item = {
-            "id": advertisement.length+1,
+            "id": uniqid(),
             "city" : value.city,  
             "sent" : value.sent,
             "rooms":value.rooms,
@@ -378,7 +379,7 @@ export default function Homepage(){
                         {
                             Rayon.map((item)=>{
                               return(
-                              <li key = {item.value} className="dropdown__item">{(item.value).substring(0,(item.value).indexOf(" ",0))}</li>
+                              <li key = {"dropdown__item"+item.value} className="dropdown__item">{(item.value).substring(0,(item.value).indexOf(" ",0))}</li>
                               )
                             })
                         } 
@@ -538,7 +539,7 @@ export default function Homepage(){
                             {
                               Cities.map((item) => {
                                 return(
-                                <button className="city" onClick={()=>push2(`${item.city}`)}>{item.city}</button>
+                                <button className="city" key={item.city+item.id+"2"} onClick={()=>push2(`${item.city}`)}>{item.city}</button>
                                 )
                               })  
                             }
@@ -668,7 +669,7 @@ export default function Homepage(){
       
     {/* section 3 */}
 
-      <section className="third" style={{height:"970px",
+      <section key = {"section1"} className="third" style={{height:"970px",
                                  marginBottom:"90px"}}>
         <div className="third__block">
           <img src={img5} alt="" />
@@ -730,7 +731,7 @@ export default function Homepage(){
                         {
                             Rayon.map((item)=>{
                               return(
-                              <li key={item.value} className="dropdown__item">{(item.value).substring(0,(item.value).indexOf(" ",0))}</li>
+                              <li key={"dropdown__item"+item.value+"1"} className="dropdown__item">{(item.value).substring(0,(item.value).indexOf(" ",0))}</li>
                               )
                             })
                         } 
@@ -947,18 +948,17 @@ export default function Homepage(){
                 </div>
                 <p className="Division__text">Чтобы снять квартиру на сутки в Минске, вам достаточно определиться с выбором и связаться с владельцем для уточнения условий аренды и заключить договор. Заметим, на сайте представлены исключительно квартиры на сутки без посредников, что избавляет посетителей от необходимости взаимодействовать с агентствами, тратя свое время и деньги. Также пользователи сайта могут совершенно бесплатно размещать объявления о готовности сдать квартиру на сутки.    </p>
               </div>
-
-              <div className="secondpart">
                 {
-                  Loading?
-                  <NewsHomePage/>
-                  :<>
+                Loading?
+                  <NewsHomePage key={"NewsHomePageInfo"+Loading}/>
+                  :
+                <div className="secondpart" key={"secondpartInfo"+Loading}>
                   <h1 className="intro">Новости</h1>
                   {
                     currentPer.map((item)=>(
                       <>
-                        <button className="news" onClick={()=>push(item.id)}>
-                          <div className="newstextsecClass" key={item.id}>
+                        <button className="news" key={"news"+item.id} onClick={()=>push(item.id)}>
+                          <div className="newstextsecClass">
                             <p className="newstextintro">{item.title}</p>
                             <p className="newstextsec">{item.data}</p>
                           </div>
@@ -976,9 +976,8 @@ export default function Homepage(){
                       </div>
                     </button>
                   </Link>
-              </>
-                }
               </div>
+            }
             </div>
           </div>
         </div>
@@ -1077,7 +1076,7 @@ export default function Homepage(){
                                     {
                                       imgUrl.map((imgItem)=>(
                                         <SwiperSlide>
-                                          <img style={{width:"250px",height:"250px"}} src={imgItem} />
+                                          <img style={{width:"250px",height:"250px"}} key={"imgUrlHome"+imgItem} src={imgItem} />
                                         </SwiperSlide>
                                       ))
                                     }

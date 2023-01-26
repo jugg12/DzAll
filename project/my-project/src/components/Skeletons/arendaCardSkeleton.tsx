@@ -27,8 +27,6 @@ const arendaCardProduct = (props) => (
     
   </ContentLoader>
   
-
-  
 )
 
 export default arendaCardProduct

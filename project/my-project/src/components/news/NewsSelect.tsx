@@ -10,23 +10,31 @@ import { useParams,useNavigate,Link} from "react-router-dom";
 import axios from "../../axios"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
+import CatalogSelectSkeleton from "../Skeletons/catalogSelectSkeleton";
 
 
 export default function NewsSelect(){
   const navigate=useNavigate();
   const params=useParams()
-  const [news,setNews]=useState<NewsItem>()
+  const [news,setNews]=useState<NewsItem>();
+  const [Loading,setLoading] = useState<boolean>(true);
   useEffect(()=>{
     axios.get(`/NewsCard/${params.id}`).then
     (({data})=>{
       setNews(data);
+      setLoading(false);
     }).catch(()=>navigate("/404"))
   },[])
 
   return(
-    news?
+    Loading?
     <>
-    
+      {
+        <CatalogSelectSkeleton/>
+      }
+    </>
+    :news?
+    <>
     <section className="firstCatalog">
       <div className="filterInfo">
           <div className="conteinerCatalogSelect">
