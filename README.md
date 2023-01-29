@@ -38,19 +38,20 @@ ___________________________________
 >      10) React. Routing;
 >      11) React. Context"
   ### Описание:
-     > В ней находятся файлы по занятиям 7-11, "Routing" - находится в файле App.js, который находится в самом начале. Остальное в самом приложении.
-     > Ссылка на занятие с дз: 
-       > 7-8 занятие дз - https://www.youtube.com/watch?v=HHBcLGBLTzE&feature=youtu.be ; 
-       > 9-10 занятие дз - https://www.youtube.com/watch?v=kRKP2cOuETU&feature=youtu.be; 
-       > 11 занятие дз находится в 12 занятии - https://www.youtube.com/watch?v=fl2cifZkT-s&feature=youtu.be;
+      В ней находятся файлы по занятиям 7-11, "Routing" - находится в файле App.js, который находится в самом начале. Остальное в самом приложении.
+      Ссылка на занятие с дз: 
+        7-8 занятие дз - https://www.youtube.com/watch?v=HHBcLGBLTzE&feature=youtu.be ; 
+        9-10 занятие дз - https://www.youtube.com/watch?v=kRKP2cOuETU&feature=youtu.be; 
+        11 занятие дз находится в 12 занятии - https://www.youtube.com/watch?v=fl2cifZkT-s&feature=youtu.be;
 ___________________________________
 
 ## Папка пятая под названием: "5(strore-redux)".
-Темы:"12)  React. Стейтменеджеры. Обзор;
-      13)  React. Стейтменеджеры. Redux" 
-Описание:
-  В ней находятся файлы по занятиям 12-13.
-  Ссылка на занятие с дз: дз с 14 занятия :https://www.youtube.com/watch?v=yzXtoFMywNM&feature=youtu.be
+### Темы:
+>     12)  React. Стейтменеджеры. Обзор;
+>     13)  React. Стейтменеджеры. Redux" 
+  ### Описание:
+        В ней находятся файлы по занятиям 12-13.
+        Ссылка на занятие с дз: дз с 14 занятия :https://www.youtube.com/watch?v=yzXtoFMywNM&feature=youtu.be
 ___________________________________
 
 ## Папка шестая под названием: "6(formik)".
