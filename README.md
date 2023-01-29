@@ -31,17 +31,18 @@ __________________________________
 ___________________________________
 
 ## Папка четвертая под названием: "4(useState,useContext,style,routing)".
-Темы:"7)  React. Hooks. Часть 1; 
-      8)  React. Hooks. Часть 2; 
-      9)  React. Стилизация приложений;
-      10) React. Routing;
-      11) React. Context"
-Описание:
-  В ней находятся файлы по занятиям 7-11, "Routing" - находится в файле App.js, который находится в самом начале. Остальное в самом приложении.
-  Ссылка на занятие с дз: 
-  7-8 занятие дз - https://www.youtube.com/watch?v=HHBcLGBLTzE&feature=youtu.be ; 
-  9-10 занятие дз - https://www.youtube.com/watch?v=kRKP2cOuETU&feature=youtu.be; 
-  11 занятие дз находится в 12 занятии - https://www.youtube.com/watch?v=fl2cifZkT-s&feature=youtu.be;
+### Темы:
+>      7)  React. Hooks. Часть 1; 
+>      8)  React. Hooks. Часть 2; 
+>      9)  React. Стилизация приложений;
+>      10) React. Routing;
+>      11) React. Context"
+  ### Описание:
+     > В ней находятся файлы по занятиям 7-11, "Routing" - находится в файле App.js, который находится в самом начале. Остальное в самом приложении.
+     > Ссылка на занятие с дз: 
+       > 7-8 занятие дз - https://www.youtube.com/watch?v=HHBcLGBLTzE&feature=youtu.be ; 
+       > 9-10 занятие дз - https://www.youtube.com/watch?v=kRKP2cOuETU&feature=youtu.be; 
+       > 11 занятие дз находится в 12 занятии - https://www.youtube.com/watch?v=fl2cifZkT-s&feature=youtu.be;
 ___________________________________
 
 ## Папка пятая под названием: "5(strore-redux)".
