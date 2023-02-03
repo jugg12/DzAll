@@ -92,3 +92,32 @@
       transform:rotate(360deg);
   }
 }
+
+@media(max-width:1150px) {
+  .colorCheck{
+    right: 29px;
+    margin-top: 89%;
+  }
+  .ContactsBtn4::before{
+    left: 26.5%;
+  }
+}
+
+@media(max-width:768px) {
+  .ContactsBtn4::before{
+    left: 28.5%;
+    width: 33%;
+  }
+}
+@media(max-width:480px){
+  .colorCheck{
+    right: -29px;
+    font-size: 34px;
+  }
+  .change{
+    display: none;
+  }
+  .ContactsBtn4{
+    display: none;
+  }
+}

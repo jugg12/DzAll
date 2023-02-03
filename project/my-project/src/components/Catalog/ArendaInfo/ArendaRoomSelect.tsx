@@ -32,7 +32,7 @@ const ArendaRoomSelect=(link)=>{
   },[])
     
   return(
-    <div className="slider-wrapper" style={{height:"595px"}}>
+    <div className="slider-wrapper conteiner" style={{height:"595px"}}>
     <Slider {...settingsSelectPage} ref={sliderRef} className="Slider" >
       {
       Loading?<>

@@ -1,7 +1,6 @@
-import React, {memo, useCallback,useState,useEffect,useRef} from "react"
+import React, {useState,useEffect,useRef} from "react"
 import "./NewsRoom.css"
 import axios from "../../../axios"
-import isEqual from 'lodash/isEqual'
 import { Card,Button,Col } from "react-bootstrap"
 import {useNavigate} from "react-router-dom"
 import Slider from "react-slick"
@@ -18,8 +17,8 @@ const NewsRoom=(link)=>{
   const [Loading,setLoading] = useState<boolean>(true);
     
   const push = (item) =>{
-    window.scrollTo({top:0,behavior:"smooth"})
     navigate(`/news/${item}`)
+    window.scrollTo({top:0,behavior:"smooth"})
   }  
   
   const [news,setNews]=useState<NewsItem[]>([]);
@@ -39,7 +38,7 @@ const NewsRoom=(link)=>{
         <CardSkeleton/>
       </div>
     </>
-    :<div className="slider-wrapper">
+    :<div className="slider-wrapper conteiner">
     <Slider {...settingsNewsSelectPage} ref={sliderRef} className="Slider">
       {
         news.map((item)=>(
@@ -71,7 +70,7 @@ const NewsRoom=(link)=>{
 
                   <Button variant="primary" className="ReadButton">
                   <div className="More">
-                      <p className="textMore ReadBtn" onClick={(e)=>{push(item.id);window.location.reload()}}>Читать</p>
+                      <p className="textMore ReadBtn" onClick={(e)=>{push(item.id)}}>Читать</p>
                   </div>
                   </Button>
                 </div>

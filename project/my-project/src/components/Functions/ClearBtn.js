@@ -1,5 +1,4 @@
 import { cityIn } from 'lvovich';
-import { useDispatch, useSelector } from 'react-redux';
 import { setSort } from '../../store/slices/FilterSlice';
 
 export default function Clear(category,setCategory,setCategory2,priceMin,priceMax,setpriceMin,setpriceMax,axios,setArenda,city,dispatch){
@@ -10,7 +9,7 @@ export default function Clear(category,setCategory,setCategory2,priceMin,priceMa
   const btn2 = document.getElementById("filterSleepplaces");
   const btn3 = document.getElementById("FilterRayon");
   const btn4 = document.getElementById("FilterMetro2");
-  const input = document.getElementById("checkboxInputValue");
+  const inputCheckBoxInfo = document.getElementById("checkboxInputValue");
   
   if (category){
     setCategory("");
@@ -31,7 +30,7 @@ export default function Clear(category,setCategory,setCategory2,priceMin,priceMa
   btn2.textContent="Выберите";
   btn3.textContent="Выберите";
   btn4.textContent="Выберите";
-  input.textContent="";
+  inputCheckBoxInfo.value="";
   Options.classList.remove("active");
   DopOptions.classList.remove("active");
   axios.get(`/ArendaCard?city2=${city}`)

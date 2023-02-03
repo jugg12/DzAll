@@ -95,3 +95,12 @@ export function notifyErrorAuthorization(){
     autoClose:2000,
   });
 }
+
+export function notifyErrorAddAdvertisement(){
+  toast.error("Необходимо разрешение экрана > 1300px",{
+    position:"top-center",
+    closeOnClick:true,
+    pauseOnHover:false,
+    autoClose:2000,
+  });
+}

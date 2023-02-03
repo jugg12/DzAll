@@ -7,7 +7,6 @@ import { ArendaCardProduct } from '../../interfaces';
 
 export default function mapSelect() {
   const [Arenda,setArenda]=useState<ArendaCardProduct[]>([]);
-
   const city = useSelector((state:any) => state.filter.city);
   useEffect(()=>{
     axios.get(`/ArendaCard?city2=${city}`).then(({data})=>{
@@ -28,9 +27,9 @@ export default function mapSelect() {
       hintContent:"Объяление",
       balloonLayout: "",
       balloonContent:[
-        `<div class="Card" style={width:"500px"}>
-          <div class="balloon">Доступно ${Arenda.length} объявлений</div>
-          <a href="/catalog/city=" onClick={dispatch(setCity("Минск"))}>Посмотреть все</a>
+        ` <div class="Card" style={width:"500px"}>
+            <div class="balloon">Доступно ${Arenda.length} объявлений</div>
+            <a href="/catalog/city=">Посмотреть все</a>
           </div>`]
       },    
       

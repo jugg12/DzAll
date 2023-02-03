@@ -24,7 +24,7 @@ export default function NewsSelect(){
       setNews(data);
       setLoading(false);
     }).catch(()=>navigate("/404"))
-  },[])
+  },[params.id])
 
   return(
     Loading?
@@ -154,7 +154,7 @@ export default function NewsSelect(){
       <img className="tochkiJeltie" style={{marginTop:"2%",position:"absolute",left:0,marginLeft:"21%"}} src={img7} alt="" />
         <div className="conteinerCatalogSelect">
           <div className="allInfoStructure">
-            <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} style={{width:"844px",height:"563px"}} className="imgCatalogSelect">
+            <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCatalogSelect">
               {
                 news.url.map((itemImg)=>(
                   <SwiperSlide>
@@ -171,13 +171,13 @@ export default function NewsSelect(){
     <section className="last last2">
       <div className="Takje">
         <div className="conteiner">
-          <div className="ArendaSecText">
-            <h2 style={{marginLeft:"20px"}}>Читайте также</h2>
+          <div className="ArendaSecText ArendaSecTextcatalogSelect">
+            <h2>Читайте также</h2>
           </div>
           <div className="card__list">
             <div className="Card">
-              <div className="ColRowHome conteiner">
-                <div className="cards" style={{display:"flex",justifyContent:"space-between"}}>
+              <div className="ColRowHome conteiner" style={{marginTop:"20px"}}>
+                <div className="cards" style={{display:"flex",justifyContent:"center"}}>
                   <Row>
                     <Col>
                       <NewsRoom>{"/NewsCard"}</NewsRoom>

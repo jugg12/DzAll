@@ -93,6 +93,7 @@
 
 .loginmail{
   display: flex;
+  justify-content: space-between;
 }
 
 .Contacts__text{
@@ -134,7 +135,8 @@
 
 .TextAreaMes{
   border: none;
-  width: 92%;
+  resize: none;
+  width: 93% !important; 
   height: 200px;
   background: #F8F8F8;
   border-radius: 30px;
@@ -195,12 +197,12 @@
 }
 
 .Contacts__socseti__hover{
-  transition: .1s fillOpacity linear;
+  transition: .1s opacity linear;
 }
 
 .Contacts__socseti:hover .Contacts__socseti__hover{
-  fillOpacity: .3;
-  transition: .1s fillOpacity linear;
+  opacity: .5;
+  transition: .1s opacity linear;
 }
 
 .Contacts__socseti2{
@@ -209,12 +211,12 @@
 }
 
 .Contacts__socseti2 .Contacts__socseti2__hover{
-  transition: .1s fillOpacity linear;
+  transition: .1s opacity linear;
 }
 
 .Contacts__socseti2:hover .Contacts__socseti2__hover{
-  fillOpacity: .3;
-  transition: .1s fillOpacity linear;
+  opacity: .6;
+  transition: .1s opacity linear;
 }
 
 /* popup */
@@ -253,8 +255,9 @@
 /* errors */
 
 .TextAreaMes__error{
+  resize: none;
   border: none;
-  width: 92%;
+  width: 93% !important;
   height: 200px;
   background: #F8F8F8;
   border-radius: 30px;
@@ -268,4 +271,77 @@
 
 .TextAreaMes__error:focus{
   outline: 1px solid #EB5757;
+}
+
+@media(max-width:1325px){
+  .IP{
+    font-size: 13px;
+  }
+  .warText{
+    font-size: 13px;
+  }
+  .warning__Contacts{
+    padding: 24px 14px;
+    justify-content: center;
+  }
+}
+
+@media(max-width:1150px){
+
+  .loginmail{
+    justify-content: start;
+  }
+  .Contactsforma{
+    padding-top: 33px;
+  }
+  .Division__Contacts{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .block__Contacts{
+    justify-content: center;
+  }
+  
+  .pervoe__Division__Contacts{
+    max-width: 100%;
+    justify-content: center;
+    margin-right: 0;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .tretie__Division__Contacts{
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 15px;
+  }
+  
+  .Contacts__socseti2{
+    display: flex;
+    justify-content: center;
+    margin-right: 15px;
+  }
+}
+
+@media(max-width:768px){
+  .loginmail{
+    flex-direction: column;
+  }
+  .LOGIN.LOGIN__Contacts{
+    margin-right: 0;
+  }
+  .TextAreaMes__error{
+    width: 88% !important;
+  }
+  .TextAreaMes{
+    width: 88% !important;
+  }
+}
+
+@media(max-width:480px){
+  .gorod__Contacts{
+    font-size: 15px;
+  }
 }

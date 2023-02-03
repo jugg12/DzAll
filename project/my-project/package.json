@@ -63,7 +63,7 @@
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "server": "json-server-auth --watch db.json --port 8080",
+    "server": "json-server-auth --watch db.json --port 8080 --host 0.0.0.0",
     "dev": "concurrently \"npm run start\" \"npm run server \" ",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

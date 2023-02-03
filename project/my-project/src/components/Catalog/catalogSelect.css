@@ -53,7 +53,7 @@
 .imgCatalogSelect{
   margin-top: -44px;
   width: 844px;
-  height: 563.24px;
+  height: 563px;
   filter: drop-shadow(0px 20px 40px rgba(39, 95, 158, 0.1));
   border-radius: 10px;
   margin-bottom: 40px;
@@ -100,4 +100,61 @@
   display: flex;
   justify-content: center;
   margin-bottom: 100px;
+}
+
+@media(max-width:1325px){
+  .ArendaSecTextcatalogSelect{
+    text-align: center;
+  }
+}
+@media(max-width:1150px){
+  .conteinerCatalogSelect{
+    width:728px;
+  }
+
+  .imgCatalogSelect{
+    width:728px;
+  }
+}
+
+@media(max-width:768px){
+  .CatalogSelect{
+    justify-content: center;
+  }
+  .ArendaInnerTextcatalogSelect{
+    font-size: 14px;
+    text-align: center;
+    line-height: 30px;
+  }
+  .adressInfoKataloSelect{
+    margin-bottom: 30px;
+  }
+  .categories{
+    justify-content: center;
+  }
+  .conteinerCatalogSelect{
+    width:460px;
+  }
+  .imgCatalogSelect{
+    width:460px;
+    height: 480px;
+  }
+}
+
+@media(max-width:480px){
+  .conteinerCatalogSelect{
+    width:280px;
+  }
+
+  .imgCatalogSelect{
+    width: 280px !important;
+    height: 320px !important;
+  }
+  .breadcrumbs.CatalogSelect{
+    flex-direction: column;
+  }
+
+  .descriptionCatalogSelect{
+    text-align: center;
+  }
 }

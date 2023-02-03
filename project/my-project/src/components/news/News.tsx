@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import "./News.css"
 import {useNavigate,Link} from "react-router-dom"
 import axios from "../../axios";
-import { Card,Button,Col,Row } from "react-bootstrap";
+import { Card,Button,Col, Row } from "react-bootstrap";
 import { NewsItem } from "../../interfaces";
 import ReactPaginate from "react-paginate";
 import CardSkeleton from "../Skeletons/newsItemsSkeleton";
@@ -17,7 +17,6 @@ export default function News(){
   const [pageCount,setCountPage]= useState<number>(0)
   const [Loading,setLoading]=useState<boolean>(true);
   const navigate=useNavigate();
-
   const handlepageclick = (e) =>{
     const newOffset = (e.selected*CatalogPerPage)%filter.length;
     setItemOffset(newOffset);
@@ -25,8 +24,8 @@ export default function News(){
   }
 
   const push = (item) =>{
-    window.scrollTo({top:0,behavior:"smooth"})
     navigate(`/news/${item}`)
+    window.scrollTo({top:0,behavior:"smooth"})
   }
 
   const [News,setNews]=useState<NewsItem[]>([]);
@@ -85,14 +84,14 @@ export default function News(){
                   </div>
                   <h1 className="InnerTextNews">Новости</h1>
                 </div>
-                <div className="SecondDivisionNews" style={(currentPage.length<=0 && currentPage!==null)?{height:"622px"}:{height:"1000px"}}>
-                  <div className="">
-                    <input type="text" className='InputSerch' value={value} placeholder='Поиск по статьям' onClick={inputHandler} onChange={e=>setValue(e.target.value)}/>
-                    <button className="Search">
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16.8676 15.2581L13.5441 11.9344C13.3941 11.7844 13.1907 11.7011 12.9774 11.7011H12.434C13.3541 10.5243 13.9008 9.04417 13.9008 7.43401C13.9008 3.60364 10.7973 0.5 6.96711 0.5C3.13693 0.5 0.0334473 3.60364 0.0334473 7.43401C0.0334473 11.2644 3.13693 14.368 6.96711 14.368C8.57718 14.368 10.0573 13.8213 11.234 12.9012V13.4446C11.234 13.658 11.3173 13.8613 11.4673 14.0113L14.7908 17.335C15.1042 17.6483 15.6108 17.6483 15.9209 17.335L16.8642 16.3916C17.1776 16.0782 17.1776 15.5715 16.8676 15.2581ZM6.96711 11.7011C4.61033 11.7011 2.70024 9.79424 2.70024 7.43401C2.70024 5.07711 4.607 3.16693 6.96711 3.16693C9.32388 3.16693 11.234 5.07378 11.234 7.43401C11.234 9.79091 9.32722 11.7011 6.96711 11.7011Z" fill="white"/>
-                      </svg>
-                    </button>
+                <div className="" style={{width:"100%",alignItems:"center",display:"grid"}}>
+                    <div className="inputSerchAll">
+                      <input type="text" className='InputSerch' value={value} placeholder='Поиск по статьям' onClick={inputHandler} onChange={e=>setValue(e.target.value)}/>
+                      <button className="Search">
+                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16.8676 15.2581L13.5441 11.9344C13.3941 11.7844 13.1907 11.7011 12.9774 11.7011H12.434C13.3541 10.5243 13.9008 9.04417 13.9008 7.43401C13.9008 3.60364 10.7973 0.5 6.96711 0.5C3.13693 0.5 0.0334473 3.60364 0.0334473 7.43401C0.0334473 11.2644 3.13693 14.368 6.96711 14.368C8.57718 14.368 10.0573 13.8213 11.234 12.9012V13.4446C11.234 13.658 11.3173 13.8613 11.4673 14.0113L14.7908 17.335C15.1042 17.6483 15.6108 17.6483 15.9209 17.335L16.8642 16.3916C17.1776 16.0782 17.1776 15.5715 16.8676 15.2581ZM6.96711 11.7011C4.61033 11.7011 2.70024 9.79424 2.70024 7.43401C2.70024 5.07711 4.607 3.16693 6.96711 3.16693C9.32388 3.16693 11.234 5.07378 11.234 7.43401C11.234 9.79091 9.32722 11.7011 6.96711 11.7011Z" fill="white"/>
+                        </svg>
+                      </button>
                       <ul className="List__dropdown2">
                         {
                           value!=="" && Open==true? 
@@ -105,7 +104,10 @@ export default function News(){
                           :null
                         }
                         </ul>
-                  </div>
+                    </div>
+                </div>
+                <div className="SecondDivisionNews" style={(currentPage.length<=0 && currentPage!==null)?{height:"695px"}:{height:"1000px"}}>
+                  
                 </div>
               </div>
             </div>
@@ -116,6 +118,7 @@ export default function News(){
           <div className="SecondNewsMain">
             <div className="conteiner">
               <div className="CardsNews">
+              <Row style={{display:"flex",flexWrap:"wrap",justifyContent:"space-between"}}>
                 {
                   Loading?
                    <div className="" style={{display:"flex",width:"1378px",flexDirection:"column"}}>
@@ -135,45 +138,47 @@ export default function News(){
                        <CardSkeleton/>
                      </div>
                    </div>:
+                   
                   (News.length && currentPage.length) > 0?
                   currentPage.map((item)=>( 
-                  <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
-                    <Card className="card__style" style={{width:"406px",height:"500px"}}>
-                      <div className="ListInformContacts" key={"ListInformContacts"+item.id}>   
-                        <div className="CardMain">
-                          <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCard">
-                            {
-                              item.url.map((itemImg)=>(
-                                <SwiperSlide>
-                                    <Card.Img key={"CardImg"+itemImg} variant="top" src={itemImg} style={{ height: "300px",width: "444px"}}/>
-                                </SwiperSlide>
-                              ))
-                            }
-                          </Swiper>
-                          <Card.Body className="bodyCard" >
-                            <Card.Title className="card__title">
-                              <div className="InnerText">{item.title}</div>
-                            </Card.Title>
-                            <Card.Text className="card__text card__text2">
-                              {item.secondTitle}
-                            </Card.Text>  
-                            <div className="btnContactsMain">
-                              <div className="totalPeople DataNews">
-                                {item.data}
+                    <Col key={item.id} className="mainNewsCard">
+                      <Card className="card__style" style={{width:"406px",height:"500px"}}>
+                        <div className="ListInformContacts" key={"ListInformContacts"+item.id}>   
+                          <div className="CardMain">
+                            <Swiper pagination={{clickable:true}} navigation={{enabled:true}} modules={[Pagination,Navigation]} className="imgCard">
+                              {
+                                item.url.map((itemImg)=>(
+                                  <SwiperSlide>
+                                      <Card.Img key={"CardImg"+itemImg} variant="top" src={itemImg} style={{ height: "300px",width: "444px"}}/>
+                                  </SwiperSlide>
+                                ))
+                              }
+                            </Swiper>
+                            <Card.Body className="bodyCard" >
+                              <Card.Title className="card__title">
+                                <div className="InnerText">{item.title}</div>
+                              </Card.Title>
+                              <Card.Text className="card__text card__text2">
+                                {item.secondTitle}
+                              </Card.Text>  
+                              <div className="btnContactsMain">
+                                <div className="totalPeople DataNews">
+                                  {item.data}
+                                </div>
+                                <Button variant="primary" className="ReadButton">
+                                <div className="More">
+                                    <p className="textMore ReadBtn" onClick={(e)=>push(item.id)}>Читать</p>
+                                </div>
+                                </Button>
                               </div>
-                              <Button variant="primary" className="ReadButton">
-                              <div className="More">
-                                  <p className="textMore ReadBtn" onClick={(e)=>push(item.id)}>Читать</p>
-                              </div>
-                              </Button>
-                            </div>
-                          </Card.Body>
+                            </Card.Body>
+                          </div>
                         </div>
-                      </div>
-                    </Card>
-                  </Col>
+                      </Card>
+                    </Col>
                   )):<h4 style={{height:"337px"}}>Значений не найдено</h4>
                 }
+                </Row>
                 <div style={{width:"100%",marginBottom:"75px"}}>
                 <ReactPaginate
                   breakLabel={"..."}

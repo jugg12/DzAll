@@ -4,7 +4,7 @@ let Massive2;
 export default function ClickCheckbox(value){
   const input = document.getElementById("checkboxInputValue");
   document.querySelectorAll(".checkBoxOptions").forEach((checkbox)=>{
-    if (value=="") {
+    if (value=="" || input.value=="") {
       Massive = []
     }
 
@@ -20,11 +20,12 @@ export default function ClickCheckbox(value){
       }
     }
       input.value = Massive;
+      console.log(input.value)
   })
 
   const input2 = document.getElementById("checkboxInputValue_module");
   document.querySelectorAll(".checkBoxOptions2").forEach((checkbox)=>{
-    if (value=="") {
+    if (value=="" || input2.value=="") {
       Massive3 = []
     }
 

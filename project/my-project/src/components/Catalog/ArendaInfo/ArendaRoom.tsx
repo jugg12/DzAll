@@ -2,6 +2,8 @@ import React, {memo, useCallback,useState,useEffect,useRef} from "react";
 import "./ArendaRoom.css";
 import axios from "../../../axios";
 import isEqual from 'lodash/isEqual';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { Card,Button } from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import { useSelector,useDispatch } from "react-redux";
@@ -78,18 +80,19 @@ const ArendaRoom=()=>{
 
   return(
     Loading?
-    <div className="" style={{display:"flex",width:"1378px"}}>
+    <div className="" style={{display:"flex",width:"1378px",marginTop:"40px"}}>
       <CardSkeleton style={{marginRight:"50px"}}/>
       <CardSkeleton style={{marginRight:"50px"}}/>
       <CardSkeleton/>
     </div>
   :
   <>
-    <div className="slider-wrapper" key={generateKey("slider-wrapper")} style={{height:"595px"}}>
+    <div className="conteiner" key={generateKey("slider-wrapper")} style={{height:"595px"}}>
     <Slider {...settingsHomePage} ref={sliderRef} key={generateKey("Slider")}>
       {
-      Arenda.length!==0?Arenda.map((item)=>(
-      <Card className="card__style" style={{width:"406px",height:"535px"}}>
+      Arenda.length!==0?Arenda.map((item)=>{
+      return(
+      <Card className="card__style" style={{width:"406px"}}>
         <div className={"ListInformContacts"} key={"ArendaAlone"+item.id}>
           <div className="CardMain">
             <div className="Gold">
@@ -179,14 +182,14 @@ const ArendaRoom=()=>{
                 <div className="btnContactsMain">
                   <div className="dropdownContacts">
                     <button className={`ContactsBtn`} id={`${item.id}`} onClick={()=>btnclick(item.id)}>
-                        <div className="btnall" >
+                        <div className="btnall btnallHome" >
                           <div className="btniconContacts">
                             <svg className="telbtnicon" width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M7.18253 0.349609H1.72797C0.787063 0.349609 0.0234375 1.11324 0.0234375 2.05415L0.0234375 13.6451C0.0234375 14.586 0.787063 15.3496 1.72797 15.3496H7.18253C8.12344 15.3496 8.88707 14.586 8.88707 13.6451V2.05415C8.88707 1.11324 8.12344 0.349609 7.18253 0.349609ZM4.45527 14.6678C3.88935 14.6678 3.43254 14.211 3.43254 13.6451C3.43254 13.0792 3.88935 12.6223 4.45527 12.6223C5.02119 12.6223 5.478 13.0792 5.478 13.6451C5.478 14.211 5.02116 14.6678 4.45527 14.6678ZM7.52345 11.9405H1.38709V2.39507H7.52345V11.9405Z" fill="#664EF9"/>
                             </svg>
                           </div>
                           <p className="textContacts">Контакты</p>    
-                        </div> 
+                        </div>
                     </button>
                     <div className="informContacts" id={`${item.id}`}>
                       <img src={item.imageOwner} className="circleIcon" alt="" />
@@ -228,7 +231,7 @@ const ArendaRoom=()=>{
                     </div>  
 
                   </div>
-                <Button variant="primary" className="Morebtn">
+                <Button variant="primary" className="Morebtn MorebtnHome">
                 <div className="More">
                     <p className="textMore" onClick={(e)=>push(item.id,item.city2)}>Подробнее</p>
                 </div>
@@ -237,11 +240,11 @@ const ArendaRoom=()=>{
             </Card.Body>
             </div>
           </div>
-      </Card> 
-    )):<p className="dontFound">Квартир по данному запросу не найдено</p>
+      </Card>  
+      )}):<p className="dontFound">Квартир по данному запросу не найдено</p>
       }
     </Slider>
-    <div className="btnsarrows" style={{textAlign:"center",position: "absolute", left: "48.5%", zIndex: "2"}}>
+    <div className="btnsarrows" style={{textAlign:"center", zIndex: "2"}}>
         <button className="arrow__left" onClick={()=>sliderRef.current.slickPrev()} style={{marginRight:"13px"}}> <svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8 1.12305L1.42857 7.69448L8 14.2659" stroke="#664EF9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>

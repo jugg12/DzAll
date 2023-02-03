@@ -1,59 +1,30 @@
 .card__style{
   transform: scale(1);
+  margin-bottom: 55px;
   transition: .2s transform linear;
   height: 526px;
-  width: 406px;
+  width: 406px !important ;
   background: #FFFFFF;
   box-shadow: 0px 25px 25px rgba(78, 100, 249, .2);
   border-radius: 10px;
-
-}
-
-.slick-list{
-  z-index: 1;
-  height: 596px;
-}
-
-.slick-slide.slick-cloned{
-  max-width: 406px;
-}
-
-.slick-slider.Slider.slick-initialized{
-  height: 596px;
-}
-
-.slick-slide.slick-active.slick-current{
-  visibility:visible;
-}
-
-.slick-initialized .slick-slide {
-padding: 30px 45px 30px 11px;
+  margin-top: 25px;
+  z-index: 2;
 }
 
 
 /* slick style */
 
-.slider-wrapper {
-  outline: none;
-  z-index: 1;
-  height: 554px;
-  width: 1378px;
-}
-.slick-slide {
-  position: relative;
-  max-width: 406px;
-  height: 535px;
-}
-.slick-slide:focus {
-  outline: none;
-  width: 406px;
-}
-
-
-
 /* List */
 
+.slick-list{
+  text-align: center;
+  z-index: 1;
+  text-align: -webkit-center;
+}
 
+.slick-slide .slick-active.slick-cloned{
+  display: none;
+}
 /* Contacts click form */
 
 
@@ -160,15 +131,13 @@ padding: 30px 45px 30px 11px;
 
 /* osnovnaya card */
 
-.slick-slide.slick-active{
-  max-width: 406px;
-  height: 535px;
-}
+
 
 .CardMain{
   width: 406px;
   animation: none;
   background: none;
+  overflow: hidden;
 }
 
 .ListInformContacts{
@@ -212,6 +181,7 @@ padding: 30px 45px 30px 11px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: left;
 }
 
 .sum{
@@ -341,6 +311,7 @@ padding: 30px 45px 30px 11px;
   font-size: 12px;
   line-height: 15px;
   color: #8291A3;
+  text-align: left;
 }
 
 /* btns */
@@ -595,7 +566,7 @@ padding: 30px 45px 30px 11px;
 .swiper-button-next::before{
   content: "" !important;
   transform-origin:0 100% 0;
-  transform: rotate(50deg);
+  transform: rotate(45deg);
   height: 30% !important;
   border: 1.5px solid #ffffff;
   background: #ffffff !important;
@@ -611,5 +582,14 @@ padding: 30px 45px 30px 11px;
         box-shadow: 0px 2px 5px #000000;
         scale: 1.02;
         opacity: 0.8 !important;
+  }
+}
+
+@media(max-width:480px){
+  .card__text{
+    text-align: center;
+  }
+  .card-img-top{
+    width: 261px !important;
   }
 }

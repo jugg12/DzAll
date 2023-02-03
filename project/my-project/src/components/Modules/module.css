@@ -11,18 +11,18 @@
   justify-content: center;
   align-items: center;
   opacity: 0;
+  z-index: -10;
   transition: .2s;
   pointer-events: none;
 }
 
 .modal.active{
-  z-index: 10;
+  z-index: 15;
   opacity: 1;
   pointer-events: all;
 }
 
 .modal__content{
-
   padding: 50px 48px 54px;
   border-radius: 10px;
   background: #FFFEFE;

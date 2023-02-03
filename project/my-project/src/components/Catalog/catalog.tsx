@@ -70,6 +70,15 @@ export default function catalog(){
         metro:filterFromHome.metro,
         inputCheckboxInfo:filterFromHome.inputCheckboxInfo
       }))
+      // Проверка чекбоксов
+      document.querySelectorAll(".checkBoxOptions").forEach((checkbox)=>{
+        let massive = filterFromHome.inputCheckboxInfo.split(",");
+        massive.map((massive__item) => {
+          if(massive__item==((checkbox as HTMLInputElement).value).replace(/\s/g, '')){
+            (checkbox as HTMLInputElement).checked=true;
+          }
+        })
+      })
       navigate(`/catalog/city=?${queryString}`)
     }
   },[])
@@ -222,7 +231,6 @@ export default function catalog(){
 
   return(
     <>
-    
     <section className="firstCatalog">
       <div className="filterInfo">
         <div className="conteiner">
@@ -291,7 +299,7 @@ export default function catalog(){
                   <input type="text" name="select__category" value="" className="drodown__item__hiden" />
                 </div>
             </div>
-            <svg width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="lineDivision" width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path opacity="0.1" d="M1 0L1 81" stroke="#664EF9"/>
             </svg>
             <div className=" select__filter__item3">  
@@ -302,11 +310,11 @@ export default function catalog(){
                 <input className="filter__input" id="filter__input2" type="text" placeholder="До" value={priceMax} onChange={()=>handlePriceMax(event.target,setpriceMax)}/>
               </div>
             </div>
-            <svg width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="lineDivision" width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path opacity="0.1" d="M1 0L1 81" stroke="#664EF9"/>
             </svg>
             <div className=" select__filter__item3">
-              <div className="raz Options" onClick={()=>OptionsClick(true)}>
+              <div className="raz Options OptionsCatalog" onClick={()=>OptionsClick(true)}>
                 <p className="select__filter__item__css2" style={{marginRight:"10px"}}>Больше опций</p>
                 <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5.91109 4.29814C5.91109 2.90551 4.937 1.73697 3.63453 1.4358V0.661897C3.63453 0.296309 3.33822 0 2.97264 0C2.60705 0 2.31074 0.296309 2.31074 0.661897V1.4358C1.00835 1.73689 0.0341797 2.90551 0.0341797 4.29814C0.0341797 5.69077 1.00827 6.85931 2.31074 7.16048V17.3381C2.31074 17.7037 2.60705 18 2.97264 18C3.33822 18 3.63453 17.7037 3.63453 17.3381V7.16048C4.937 6.85931 5.91109 5.69077 5.91109 4.29814ZM1.35805 4.29814C1.35805 3.40781 2.08238 2.68348 2.97271 2.68348C3.86303 2.68348 4.58737 3.40781 4.58737 4.29814C4.58737 5.18846 3.86303 5.9128 2.97271 5.9128C2.08238 5.9128 1.35805 5.18846 1.35805 4.29814Z" fill="#664EF9"/>
@@ -315,16 +323,24 @@ export default function catalog(){
                 </svg>
               </div>
             </div>
-            <svg width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="lineDivision" width="2" height="81" viewBox="0 0 2 81" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path opacity="0.1" d="M1 0L1 81" stroke="#664EF9"/>
             </svg>
             <div className=" select__filter__item2">
               <button className="clearAll" onClick={()=>{ClearAll(category,setCategory,setCategory2,priceMin,priceMax,setpriceMin,setpriceMax,axios,setArenda,city)}}>Очистить</button>
             </div>
-            <div className=" 2">
+            <div className="DivisionBtns">
               <button className="Show" onClick={()=>Show(priceMin,priceMax,filterRooms.textContent,filterSleepplaces.textContent,filterRayon.textContent,filterMetro.textContent,(input as HTMLInputElement).value)}>
                 <div className="btnarrow">
                   <p className="t" style={{marginRight:"10px"}}> Показать объекты</p>
+                  <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.125 14.25L11.875 9.5L7.125 4.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </button>
+              <button className="Show2" onClick={()=>Show(priceMin,priceMax,filterRooms.textContent,filterSleepplaces.textContent,filterRayon.textContent,filterMetro.textContent,(input as HTMLInputElement).value)}>
+                <div className="btnarrow">
+                  <p className="t" style={{marginRight:"10px"}}>Отфильтровать</p>
                   <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M7.125 14.25L11.875 9.5L7.125 4.75" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -349,7 +365,7 @@ export default function catalog(){
               </ul>
               <input type="text" name="select__category" value="" className="drodown__item__hiden" />
             </div>
-            <input type="text" id="checkboxInputValue" name="select__category" defaultValue={filter.inputCheckboxInfo!==""?filter.inputCheckboxInfo:""} className="drodown__item__hiden" />
+            <input type="text" id="checkboxInputValue" name="select__category" value={filterFromHome.inputCheckboxInfo!==""?filterFromHome.inputCheckboxInfo:""} className="drodown__item__hiden" />
             <div className="checkbox" style={{display:"flex",marginBottom:"10px",marginTop:"30px"}}>
               <input type="checkbox" value={"Газовая плита"} id="checkbox1" onChange={() => ClickCheckbox(1)} className="checkBoxOptions" /> 
               <label htmlFor="checkbox1" className="textCheckboxOptions">Газовая плита</label>
@@ -530,7 +546,7 @@ export default function catalog(){
         <div className="conteiner">
           <div className="DivisionThirdCatalog">
             <div className="dropdown2">
-            <svg style={{marginLeft:"10px",marginTop:"9px",position:"absolute"}} width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="SvgSort" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <g clipPath="url(#clip0_2831_2828)">
                   <g opacity="0.6">
                   <path className="imgSort" d="M7.32328 6.74139H11.4807C11.5823 6.74139 11.6647 6.65952 11.6647 6.55807V4.37278C11.6647 4.27148 11.5826 4.18945 11.4807 4.18945H7.32328C7.22199 4.18945 7.13965 4.27133 7.13965 4.37278V6.55822C7.13965 6.65952 7.22183 6.74139 7.32328 6.74139Z" fill="#7A7F86"/>
@@ -546,10 +562,10 @@ export default function catalog(){
                   </clipPath>
                   </defs>
               </svg>
-              <button className="List List2" id = "SortirovkaBtn" onClick={()=>sortInfo(dispatch)}>
-                {sort}
-              </button>
-              <ul className="List__dropdown" id="List__dropdown">
+                <button className="List List2" id = "SortirovkaBtn" onClick={()=>sortInfo(dispatch)}>
+                  {sort}
+                </button>
+              <ul style={{marginLeft:"25px"}} className="List__dropdown" id="List__dropdown">
                 <li className="dropdown__item">По умолчанию</li>
                 <li className="dropdown__item">По комнатам</li>
                 <li className="dropdown__item">По цене</li>
@@ -601,7 +617,7 @@ export default function catalog(){
         <div className="conteiner">
           <div className="SetkaCards">
             <h1 className="Naideno" style={{marginBottom:"40px"}}>Найдено {Arenda.length} результатов</h1>
-            <Row style={{display:"flex", flexWrap:"wrap",justifyContent:"space-between"}}>
+            <Row className="Row" style={ToggleState==2?{display:"flex", flexWrap:"wrap",justifyContent:"space-between"}:{}}>
             {
               Arenda.length?
                 (ToggleState==2)?(  

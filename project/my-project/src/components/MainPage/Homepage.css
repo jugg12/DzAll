@@ -1,7 +1,4 @@
-*{
-  margin: 0;
-  padding: 0;
-}
+
 /* section1 */
 
 .first{
@@ -190,7 +187,7 @@ select {
 }
 
 .List:hover{
-  background: url("../../img/footer/arrowbottom.svg") no-repeat 90% rgba(102, 78, 249, 0.1);;
+  background: url("../../img/footer/arrowbottom.svg") no-repeat 90% rgba(102, 78, 249, 0.1);
   transition: .2s background linear;
 }
 
@@ -417,6 +414,7 @@ align-items: center;
 
 .MainOptions{
   display: flex;
+  flex-wrap: wrap ;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -623,7 +621,7 @@ width: 516px;
 }
 
 .pos{
-  margin: 37.5px 0px 0px 37px;
+  padding: 37.5px 0px 0px 37px;
   margin-bottom: 92px;
   height: 169px;
 }
@@ -784,6 +782,10 @@ justify-content: space-between;
   justify-content: space-between;
 }
 
+.ColRowHome{
+  margin-top: 100px;
+}
+
 /* pervoe Division */
 
 .pervoe__Division__third__block{
@@ -847,6 +849,7 @@ opacity: 0.6;
 
 .vtoroe__Division__third__block{
   position: absolute;
+  z-index: -5;
   right: 0;
   width: 56%;
   padding-top: 58px;
@@ -858,19 +861,15 @@ opacity: 0.6;
 
 .select_metro{
   display: flex;
-  justify-content: flex-end;
-  margin-right: 244px;
+  justify-content: flex-end; 
+  margin-top: 50px;
+  align-items: center;
   
 }
 
 
 .List.Listmetro{
   box-shadow: 0px 10px 20px rgba(0, 96, 206, 0.1);
-  margin-right: 30px;
-}
-
-.List.Listmetro:last-child{
-  margin-right: 0px;
 }
 
 .arrow__left{
@@ -1297,11 +1296,21 @@ margin-right: 38px;
   box-shadow:0 0px 10px #000000, inset 0px 0px 2px #000000;
 }
 
-@media (max-width: 1308px) {
+@media (max-width: 1325px) {
   /* 1 block */
   .Items{
     width: auto;
     margin-right: 0;
+  }
+
+  .raz.Options::after{
+    left: -35px;
+    width: 540%;
+  }
+
+  .raz.Options.active::before{
+    left: -35px;
+    width: 540%;
   }
 
   .List{
@@ -1310,7 +1319,7 @@ margin-right: 38px;
     padding: 12px 43px 25px 0px;
   }
 
-  .choose{
+  .choose3{
     display: none;
   }
 
@@ -1349,20 +1358,33 @@ margin-right: 38px;
   
   /* 3 block  */
   
-  
-  
-  /* slick style */
-  
-  .slider-wrapper {
-    width: 1100px;
+  .Division__third__block{
+    flex-direction: column;
+    justify-content: center;
+    text-align:center;
+  }
+  .vtoroe__Division__third__block{
+    margin-top: 82cqh;
   }
 
-  .ContactsBtn::before{
-    width: 37%;
+  .select_metro{
+    justify-content: center;
+    margin-top: 25px;
   }
-  .Morebtn::before {
-    width: 33%;
+
+  .predlojenia{
+    margin-top: 50px;
   }
+
+  .ColRowHome {
+    margin-top: 160px;
+  }
+
+  .vtoroe__Division__third__block{
+    width: 100%;
+  }
+  
+  /* slick style */
 
   /* 4 block */
 
@@ -1372,11 +1394,415 @@ margin-right: 38px;
   .info__forth__inner__text{
     font-size: 15px;
   }
-
-
 }
 
+@media (max-width: 1150px) {
+  /* 1 block */
+  .block__item{
+    padding: 1px 120px 11px 120px;
+  }
 
+  .Items{
+    width: auto;
+    margin-right: 0;
+  }
+
+  .block__tabs{
+    display: none;
+  }
+
+  .select__filter{
+    display: none;
+  }
+
+  .List{
+    width: 150px;
+    font-size: 12.5px;
+    padding: 12px 43px 25px 0px;
+  }
+
+  .choose3{
+    display: none;
+  }
+
+  .choose2{
+    display: block;
+  }
+
+  .raz.Options{
+    margin-right: 20px;
+  }
+
+  .raz:hover{
+    margin-bottom: 0px;
+    border-bottom: none;
+  }
+
+  .raz.Options:hover{
+    margin-bottom: 0px;
+    border-bottom: none;
+  }
+
+  .select__filter__item__css2{
+    display: none;
+  }
+
+  /* 2 block */
+
+  .second__block{
+    margin-top: 35px;
+  }
+  .pervoe__Division{
+    max-width: 1100px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .second__block__Division {
+    max-height: 1100px;
+  }
+
+  .second__block__item1{
+    margin-right: 0;
+    height: auto;
+    width: 516px;
+  }
+  
+  .second__block__item2{
+    width: 410px;
+  }
+
+  .second__block__item3{
+    margin-right: 0;
+    width: 410px;
+  }
+
+  .second__block__item4{
+    width: 516px;
+  }
+  
+  /* 3 block  */
+  
+  /* slick style */
+  .Division__third__block{
+    flex-direction: column;
+    justify-content: center;
+    text-align:center;
+  }
+  .select_metro{
+    justify-content: center;
+  }
+  .ContactsBtn::before{
+    width: 37%;
+  }
+  .Morebtn::before{
+    width: 33%;
+  }
+
+  .btndob.btnpredl{
+    display: block !important;
+    margin-left: -20px;
+    padding: 10px 8px;
+    z-index: 15;
+  }
+  
+  .btndob.btnpredl{
+    display: block !important;
+    margin-left: -20px;
+    padding: 10px 8px;
+    z-index: 15;
+  }
+
+  .predlojenia{
+    justify-content: center;
+  }
+
+
+  /* 4 block */
+
+  .razmestitbtn{
+    display: block !important;
+    margin-left: 0 !important;
+  }
+
+  .item__info__forth{
+    max-width: 200px;
+    padding: 13px 20px 25px 21px;
+  }
+
+  .info__forth__intro__text{
+    font-size: 24px;
+  }
+
+  .info__forth__inner__text{
+    font-size: 15px;
+  }
+  
+  .info__foth__sec__text{
+    font-size: 12px;
+  }
+
+  .info__foth__sec__text2{
+    margin-bottom: 11px;
+  }
+
+  .Voyti{
+    font-size: 13px !important;
+  }
+
+  .Voyti.razmestitbtn{
+    padding: 10px 7px;
+  }
+
+  /* 5 block */
+
+  .Division__fivth{
+    flex-direction: column;
+  }
+
+  .Divisiontochki{
+    margin-top: 199px;
+    margin-left: 386px;
+  }
+
+  .secondpart{
+    margin-left: 15px;
+    height: 450px;
+  }
+}
+
+@media (max-width:768px){
+  .block__item{
+    padding: 1px 80px 11px 80px;
+  }
+
+  /* 2 block */
+  .second__block__item1{
+    width: 380px;
+    height: 245px;
+  }
+
+  .sec__inner__text{
+    font-size: 12px;
+  }
+  .sec__sec__text{
+    font-size: 18px;
+  }
+  .pos{
+    padding: 18.5px 0px 0px 27px;
+  }
+  .btns{
+    width: 350px;
+  }
+  .arrow{
+    margin-left: 270px;
+  }
+
+  .arrow.arrow2{
+    margin-left: 270px;
+    margin-top:46px
+  }
+  .second__block__item2{
+    width: 380px;
+  }
+  .second__block__item3{
+    width: 380px;
+  }
+  .second__block__item4{
+    width: 380px;
+  }
+  .img{
+    width: 435px;
+  }
+
+  .pervoe__Division{
+    max-width: 768px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 3 block */
+  .Division__third__block{
+    justify-content: center;
+  }
+
+  .info__pervogo__delenia{
+    text-align: center;
+  }
+  
+  .select_metro{
+    justify-content: center;
+    margin-right: 0;
+    margin-left: 37px;
+  }
+  .ContactsBtn::before{
+    width: 33%;
+  }
+
+  .vtoroe__Division__third__block{
+    width: 100%;
+    padding-top: 106px;
+  } 
+
+/* 4 block */
+  .innerText{
+    width: 300px;
+    font-size: 24px;
+  }
+  
+  .Division__flex{
+    flex-direction: column; 
+    text-align: center;
+    align-items: center;
+  }
+
+  .Division1.Division1Home{
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  
+  .Divisiontochki{
+    margin-top: 210px;
+    margin-left: 403px;
+  }
+
+  .Division2_1{
+    margin-right: 0;
+  }
+  .Division2__text{
+    text-align: center;
+    margin-right: 0;
+    max-width:100%
+  }
+
+  .Division__text{
+    text-align: center;
+  }
+  .item__info__forth{
+    max-width: 275px;
+    margin-left: 0px;
+    margin-bottom: 155px;
+  }
+
+  .item__info__forth:last-child{
+    margin-bottom: 0;
+  }
+
+  /* 5 block */
+
+  .twoparts{
+    flex-direction: column;
+  }
+
+  .dopinfo__pervogo__delenia2{
+    text-align: center;
+  }
+  
+}
+
+@media(max-width:480px){
+  .block__item{
+    padding: 1px 1px 11px 9px;
+  }
+
+  .innerText{
+    width: auto;
+    font-size: 16px;
+  }
+
+  /* 2 block */
+  
+  .pervoe__Division{
+   display: none;
+  }
+
+  /* 3 block */
+  .third__block{
+    margin-top: 0;
+  }
+  .ColRowHome{
+    margin-top: 180px;
+  }
+  .Division__third__block{
+    justify-content: center;
+  }
+
+  .info__pervogo__delenia{
+    text-align: center;
+  }
+  
+  .select_metro{
+    justify-content: center;
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .vtoroe__Division__third__block{
+    margin-top: 85cqh;
+  } 
+  .btndob.btnpredl{
+    margin-left: 0;
+  }
+
+/* 4 block */
+  
+  .Division__flex{
+    margin-top: 50px;
+  }
+
+  .Division1.Division1Home{
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  
+  .Divisiontochki{
+    margin-top: 109px;
+    margin-left: 226px;
+  }
+
+  .secondpart{
+    margin-left: 0;
+  }
+
+  .Division2_1{
+    margin-right: 0;
+  }
+  .Division2__text{
+    text-align: center;
+    margin-right: 0;
+    max-width:100%
+  }
+
+  .Division__text{
+    text-align: center;
+  }
+  .item__info__forth{
+    max-width: 235px;
+  }
+
+  .item__info__forth:last-child{
+    margin-bottom: 0;
+  }
+  .info__forth__inner__text{
+    width: 310px;
+  }
+
+  .imglast{
+    margin-right: 0;
+  }
+
+  /* 5 block */
+
+  .twoparts{
+    flex-direction: column;
+  }
+
+  .dopinfo__pervogo__delenia2{
+    text-align: center;
+  }
+}
 
 
 

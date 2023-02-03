@@ -16,7 +16,7 @@ import { Form, Formik,Field } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { decrementAdvertisement, incrementAdvertisement, setIdItem, setIdItemChange, setLength } from "../../store/actions/advertisementAction"; 
 import { setCity, setRooms } from "../../store/slices/FilterSlice";
-import { notifyEditingAdvertisement, notifyDeleteAdvertisement } from "../Toasts/ToastsContent";
+import { notifyEditingAdvertisement, notifyDeleteAdvertisement, notifyErrorAuthorization, notifyErrorAddAdvertisement } from "../Toasts/ToastsContent";
 import { advertisementItem } from "../../interfaces";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination,Navigation } from "swiper";
@@ -24,7 +24,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { FileObjectAdvertisementFromAdvertisement, OwnerImgAdvertisementFromAdvertisement } from "../Functions/btnChooseFile";
-import { downLoadImgAdvertisements, downLoadImgOwner, handleCityInfo, handleDescriptionInfo, handleDopNamesInfo, handleLinkMailInfo, handleLinkViberInfo, handleLinkWhatsInfo, handleMailInfo, handleMetroInfo, handleNameInfo, handleNumberInfo, handleRayonInfo, handleRoomsInfo, handleSentInfo, handleSquareInfo, handleTotalInfo } from "../HandlersOnChanges/handleOnChange";
+import { downLoadImgAdvertisements, downLoadImgOwner, handleCityInfo, handleDescriptionInfo, handleDopNamesInfo, handleLinkMailInfo, handleLinkViberInfo, handleLinkWhatsInfo, handleMailInfo, handleMetroInfo, handleNameInfo, handleNumberInfo, handleRayonInfo, handleRoomsInfo, handleSentInfo, handleSleepPlaces, handleSquareInfo, handleTotalInfo } from "../HandlersOnChanges/handleOnChange";
 import { clickChangeAdvertisement, clickDeleteAdvertisement } from "../Functions/clickChange";
 
 export default function advertisement() {
@@ -59,20 +59,19 @@ export default function advertisement() {
   const [linkViberInfo,setLinkViberInfo] = useState<string>(null);
   const [linkMailInfo,setLinkMailInfo] = useState<string>(null);
   const [linkWatsInfo,setLinkWatsInfo] = useState<string>(null);
-  const [dopNames,setDopNames] = useState<string>(null);
+  const [dopNames,setDopNames] = useState<string[]>(null);
   const [sleepPlaces,setsleepPlaces] = useState<string>(null);
   const [Loading,setLoading]=useState<boolean>(true);
   const [LoadingInfo,setLoadingInfo]=useState<boolean>(true);
   const [ToggleState,setToggleState] = useState<number>(1);
   
   const checkboxInputValue_moduleChange = document.getElementById("checkboxInputValue_moduleChange");
-  const FiltersleepPlacesDop = document.getElementById("FiltersleepPlacesDop");
+  const FiltersleepPlacesDopAdverts = document.getElementById("FiltersleepPlacesDopAdverts");
   let CloneInfo = [];
   const dispatch = useDispatch();
   const idItem = useSelector((state:any)=>state.advertisementAction.idItem);
   const idItemChange = useSelector((state:any) => state.advertisementAction.idItemChange);
   const LengthAdvertisements = useSelector((state:any) => state.advertisementAction.length);
-  
   const push = (item) =>{
     navigate(`/advertisement/test/${item}`)
   }
@@ -171,6 +170,17 @@ export default function advertisement() {
     });
   }
   },[idItemChange,itemInfo]);
+  
+  useEffect(()=>{
+    // Проверка чекбоксов
+    document.querySelectorAll(".checkBoxOptions3").forEach((checkbox)=>{
+      dopNames.map((massive__item) => {
+        if(massive__item==((checkbox as HTMLInputElement).value).replace(/\s/g, '')){
+          (checkbox as HTMLInputElement).checked=true;
+        }
+      })
+    })
+  },[dopNames])
 
   const ChangeInfoAdvertisement = () => { // Обновление данных
     const choose = confirm("Вы уверены, что хотите изменить Ваше объявление?\n(при нажатии на `нет`, Вы cможете изменить введенные Вами данные)");
@@ -194,10 +204,10 @@ export default function advertisement() {
         "linkMail":linkMailInfo,
         "options":[
           {
-            "name":((document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value!=="")?
-            (document.getElementById(`checkboxInputValue_moduleChange`) as HTMLInputElement).value.split(",")
+            "name":((checkboxInputValue_moduleChange as HTMLInputElement).value!=="")?
+            (checkboxInputValue_moduleChange as HTMLInputElement).value.split(",")
                   :[],
-            "sleepPlaces":FiltersleepPlacesDop.textContent!=="Выберите"? FiltersleepPlacesDop.textContent:""
+            "sleepPlaces":(FiltersleepPlacesDopAdverts.textContent!=="Выберите"?FiltersleepPlacesDopAdverts.textContent:"")
           }
         ],
         "total":totalInfo,
@@ -263,7 +273,7 @@ export default function advertisement() {
             <div className="allCatalog">
               <div className="textFilterInfo">
                 <div className="ArendaInnerText">
-                  <h1>Ваши объявления</h1>
+                  <h1 className="ArendaInnerTextH1">Ваши объявления</h1>
                 </div>
               </div>
             </div>
@@ -274,7 +284,7 @@ export default function advertisement() {
       <section className="SecondFavourites" style={{marginTop:"50px"}}>
         <div className="CardsFavourites">
           <div className="conteiner">
-            <div className="FavouritesMain">
+            <div className="FavouritesMain" style={advertisementChange.length==0?{justifyContent:"center"}:{justifyContent:"space-between"}}>
               {
               Loading?
               <div className="" style={{display:"flex",width:"1378px",flexDirection:"column"}}>
@@ -291,7 +301,7 @@ export default function advertisement() {
               </div>:advertisementChange.length ? (
                 currentPage.map((item) => {
                   return (
-                    <Col key={item.id} style={{marginBottom:"25px",width:"33.33333%"}}>
+                    <Col key={item.id}>
                       <Card className="card__style" style={{width:"406px",height:"535px"}}>
                         <div className="ListInformContacts">  
                           <div className="CardMain">
@@ -359,7 +369,7 @@ export default function advertisement() {
                               </Card.Text>  
                                 <div className="btnContactsMain" style={{marginTop:"80px"}}>
                                 <div className="" style={{display:"flex"}}>
-                                  <div className="change" id={`change-${item.id}`} onClick={()=>clickChangeAdvertisement(item.id,dispatch,setModalAdvertisements)}>
+                                  <div className="change" title="Изменить объявление" id={`change-${item.id}`} onClick={()=>{login && window.innerWidth>1300?clickChangeAdvertisement(item.id,dispatch,setModalAdvertisements):window.innerWidth<1300 && !login?notifyErrorAuthorization():notifyErrorAddAdvertisement()}}>
                                     <svg className="change__pancil" viewBox="0 0 80 80" width="20" height="20" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                       <title/>
                                       <g id="Layer_2">
@@ -370,7 +380,7 @@ export default function advertisement() {
                                       </g>
                                     </svg>
                                   </div>
-                                  <div className="delete" id={`delete-${item.id}`} onClick={()=>{clickDeleteAdvertisement(item.id,dispatch)}}>
+                                  <div className="delete" title="Удалить объявление" id={`delete-${item.id}`} onClick={()=>{clickDeleteAdvertisement(item.id,dispatch)}}>
                                     <svg className="deleteIcon" height="20" viewBox="0 0 48 48" width="20" xmlns="http://www.w3.org/2000/svg">
                                       <path className="delete__Fill" d="M12 38c0 2.21 1.79 4 4 4h16c2.21 0 4-1.79 4-4v-24h-24v24zm26-30h-7l-2-2h-10l-2 2h-7v4h28v-4z"/>
                                       <path  d="M0 0h48v48h-48z" fill="none"/>
@@ -386,6 +396,15 @@ export default function advertisement() {
                                             </svg>
                                           </div>
                                           <p className="textContacts">Контакты</p>    
+                                        </div> 
+                                    </button>
+                                    <button className="ContactsBtn ContactsBtnNoText" style={{alignItems:"center",display:"none"}} id={`${item.id}`} onClick={()=>btnclick(item.id)}>
+                                        <div className="btnall2" style={{padding:"10px 18px 8px 18px"}}>
+                                          <div className="btniconContacts">
+                                            <svg width="9" height="16" viewBox="0 0 9 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                              <path d="M7.18253 0.349609H1.72797C0.787063 0.349609 0.0234375 1.11324 0.0234375 2.05415L0.0234375 13.6451C0.0234375 14.586 0.787063 15.3496 1.72797 15.3496H7.18253C8.12344 15.3496 8.88707 14.586 8.88707 13.6451V2.05415C8.88707 1.11324 8.12344 0.349609 7.18253 0.349609ZM4.45527 14.6678C3.88935 14.6678 3.43254 14.211 3.43254 13.6451C3.43254 13.0792 3.88935 12.6223 4.45527 12.6223C5.02119 12.6223 5.478 13.0792 5.478 13.6451C5.478 14.211 5.02116 14.6678 4.45527 14.6678ZM7.52345 11.9405H1.38709V2.39507H7.52345V11.9405Z" fill="#664EF9"/>
+                                            </svg>
+                                          </div>
                                         </div> 
                                     </button>
                                     <div className="informContacts" id={`${item.id}`}>
@@ -745,7 +764,7 @@ export default function advertisement() {
                             <div className="DivisionOptions">
                               <p className="titleOptions">Спальные места</p>
                               <div className="dropdown">
-                                <button className="List" id="FiltersleepPlacesDop" type="button" onClick={defaultClickDropDown}>{sleepPlaces!==""?sleepPlaces:"Выберите"}</button>
+                                <button className="List" id="FiltersleepPlacesDopAdverts" type="button" onClick={defaultClickDropDown}>{sleepPlaces?sleepPlaces:"Выберите"}</button>
                                 <ul className="List__dropdown">
                                   <li className="dropdown__item">1 место</li>
                                   <li className="dropdown__item">2 места</li>
@@ -754,7 +773,7 @@ export default function advertisement() {
                                 </ul>
                                 <Field type="text" name="select__category" className="drodown__item__hiden" />
                               </div>
-                              <input type="text" id="checkboxInputValue_moduleChange" value={dopNames} onChange={()=>handleDopNamesInfo(event.target,setDopNames,checkboxInputValue_moduleChange)} className="drodown__item__hiden checkboxInputValue_moduleChange" />
+                              <input type="text" id="checkboxInputValue_moduleChange" defaultValue={dopNames} className="drodown__item__hiden checkboxInputValue_moduleChange" />
                               <div className="checkbox" style={{display:"flex",marginBottom:"10px",marginTop:"30px"}}>
                                 <input type="checkbox" value={"Газоваяплита"} defaultValue={"Газоваяплита"} id="checkbox_moduleChange1" onChange={() => ClickCheckbox(1)} className="checkBoxOptions3"/> 
                                 <label htmlFor="checkbox_moduleChange1" className="textCheckboxOptions">Газовая плита</label>

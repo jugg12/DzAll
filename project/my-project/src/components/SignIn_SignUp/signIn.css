@@ -56,14 +56,10 @@ html,body{
   flex-direction: column;
 }
 
-.LOGIN{
-  display: flex;
-}
-
 .login{
   outline: none;
   background: #F7F7F7;
-  width: 80%;
+  width: 76%;
   border: 0px;
   border-radius: 30px;
   padding: 15px 20px 15px 55px;
@@ -79,8 +75,6 @@ html,body{
   outline: 2px solid rgba(78, 100, 249, 0.8);
   fill: #664EF9;
 }
-
-
 
 .login:hover ~ .userOf .user{
   opacity: 1;
@@ -111,7 +105,7 @@ html,body{
 .password{
   background: #F7F7F7;
   border: 0px;
-  width: 80%;
+  width: 76%;
   border-radius: 30px;
   padding: 15px 20px 15px 55px;
 }
@@ -302,7 +296,7 @@ html,body{
 .login__error{
   outline: none;
   transition: .2s linear outline;
-  width: 70%;
+  width: 76%;
   margin-bottom: 20px;
   border-radius: 30px;
   padding: 15px 20px 15px 55px;
@@ -312,7 +306,7 @@ html,body{
 
 .password__error{
   outline: none;
-  width: 80%;
+  width: 76%;
   border-radius: 30px;
   padding: 15px 20px 15px 55px;
   border: 1px solid #EB5757;
@@ -330,9 +324,10 @@ html,body{
 
 .icon__error{
   visibility: visible;
-  position: relative;
-  right: 11%;
+  position: absolute;
+  right: 0;
   margin-top: 13.5px;
+  margin-right: 10px;
 }
 
 .iconHidden{
@@ -360,4 +355,10 @@ html,body{
   font-size: 16px;
   line-height: 24px;
   color: #FFFFFF;
+}
+
+@media (max-width:1325px){
+  .icon__error{
+    margin-right: 10px;
+  }
 }

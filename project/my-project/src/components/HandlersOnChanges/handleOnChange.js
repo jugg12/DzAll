@@ -105,3 +105,8 @@ export const handleDopNamesInfo = (event,setDopNames,checkboxInputValue_moduleCh
     setDopNames(result);
   }
 }
+
+export const handleSleepPlaces = (event,setsleepPlaces) => {
+    const result = event.value;
+    setsleepPlaces(result);
+}

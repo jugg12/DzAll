@@ -77,6 +77,10 @@
   max-width: 249px;
 }
 
+.Voyti.back2{
+  display: none;
+}
+
 .tochki{
   margin-top: 96px;
 
@@ -84,4 +88,101 @@
 
 footer{
   margin-top: 0;
+}
+
+@media(max-width:1325px){
+  .block404{
+    margin-right: 70px;
+  }
+
+  .tochkiblock{
+    margin-right: 13px;
+  }
+  .Text {
+    font-size: 45px;
+  }
+
+  .SecondText {
+    font-size: 16px;
+  }
+}
+
+@media(max-width:1150px){
+  .Forma.formaoshibki{
+    min-height: 66vh;
+  }
+
+  .tochki{
+    margin-top: 130px;
+  }
+
+  .pervoeDivision{
+    margin-left: 77px;
+  }
+  .block404{
+    margin-right: 70px;
+  }
+
+  .Img404{
+    width: 400px !important;
+    height: 200px !important;
+  }
+
+  .tochkiblock{
+    margin-right: 13px;
+  }
+  .Text {
+    font-size: 35px;
+    line-height: 42px;
+  }
+
+  .SecondText {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  
+  .Voyti.back{
+    display: none;
+  }
+  .Voyti.back2{
+    display: flex;
+    padding: 12px 37px;
+  }
+
+  .Home{
+    margin-right: 0;
+  }
+}
+
+@media(max-width:768px){
+  .DivisionOshibki{
+    flex-direction: column-reverse;
+  }
+
+  .block404{
+    margin-right: 0;
+  }
+
+  .pervoeDivision{
+    margin:0;
+    text-align: center;
+  }
+
+  .Voyti.back2{
+    display: inline;
+    margin-bottom: 15px;    
+    padding: 8px 18px;
+    margin-right: 0;
+    justify-content: center;
+  }
+}
+
+@media(max-width:480px){
+  .Img404{
+    width: 281px !important;
+    height: 200px !important;
+  }
+  .tochkiblock{
+    margin-right: 0;
+  }
 }

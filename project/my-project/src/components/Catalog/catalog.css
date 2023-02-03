@@ -171,6 +171,20 @@
   color: #FFFFFF;
 }
 
+.Show2{
+  display: none;
+  padding: 9px 16px;
+  transition: .2s background linear;
+  background: #664EF9;
+  border-radius: 22px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFFFFF;
+}
+
 .Show:hover{
   background: #4126f3;
   transition: .2s background linear;
@@ -203,7 +217,7 @@
 }
 
 .List2{
-  /* padding: 9.5px 92px 9.5px 11px; */
+  margin-left: 25px;
   width: 232px;
   height: 36px;
   background: url("../../img/footer/arrowbottom.svg") no-repeat 90% #FFFFFF;
@@ -213,6 +227,12 @@
   font-size: 14px;
   line-height: 17px;
   color: #1E2123;
+}
+
+.SvgSort{
+  margin-left:40px;
+  margin-top:12px;
+  position:absolute;
 }
 
 /* 2oe Division jsconten space between */
@@ -393,3 +413,217 @@ width: 319px;
   left: 28.5%;
 }
 
+@media (max-width:1325px){
+  .Show{
+    display: none
+  }
+
+  .Show2{
+    display: block;
+  }
+
+  .raz.Options.OptionsCatalog{
+    margin-right: 0;
+  }
+
+  .raz.Options.OptionsCatalog::after{
+    left: -25px;
+    width: 410%;
+  }
+
+  .raz.Options.OptionsCatalog::before{
+    left: -25px;
+    width: 410%;
+  }
+  
+  .DopOptions.active{
+    width: auto;
+  }
+
+  .select__filter__item__css3{
+    text-align: center;
+  }
+  
+}
+
+@media(max-width:1150px){
+  .ContactsBtn2::before{
+    left: 20.5%;
+  }
+  .Naideno{
+    text-align: center;
+  }
+  .card__style {
+    width: 360px !important;
+  }
+
+  .ArendaInnerTextH1{
+    line-height: 40px
+  }
+
+  .List2{
+    margin-left: 0;
+  }
+
+  .SvgSort{
+    margin-left: 15px;
+  }
+  .spisok{
+    display: none;
+  }
+
+  .spisok__active{
+    display: none;
+  }
+
+  .Plitki{
+    display: none;
+  }
+
+  .Plitki__active{
+    display: none;
+  }
+  
+  .allitemsselectcatalog{
+    flex-direction: column;
+  }
+
+  .select__filter__item3{
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+
+  .lineDivision{
+    display: none;
+  }
+
+  .select__filter__item__css2{
+    display: block;
+  }
+
+  .select__filter__item__css3{
+    margin-bottom: 15px;
+    margin-right: 0;
+    text-align: center;
+  }
+
+  .select__filter__item3{
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  .raz.Options.OptionsCatalog{
+    margin-right: 0;
+  }
+
+  .raz.Options.OptionsCatalog::after{
+    top: 50px;
+    left: 0;
+    width: 100%;
+  }
+
+  .raz.Options.OptionsCatalog::before{
+    top: 50px;
+    left: 0;
+    width: 100%;
+  }
+
+  .clearAll{
+    margin-bottom: 15px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .Show2{
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+}
+
+@media(max-width:768px){
+  .ContactsBtn2::before{
+    left: 23.5%;
+    width: 33%;
+  }
+  .Morebtn::before{
+    width: 30%;
+  }
+  .card__style {
+    width: 406px !important;
+  }
+ .Row{
+  justify-content: center !important;
+ }
+}
+
+@media(max-width:480px){
+  /* Шапка */
+  .ContactsBtn.ContactsBtn2{
+    display: none;
+  }
+  
+  .ContactsBtn.ContactsBtnNoText{
+    display: block !important;
+  }
+  .ContactsBtn.ContactsBtnNoText::before{
+    width: 19%;
+    height: 79%;
+    left: 25%;
+  }
+
+  .breadcrumbs{
+    justify-content: center;
+  }
+  .ArendaInnerTextH1{
+    text-align: center;
+  }
+  .ArendaSecText{
+    text-align: center;
+    line-height: 26px;
+  }
+  .categories{
+    justify-content: center !important;
+  }
+  .categoriesBtn{
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+  /* 2 шапка с сортами */
+
+  .DivisionThirdCatalog{
+    flex-direction: column;
+    align-items: center;
+  }
+  .secondDivisionThirdblockCatalog{
+    margin-top: 20px;
+  }
+  /* Стили карточки */
+  .card__style{
+    width: 260px !important;
+  }
+  .totalPeople{
+    display: none;
+  }
+  .totalPeople.rooms{
+    display: block;
+  }
+  .metrorayon{
+    display: none;
+  }
+
+  .ContactsBtn::before{
+    width: 53%;
+  }
+  .Morebtn::before{
+    width: 46%;
+  }
+  /* пагинация */
+
+  .mainCatalogRecomentation{
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  .formaCatalog{
+    min-height: 35vh;
+  }
+}

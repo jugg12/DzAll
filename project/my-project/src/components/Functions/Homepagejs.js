@@ -2,7 +2,6 @@ import { cityIn } from 'lvovich';
 import { clearFilter, setCity, setCityRayonHomePage, setRooms, setSort } from '../../store/slices/FilterSlice';
 import qs from "qs";
 
-
 export function defaultClickDropDown(){ // Кастомный выпадающий список
   document.querySelectorAll(".dropdown").forEach(function(dropdownWrapper){
     const listitemclick=dropdownWrapper.querySelectorAll(".dropdown__item");
@@ -48,6 +47,7 @@ export function MouseLeaveMouseEnterList(dispatch,filterFromHome){ // Навед
           rooms.textContent=`Квартиры в ${cityIn(listitem.id)}`;
           dispatch(setCity(listitem.id));
           dispatch(setRooms(""));
+          
           dispatch(clearFilter(filterFromHome));
           btnclickForRooms.classList.remove("visible");
         })

@@ -46,19 +46,6 @@
   flex-direction: column;
 }
 
-.login{
-  outline: none;
-  background: #F7F7F7;
-  width: 70%;
-  border: 0px;
-  border-radius: 30px;
-  padding: 15px 20px 15px 55px;
-  margin-bottom: 20px;
-}
-
-
-
-
 /* login */
 
 
@@ -67,14 +54,11 @@
   fill: #664EF9;
 }
 
-
-
 .login:hover ~ .userOf .user{
   opacity: 1;
   fill: #664ef9;
   transition: .1s opacity linear;
 }
-
 
 .login:hover{
   outline: 2px solid rgba(78, 100, 249, 0.8);
@@ -137,15 +121,6 @@
 .PASSWORD{
   display: flex;
   border-radius: 30px;
-}
-
-
-.password{
-  background: #F7F7F7;
-  border: 0px;
-  width: 70%;
-  border-radius: 30px;
-  padding: 15px 20px 15px 55px;
 }
 
 .password:hover ~ .LockOf .Lock{
@@ -240,7 +215,7 @@
 .Registrationbtn{
   background: #FFD54F;
   border-radius: 33px;
-  padding: 12px 68px;
+  padding: 12px 70px;
   border: 0;
   font-weight: 700;
   font-size: 16px;
@@ -349,4 +324,19 @@ li::before {
 
 .rc-anchor-alert{
   visibility: hidden;
+}
+
+@media(max-width:900px){
+  .Regforma{
+    max-width: 644px;
+  }
+}
+
+@media(max-width:747px){
+  .Dop{
+    display: none;
+  }
+  .Regforma{
+    max-width: 480px;
+  }
 }

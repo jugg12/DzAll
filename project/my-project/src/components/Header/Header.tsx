@@ -10,7 +10,7 @@ import ClickCheckbox from "../Functions/ClickCheckBox";
 import InputMask from 'react-input-mask';
 import Modal from "../Modules/module";
 import { useDispatch, useSelector } from "react-redux";
-import { notifySuccess, notifyErrorAuthorization, notifySuccessEditing } from "../Toasts/ToastsContent";
+import { notifySuccess, notifyErrorAuthorization, notifySuccessEditing, notifyErrorAddAdvertisement } from "../Toasts/ToastsContent";
 import { setRooms } from "../../store/slices/FilterSlice";
 import { advertisementItem, cities } from "../../interfaces";
 import { validationSchemaAdvertisements } from "../../ValidationSchema";
@@ -25,6 +25,9 @@ import { setLengthFavourites } from "../../store/actions/favouritesAction";
 import { downLoadImgAdvertisements, downLoadImgOwner, downLoadImgUser } from "../HandlersOnChanges/handleOnChange";
 import UserSkeleton from "../Skeletons/userSkeleton";
 import uniqid from 'uniqid';
+import ScrollHeader from "../Functions/ScrollHeader";
+import burgerMenu from "../Functions/BurgerMenuClick";
+
 
 const Header = () => {
   const[modalUserChange,setModalUserChange] = useState<boolean>(false);
@@ -56,7 +59,7 @@ const Header = () => {
   const toggleTab = (index) =>{
     setToggleState(index)
   }
-
+  ScrollHeader(lengthFavourites,heart)
   useEffect(()=>{ // данные закладк
     if(login){
       axios.get(`/users?login=${login}`).then((data) => {
@@ -77,12 +80,17 @@ const Header = () => {
 
   useEffect(() => {
     if (login){
-      axios.get(`/users?login=${login}`).then((data) => {
-        setUserImg(data.data[0].url);
-      });
       dispatch(setLengthFavourites(favourites));
     }
   },[login,favourites]);
+
+  useEffect(()=>{
+    if (login){
+      axios.get(`/users?login=${login}`).then((data) => {
+        setUserImg(data.data[0].url);
+      });
+    }
+  },[login])
 
   useEffect(() => {
     if(lengthFavourites>0 && heart!==null) {
@@ -121,30 +129,13 @@ const Header = () => {
   }).then(()=>{setLoading(false)})
     localStorage.setItem('login',value.login);
     login=value.login;
-    setUserImg(imgUrlUser)
+    if(imgUrlUser){
+      setUserImg(imgUrlUser)
+    }
     setModalUserChange(false);
     notifySuccessEditing();
   }
 
-  //  Появление шапки
-  window.onscroll=() => {
-    const header = document.querySelector(".UpNav");
-    if (header){
-      if(window.pageYOffset > 95){
-        header.classList.add("UpNav__fixed")
-      }
-      else{
-        header.classList.remove("UpNav__fixed");
-      }
-      
-      if(lengthFavourites>0 && heart!==null) { //Пульсация сердца
-        heart.classList.add("pulse");
-      }
-      else if(lengthFavourites==0 && heart!==null){
-        heart.classList.remove("pulse");
-      }
-    }
-  }
 
    const [Cities,setCities]=useState<cities[]>([]);
    useEffect(()=>{
@@ -223,22 +214,22 @@ const Header = () => {
     <>
     <header>
        <nav>
-            <div className="conteiner">
+          <div className="conteiner">
             <div className="UpNav">
               <div className="leftpart" style={{display:"flex",alignItems:"center"}}>
-                <NavLink to="/" className="item" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>Главная</NavLink>
-                <NavLink to="/news"className="item" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>Новости</NavLink>
-                <NavLink to="/123"className="item" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>Размещение и тарифы</NavLink>
-                <NavLink to="/map"className="item" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
+                <NavLink to="/" className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Главная</NavLink>
+                <NavLink to="/news"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Новости</NavLink>
+                <NavLink to="/123"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Размещение и тарифы</NavLink>
+                <NavLink to="/map"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>
                   <svg style={{marginRight:"5px"}} width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7.43757 1.74419C6.70501 0.627907 5.49571 0 4.13525 0C2.78641 0 1.57711 0.627907 0.821293 1.74419C0.0654788 2.83721 -0.10894 4.23256 0.356176 5.45349C0.484083 5.77907 0.681758 6.11628 0.937572 6.4186L3.87943 9.88372C3.9492 9.95349 4.01897 10 4.12362 10C4.22827 10 4.29804 9.95349 4.3678 9.88372L7.32129 6.4186C7.57711 6.11628 7.78641 5.7907 7.90269 5.45349C8.3678 4.23256 8.19339 2.83721 7.43757 1.74419ZM4.13525 5.86047C3.13525 5.86047 2.30966 5.03488 2.30966 4.03488C2.30966 3.03488 3.13525 2.2093 4.13525 2.2093C5.13525 2.2093 5.96083 3.03488 5.96083 4.03488C5.96083 5.03488 5.14687 5.86047 4.13525 5.86047Z" fill="#8291A3"/>
                   </svg>
                   Объявления на карте
                 </NavLink>
-                <NavLink to="/contacts"className="item" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>Контакты</NavLink>
+                <NavLink to="/contacts"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Контакты</NavLink>
               </div>
               <div className="rightpart">
-                  <NavLink to="/favourites"className="item item3" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>
+                  <NavLink to="/favourites"className="item item3" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>
                     <span>Закладки</span>
                     <svg className="icon" xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" fill="none" width="16px">
                       <path d="M0 0h24v24H0z" fill="none"/>
@@ -249,7 +240,7 @@ const Header = () => {
                   (login)!==null?
                     <div className="UserLink">
                       <div className="dropdown2">
-                        <button className="List" onClick={()=>UserInfoClick(login,setModalUserChange,navigate)} style={{padding:"0px 69px 0px 12px",margin:"1px 0px"}}>
+                        <button className="List" onClick={()=>UserInfoClick(login,setModalUserChange,navigate)} style={{padding:"0px 69px 0px 12px",margin:"1px 0px",border:"none",width:"116px",boxShadow:"none"}}>
                           <div style={{display:"flex",alignItems:"center",boxSizing:"border-box",position:"absolute",marginTop:"-15px"} } >
                             {
                               Loading?
@@ -263,7 +254,7 @@ const Header = () => {
                             <span className="max">{login}</span>
                           </div>
                         </button >
-                        <ul className="List__dropdown" >
+                        <ul className="List__dropdown userDropdown">
                           <li key={"change5"} className="dropdown__item">Редактировать</li>
                           <li key={"change6"} className="dropdown__item">Мои объявления</li>
                           <li key={"exit"} className="dropdown__item">Выйти</li>
@@ -279,7 +270,7 @@ const Header = () => {
         </nav>
     </header>
     <div className="head">
-    <div className="conteiner" >
+      <div className="conteiner" >
         <div className="Menu">
           <Link to="/">
             <svg style={{cursor:"pointer"}} className="Logo" width="135" height="19" viewBox="0 0 135 19" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -292,38 +283,151 @@ const Header = () => {
             </defs>
             </svg>
           </Link>
-              <NavLink to={`/catalog/city=`} onClick={()=>{dispatch(setRooms(""))}} className="Items" style={{marginRight:"39px",padding:0}}>
-                <div className="dropdown4" onMouseEnter={()=>MouseLeaveMouseEnterList(dispatch,filterFromHome)}>
-                  <div className="group Items" style={{marginRight:"0px"}}>
-                    <p className="rooms">{rooms=="Квартиры на сутки"?rooms:`Квартиры в ${cityIn(city)}`}</p>
-                    <svg style={{marginLeft:"15px"}}width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.0069 2.61628C9.90811 0.941861 8.09415 0 6.05346 0C4.0302 0 2.21625 0.941861 1.08253 2.61628C-0.0511958 4.25581 -0.312824 6.34884 0.384851 8.18023C0.576711 8.6686 0.873223 9.17442 1.25694 9.62791L5.66973 14.8256C5.77439 14.9302 5.87904 15 6.03601 15C6.19299 15 6.29764 14.9302 6.40229 14.8256L10.8325 9.62791C11.2162 9.17442 11.5302 8.68605 11.7046 8.18023C12.4023 6.34884 12.1407 4.25581 11.0069 2.61628ZM6.05346 8.7907C4.55346 8.7907 3.31508 7.55233 3.31508 6.05233C3.31508 4.55233 4.55346 3.31395 6.05346 3.31395C7.55346 3.31395 8.79183 4.55233 8.79183 6.05233C8.79183 7.55233 7.5709 8.7907 6.05346 8.7907Z" fill="#FFD54F"/>
-                    </svg>
-                  </div>
-                  <ul className="List__dropdown" style={{position:"fixed",marginTop:"0px"}}>
-                    <>
-                    {
-                      Cities.map((item)=>{
-                        return(
-                          <div className="Items3"key={item.city+item.id+"1"}>
-                              <li key = {item.city+item.id+"2"} className="dropdown__item dropdown__item2" id={item.city}>
-                              Квартиры на сутки в {cityIn(item.city)}
-                              </li>
-                          </div>
-                        )
-                      })
-                    }
-                    </>
-                  </ul>
-                </div>
-              </NavLink>
-          <NavLink to="123456"className="Items">Коттеджи и усадьбы</NavLink>
-          <NavLink to="1234567"className="Items">Бани и Сауны</NavLink>
-          <NavLink to="12345678"className="Items">Авто напрокат</NavLink>
-          <button className="btndob" onClick={()=>login?setModalAdvertisements(true):notifyErrorAuthorization()}>+ Разместить объявление</button>
+          <NavLink to={`/catalog/city=`} onClick={()=>{dispatch(setRooms(""))}} className="Items" style={{padding:0}}>
+            <div className="dropdown4" onMouseEnter={()=>MouseLeaveMouseEnterList(dispatch,filterFromHome)}>
+              <div className="group Items" style={{marginRight:"0px"}}>
+                <p className="rooms">{rooms=="Квартиры на сутки"?rooms:`Квартиры в ${cityIn(city)}`}</p>
+                <svg style={{marginLeft:"15px"}}width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.0069 2.61628C9.90811 0.941861 8.09415 0 6.05346 0C4.0302 0 2.21625 0.941861 1.08253 2.61628C-0.0511958 4.25581 -0.312824 6.34884 0.384851 8.18023C0.576711 8.6686 0.873223 9.17442 1.25694 9.62791L5.66973 14.8256C5.77439 14.9302 5.87904 15 6.03601 15C6.19299 15 6.29764 14.9302 6.40229 14.8256L10.8325 9.62791C11.2162 9.17442 11.5302 8.68605 11.7046 8.18023C12.4023 6.34884 12.1407 4.25581 11.0069 2.61628ZM6.05346 8.7907C4.55346 8.7907 3.31508 7.55233 3.31508 6.05233C3.31508 4.55233 4.55346 3.31395 6.05346 3.31395C7.55346 3.31395 8.79183 4.55233 8.79183 6.05233C8.79183 7.55233 7.5709 8.7907 6.05346 8.7907Z" fill="#FFD54F"/>
+                </svg>
+              </div>
+              <ul className="List__dropdown" style={{position:"fixed",marginTop:"0px"}}>
+                <>
+                {
+                  Cities.map((item)=>{
+                    return(
+                      <div className="Items3"key={item.city+item.id+"1"}>
+                          <li key = {item.city+item.id+"2"} className="dropdown__item dropdown__item2" id={item.city}>
+                          Квартиры на сутки в {cityIn(item.city)}
+                          </li>
+                      </div>
+                    )
+                  })
+                }
+                </>
+              </ul>
+            </div>
+          </NavLink>
+          <NavLink to="123456"className="Items" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Коттеджи и усадьбы</NavLink>
+          <NavLink to="1234567"className="Items" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Бани и Сауны</NavLink>
+          <NavLink to="12345678"className="Items" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Авто напрокат</NavLink>
+          <button className="btndob" onClick={()=>{login && window.innerWidth>1300?setModalAdvertisements(true):window.innerWidth<1300 && !login?notifyErrorAuthorization():notifyErrorAddAdvertisement()}}>+ Разместить объявление</button>
+          <div className="" style={{position:"relative"}}>
+            <div className="hamburger-lines" onClick={()=>burgerMenu()}>
+              <span className="line line1"></span>
+              <span className="line line2"></span>
+              <span className="line line3"></span>
+            </div>  
           </div>
         </div>
+      </div>
+    </div>
+    <div className="" style={{position:"relative",display:"flex",justifyContent:"center"}}>
+    <div className="burgerMenu__box">
+      <div className="UpNav">
+        <div className="leftpart" style={{display:"flex",alignItems:"start"}}>
+          <div className="itemHoverBurger" onClick={()=>{navigate("/"); burgerMenu()}}>
+            <NavLink to="/" className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Главная</NavLink>
+          </div>
+          <div className="itemHoverBurger" onClick={()=>{navigate("/news"); burgerMenu()}}>
+            <NavLink to="/news"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Новости</NavLink>
+          </div>
+          <div className="itemHoverBurger" onClick={()=>{navigate("/123"); burgerMenu()}}>
+            <NavLink to="/123"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Размещение и тарифы</NavLink>
+          </div>
+          <div className="itemHoverBurger" onClick={()=>{navigate("/map"); burgerMenu()}}>
+            <NavLink to="/map"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>
+              <svg style={{marginRight:"5px"}} width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.43757 1.74419C6.70501 0.627907 5.49571 0 4.13525 0C2.78641 0 1.57711 0.627907 0.821293 1.74419C0.0654788 2.83721 -0.10894 4.23256 0.356176 5.45349C0.484083 5.77907 0.681758 6.11628 0.937572 6.4186L3.87943 9.88372C3.9492 9.95349 4.01897 10 4.12362 10C4.22827 10 4.29804 9.95349 4.3678 9.88372L7.32129 6.4186C7.57711 6.11628 7.78641 5.7907 7.90269 5.45349C8.3678 4.23256 8.19339 2.83721 7.43757 1.74419ZM4.13525 5.86047C3.13525 5.86047 2.30966 5.03488 2.30966 4.03488C2.30966 3.03488 3.13525 2.2093 4.13525 2.2093C5.13525 2.2093 5.96083 3.03488 5.96083 4.03488C5.96083 5.03488 5.14687 5.86047 4.13525 5.86047Z" fill="#8291A3"/>
+              </svg>
+              Объявления на карте
+            </NavLink>
+          </div>
+          <div className="itemHoverBurger" onClick={()=>{navigate("/contacts"); burgerMenu()}}>
+            <NavLink to="/contacts"className="item" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"))}}>Контакты</NavLink>
+          </div>
         </div>
+      </div>
+      <svg className="lineBox" width="2" height="150" viewBox="0 0 2 150" style={{marginRight:"40px",marginTop:"-15px"}} fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path opacity="0.2" d="M1 0L1 150" stroke="#664EF9"/>
+      </svg>
+      <div className="headSecondBurger">
+        <div className="itemHoverBurger" onClick={()=>{navigate("/catalog/city="); burgerMenu()}}>
+          <NavLink to={`/catalog/city=`} onClick={()=>{dispatch(setRooms(""))}} className="Items ItemsBurger" style={{padding:0}}>
+            <div className="dropdown4" onMouseEnter={()=>MouseLeaveMouseEnterList(dispatch,filterFromHome)}>
+              <div className="group Items ItemsBurger" style={{marginRight:"0px"}}>
+                <p className="rooms">{rooms=="Квартиры на сутки"?rooms:`Квартиры в ${cityIn(city)}`}</p>
+                <svg style={{marginLeft:"15px"}}width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.0069 2.61628C9.90811 0.941861 8.09415 0 6.05346 0C4.0302 0 2.21625 0.941861 1.08253 2.61628C-0.0511958 4.25581 -0.312824 6.34884 0.384851 8.18023C0.576711 8.6686 0.873223 9.17442 1.25694 9.62791L5.66973 14.8256C5.77439 14.9302 5.87904 15 6.03601 15C6.19299 15 6.29764 14.9302 6.40229 14.8256L10.8325 9.62791C11.2162 9.17442 11.5302 8.68605 11.7046 8.18023C12.4023 6.34884 12.1407 4.25581 11.0069 2.61628ZM6.05346 8.7907C4.55346 8.7907 3.31508 7.55233 3.31508 6.05233C3.31508 4.55233 4.55346 3.31395 6.05346 3.31395C7.55346 3.31395 8.79183 4.55233 8.79183 6.05233C8.79183 7.55233 7.5709 8.7907 6.05346 8.7907Z" fill="#FFD54F"/>
+                </svg>
+              </div>
+              <ul className="List__dropdown" style={{position:"fixed",marginTop:"0px"}}>
+                <>
+                {
+                  Cities.map((item)=>{
+                    return(
+                      <div className="Items3"key={item.city+item.id+"1"}>
+                          <li key = {item.city+item.id+"2"} className="dropdown__item dropdown__item2" id={item.city}>
+                          Квартиры на сутки в {cityIn(item.city)}
+                          </li>
+                      </div>
+                    )
+                  })
+                }
+                </>
+              </ul>
+            </div>
+          </NavLink>
+        </div>
+        <div className="itemHoverBurger" onClick={()=>{navigate("123456"); burgerMenu()}}>
+          <NavLink to="123456"className="Items ItemsBurger" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Коттеджи и усадьбы</NavLink>
+        </div>
+        <div className="itemHoverBurger" onClick={()=>{navigate("1234567"); burgerMenu()}}>
+          <NavLink to="1234567"className="Items ItemsBurger" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Бани и Сауны</NavLink>
+        </div>
+        <div className="itemHoverBurger" onClick={()=>{navigate("12345678"); burgerMenu()}}>
+          <NavLink to="12345678"className="Items ItemsBurger" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки"));}}>Авто напрокат</NavLink>
+        </div>
+      </div>
+      <div className="rightpart2">
+                  <NavLink to="/favourites"className="item item3" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"});  dispatch(setRooms("Квартиры на сутки")); burgerMenu()}}>
+                    <span>Закладки</span>
+                    <svg className="icon" xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" fill="none" width="16px">
+                      <path d="M0 0h24v24H0z" fill="none"/>
+                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="#8291A3"/>
+                    </svg>
+                  </NavLink>
+                {
+                  (login)!==null?
+                    <div className="UserLink">
+                      <div className="dropdown2">
+                        <button className="List" onClick={()=>UserInfoClick(login,setModalUserChange,navigate)} style={{padding:"0px 69px 0px 12px",margin:"1px 0px",border:"none",width:"116px",boxShadow:"none"}}>
+                          <div style={{display:"flex",alignItems:"center",boxSizing:"border-box",position:"absolute",marginTop:"-15px"} } >
+                            {
+                              Loading?
+                              <>
+                              <div className="" style={{display:"flex",marginBottom:"50px",width:"1308px",height:"300px"}}>
+                                <UserSkeleton/>
+                              </div>
+                              </>
+                              :<img className="ImgUser" src={userImg} alt="" />
+                            }
+                            <span className="max">{login}</span>
+                          </div>
+                        </button >
+                        <ul className="List__dropdown">
+                          <li key={"change5"} className="dropdown__item">Редактировать</li>
+                          <li key={"change6"} className="dropdown__item">Мои объявления</li>
+                          <li key={"exit"} className="dropdown__item">Выйти</li>
+                        </ul>
+                        <input type="text" name="select__category" className="drodown__item__hiden" />
+                      </div>
+                    </div>
+                    :<Link to="/signIn"className="item item2" style={{marginBottom:"2px",marginTop:"2px"}} onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}>Вход и регистрация </Link>
+                }
+              </div>
+      </div>
+    </div>
         {/* forma redactirovania user*/}
         <Modal active={modalUserChange} setActive={setModalUserChange}>
             {
@@ -341,17 +445,17 @@ const Header = () => {
                   validateOnBlur
                   onSubmit={changeUser}>
                {({values,errors,touched,handleChange,handleBlur,isValid,handleSubmit,dirty})=>(
-                <Form style={{width:"600px",display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center"}}>
+                <Form className="formUser" style={{width:"600px",display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center"}}>
                   <p className="innerText_Module">Редактирование пользователя</p>
-                  <div className="" style={{display:"flex",marginBottom:"25px"}}>
+                  <div className="userInfoModal" style={{display:"flex",marginBottom:"25px"}}>
                     <div className="partOneAdvertisement" style={{marginRight:"15px"}}>
-                      <h2 style={{marginLeft:"67px"}}>Ваше фото</h2>
+                      <h2 className="userImgModal" style={{marginLeft:"67px"}}>Ваше фото</h2>
                       <img style={{borderRadius:"145px"}} className="IconImgAdvertisement"src={imgUrlUser?imgUrlUser:userImg} alt="" />
-                        <button style={{marginLeft:"59px",marginTop:"10px"}} onClick={UserImg} className="Voyti choose" type="button">Выберите файл</button>
+                        <button style={{marginLeft:"59px",marginTop:"10px"}} onClick={UserImg} className="Voyti choose userBtn" type="button">Выберите файл</button>
                       <Field id="file-input3" type="file" accept="image/*,.png,.jpg,.gif,.web," onChange={()=>downLoadImgUser(event.target,fileReader3,setimgUrlUser)} value={values.urlImg} style={{display:"none"}} />
                     </div>
                     <div className="LOGIN" style={{alignItems:"center"}}>
-                      <div className="" style={{marginTop:"-115px",position:"fixed"}}><h2>Ваш логин</h2></div>
+                      <div style={{marginTop:"-115px",position:"fixed"}}><h2 className="loginUser">Ваш логин</h2></div>
                       <Field className={((touched.login && errors.login)||(values.login===""))? "login__error":"login"} onChange={handleChange} onBlur={handleBlur} name = "login" type="text" validate={validateLogin} value={values.login} placeholder="Логин"/>
                       <svg className={((touched.login && errors.login)||(values.login===""))? "icon__error":"iconHidden"} style={{top:"-15px"}} width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
@@ -472,9 +576,11 @@ const Header = () => {
                                 <h2 style={{marginRight:"17px",marginBottom:"20px",textAlign:"center",fontSize:"16px"}}>Информация об объекте</h2>
                                 <div className="LOGIN">
                                     <Field className={((touched.city && errors.city)||(values.city===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "city" type="text" value={values.city} placeholder="Город"/>
-                                    <svg className={((touched.city && errors.city)||(values.city===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                      <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                    </svg>
+                                    <div className="" style={{position:"relative"}}>
+                                      <svg className={((touched.city && errors.city)||(values.city===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                      </svg>
+                                    </div>
                                     <svg className="userOf" width="20" height="20" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
                                       <path opacity="0.3" className="user" d="M640 240v240c0 17.67-14.33 32-32 32H32c-17.67 0-32-14.33-32-32L0 144c0-26.51 21.49-48 48-48H64V24.01c0-13.25 10.75-23.1 24-23.1S112 10.75 112 24.01v72h64V24.01c0-13.25 10.75-23.1 24-23.1S224 10.75 224 24.01v71.1h64V48.01c0-26.51 21.49-48 48-48l96 .0049c26.51 0 48 21.49 48 48v143.1h112C618.5 192 640 213.5 640 240zM128 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM128 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM128 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364zM256 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM256 268c0-6.625-5.375-12-12-12h-40C197.4 256 192 261.4 192 268v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM256 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364zM416 76.01c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V76.01zM416 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM416 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM576 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM576 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364z"/>
                                     </svg>
@@ -482,9 +588,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.sent && errors.sent)||(values.sent===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "sent" type="text" value={values.sent} placeholder="Цена(в BYN за сутки)"/>
-                                <svg className={((touched.sent && errors.sent)||(values.sent===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" />
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.sent && errors.sent)||(values.sent===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" />
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px"}} width="25" height="25" viewBox="0 0 512 512" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                   <path opacity="0.3" className="user" d="M256,73.089c-100.864,0-182.911,82.058-182.911,182.917S155.136,438.911,256,438.911  c100.859,0,182.911-82.046,182.911-182.905S356.86,73.089,256,73.089z M256,410.059c-84.951,0-154.06-69.108-154.06-154.054  c0-84.956,69.109-154.065,154.06-154.065c84.951,0,154.06,69.109,154.06,154.065C410.06,340.951,340.951,410.059,256,410.059z"/>
                                   <path opacity="0.3" className="user" d="M227.076,220.157c0-11.572,16.925-13.548,31.606-13.548c13.837,0,32.744,6.485,48.553,14.681l3.098-31.895  c-7.906-4.52-26.247-9.884-44.877-11.005l4.515-32.461H239.77l4.521,32.461c-38.947,3.664-51.651,26.242-51.651,45.154  c0,47.697,88.898,37.547,88.898,66.888c0,11.017-10.434,14.959-28.785,14.959c-24.832,0-43.467-8.74-53.056-17.779l-4.803,35.848  c9.04,5.364,27.375,10.161,49.397,11.294l-4.521,31.329h30.201l-4.515-31.617c45.722-3.954,53.906-28.23,53.906-44.311  C319.363,233.428,227.076,247.532,227.076,220.157z"/>
@@ -493,9 +601,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.rooms && errors.rooms) ||(values.rooms===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "rooms" type="text" value={values.rooms} placeholder="Комнаты"/>
-                                <svg className={((touched.rooms && errors.rooms)||(values.rooms===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.rooms && errors.rooms)||(values.rooms===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px"}} fill="none" height="25" viewBox="0 0 20 20" width="25" xmlns="http://www.w3.org/2000/svg">
                                   <path opacity="0.3" className="user" d="M12.485 9.99976C12.485 10.414 12.1492 10.7498 11.735 10.7498C11.3208 10.7498 10.985 10.414 10.985 9.99976C10.985 9.58554 11.3208 9.24976 11.735 9.24976C12.1492 9.24976 12.485 9.58554 12.485 9.99976Z"/>
                                   <path opacity="0.3" className="user" d="M9.60274 2.01206C9.4551 1.98045 9.30109 2.01724 9.18368 2.11217C9.06627 2.2071 8.99805 2.35 8.99805 2.50098L8.99867 17.4986L8.99805 17.501C8.99805 17.652 9.0663 17.7949 9.18374 17.8898C9.30119 17.9848 9.45525 18.0215 9.6029 17.9899L16.6023 16.4886C16.8328 16.4392 16.9975 16.2355 16.9975 15.9998V3.99976C16.9975 3.76396 16.8328 3.56021 16.6022 3.51084L9.60274 2.01206ZM9.99805 16.8824V3.11938L15.9975 4.40403V15.5956L9.99805 16.8824Z"/>
@@ -505,9 +615,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.total && errors.total)||(values.total===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "total" type="text" value={values.total} placeholder="Кол-во людей"/>
-                                <svg className={((touched.total && errors.total)||(values.total===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.total && errors.total)||(values.total===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px"}} fill="none" height="25" width="25" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
                                   <path opacity="0.3" className="user" d="M289,327a5.23,5.23,0,0,0-5.24,5.24v62.68a5.24,5.24,0,1,0,10.48,0V332.25A5.23,5.23,0,0,0,289,327Z"/>
                                   <path opacity="0.3" className="user" d="M223.35,327a5.23,5.23,0,0,0-5.24,5.24v62.68a5.24,5.24,0,0,0,10.48,0V332.25A5.23,5.23,0,0,0,223.35,327Z"/>
@@ -521,9 +633,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.square && errors.square)||(values.square==""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "square" type="text" value={values.square} placeholder="Площадь объекта"/>
-                                <svg className={((touched.square && errors.square)||(values.square==""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.square && errors.square)||(values.square==""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px"}} xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
                                   x="0px" y="0px" fill="none" height="25" width="25" viewBox="0 0 24 24" xmlSpace="preserve">
                                 <g>
@@ -539,9 +653,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.metro && errors.metro)||(values.metro===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "metro" type="text" value={values.metro} placeholder="Метро(ближайшее)"/>
-                                <svg className={((touched.metro && errors.metro)||(values.metro===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.metro && errors.metro)||(values.metro===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                               <svg className="userOf" style={{marginTop:"11px"}} fill="none" height="25" width="25" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                   <path opacity="0.3" className="user" d="M8.71,14.29a1.00157,1.00157,0,0,0-1.08984-.21.90087.90087,0,0,0-.54.54,1.00008,1.00008,0,1,0,1.83984,0A1.14718,1.14718,0,0,0,8.71,14.29Zm8,0a1.04669,1.04669,0,0,0-1.41992,0,1.14718,1.14718,0,0,0-.21.33008A.98919.98919,0,0,0,15.29,15.71a1.14718,1.14718,0,0,0,.33008.21.94107.94107,0,0,0,.75976,0,1.16044,1.16044,0,0,0,.33008-.21.98919.98919,0,0,0,.21-1.08984A1.14718,1.14718,0,0,0,16.71,14.29Zm2.59943,4.60528a4.97014,4.97014,0,0,0,1.78436-4.8172l-1.5-8A5.00038,5.00038,0,0,0,14.68066,2H9.31934A5.00038,5.00038,0,0,0,4.40625,6.07812l-1.5,8a4.97014,4.97014,0,0,0,1.78436,4.8172L3.293,20.293A.99989.99989,0,1,0,4.707,21.707l1.86914-1.86914A5.00576,5.00576,0,0,0,7.81934,20h8.36132a5.00576,5.00576,0,0,0,1.24317-.16211L19.293,21.707A.99989.99989,0,0,0,20.707,20.293ZM6.37109,6.44727A3.0021,3.0021,0,0,1,9.31934,4h5.36132a3.0021,3.0021,0,0,1,2.94825,2.44727l.34668,1.84893a7.95514,7.95514,0,0,1-11.95118,0ZM18.48828,16.916A2.9899,2.9899,0,0,1,16.18066,18H7.81934a3.00057,3.00057,0,0,1-2.94825-3.55273l.71106-3.79236a9.95447,9.95447,0,0,0,12.8357,0l.71106,3.79236A2.99028,2.99028,0,0,1,18.48828,16.916Z"/>
                                 </svg>
@@ -549,9 +665,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.rayon && errors.rayon)||(values.rayon===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "rayon" type="text" value={values.rayon} placeholder="Район"/>
-                                <svg className={((touched.rayon && errors.rayon)||(values.rayon===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.rayon && errors.rayon)||(values.rayon===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="rgb(235, 87, 87)" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" width="20" height="20" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
                                   <path opacity="0.3" className="user" d="M640 240v240c0 17.67-14.33 32-32 32H32c-17.67 0-32-14.33-32-32L0 144c0-26.51 21.49-48 48-48H64V24.01c0-13.25 10.75-23.1 24-23.1S112 10.75 112 24.01v72h64V24.01c0-13.25 10.75-23.1 24-23.1S224 10.75 224 24.01v71.1h64V48.01c0-26.51 21.49-48 48-48l96 .0049c26.51 0 48 21.49 48 48v143.1h112C618.5 192 640 213.5 640 240zM128 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM128 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM128 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364zM256 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM256 268c0-6.625-5.375-12-12-12h-40C197.4 256 192 261.4 192 268v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM256 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364zM416 76.01c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V76.01zM416 172c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V172zM416 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.38-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM576 268c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V268zM576 364c0-6.625-5.375-12-12-12h-40c-6.625 0-12 5.375-12 12v40c0 6.625 5.375 12 12 12h40c6.625 0 12-5.375 12-12V364z"/>
                                 </svg>
@@ -561,9 +679,11 @@ const Header = () => {
                             <h2 style={{marginRight:"17px",marginBottom:"20px",textAlign:"center",fontSize:"16px"}}>Информация о владельце</h2>
                             <div className="LOGIN">
                                 <Field className={((touched.name && errors.name)||(values.name===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "name" type="text" value={values.name} placeholder="ФИО"/>
-                                <svg className={((touched.name && errors.name)||(values.name===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.name && errors.name)||(values.name===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g clipPath="url(#clip0_2831_1547)">
                                   <path opacity="0.3" className="user" d="M10.0013 0C7.14418 0 4.80859 2.33559 4.80859 5.19275C4.80859 8.04991 7.14418 10.3855 10.0013 10.3855C12.8585 10.3855 15.1941 8.04991 15.1941 5.19275C15.1941 2.33559 12.8585 0 10.0013 0Z" fill="#664EF9"/>
@@ -579,9 +699,12 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <InputMask mask = "+7\ - 999 999 99 99" maskChar="_" className={((touched.number && errors.number)||(values.number===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "number" type="text" value={values.number} placeholder="Телефон"/>
-                                <svg className={((touched.number && errors.number)||(values.number===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.number && errors.number)||(values.number===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
+
                                 <svg className="userOf" height="25"  viewBox="0 0 512 512" width="25" xmlSpace="preserve" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                                   <path opacity="0.3" className="user" d="M415.9,335.5c-14.6-15-56.1-43.1-83.3-43.1c-6.3,0-11.8,1.4-16.3,4.3c-13.3,8.5-23.9,15.1-29,15.1c-2.8,0-5.8-2.5-12.4-8.2  l-1.1-1c-18.3-15.9-22.2-20-29.3-27.4l-1.8-1.9c-1.3-1.3-2.4-2.5-3.5-3.6c-6.2-6.4-10.7-11-26.6-29l-0.7-0.8  c-7.6-8.6-12.6-14.2-12.9-18.3c-0.3-4,3.2-10.5,12.1-22.6c10.8-14.6,11.2-32.6,1.3-53.5c-7.9-16.5-20.8-32.3-32.2-46.2l-1-1.2  c-9.8-12-21.2-18-33.9-18c-14.1,0-25.8,7.6-32,11.6c-0.5,0.3-1,0.7-1.5,1c-13.9,8.8-24,20.9-27.8,33.2c-5.7,18.5-9.5,42.5,17.8,92.4  c23.6,43.2,45,72.2,79,107.1c32,32.8,46.2,43.4,78,66.4c35.4,25.6,69.4,40.3,93.2,40.3c22.1,0,39.5,0,64.3-29.9  C442.3,370.8,431.5,351.6,415.9,335.5z"/>
                                 </svg>
@@ -589,9 +712,11 @@ const Header = () => {
 
                               <div className="MAIL">
                                 <Field className={((touched.mail && errors.mail)||(values.mail==="")||(errors.mail))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "mail" type="mail" value={values.mail} placeholder="Электронная почта"/>
-                                <svg className={((touched.mail && errors.mail)||(values.mail==="")||(errors.mail))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.mail && errors.mail)||(values.mail==="")||(errors.mail))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="MessOf"width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g className = "Mess" opacity="0.3" clipPath="url(#clip0_2831_1591)">
                                   <path className="Mess" d="M15.937 15.6252C16.3304 15.6252 16.6713 15.4953 16.961 15.2389L12.003 10.2806C11.8841 10.3658 11.7688 10.4486 11.6598 10.5274C11.2888 10.8008 10.9877 11.0141 10.7564 11.167C10.5252 11.3202 10.2176 11.4763 9.8336 11.6357C9.44935 11.7954 9.09137 11.8749 8.75928 11.8749H8.74956H8.73984C8.40773 11.8749 8.04975 11.7954 7.66552 11.6357C7.2813 11.4763 6.97368 11.3202 6.7427 11.167C6.51149 11.0141 6.21051 10.8008 5.83929 10.5274C5.73584 10.4516 5.62111 10.3684 5.49707 10.2793L0.538086 15.2389C0.827817 15.4953 1.16889 15.6252 1.56223 15.6252H15.937Z" fill="#686868"/>
@@ -609,9 +734,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.linkViber && errors.linkViber)||(values.linkViber===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "linkViber" type="text" value={values.linkViber} placeholder="Ваш Viber"/>
-                                <svg className={((touched.linkViber && errors.linkViber)||(values.linkViber===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.linkViber && errors.linkViber)||(values.linkViber===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px",marginLeft:"23px"}} width="20" height="20" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <rect opacity="0.3" className="user" width="36" height="36" rx="18" fill="none"/>
                                     <path d="M17.9024 10.4075C16.6336 10.4247 13.9035 10.633 12.3763 12.0323C11.2426 13.1594 10.8465 14.821 10.8003 16.8788C10.7608 18.9287 10.7146 22.778 14.4255 23.8267V25.4218C14.4255 25.4218 14.4005 26.0611 14.8223 26.1929C15.343 26.3577 15.6396 25.864 16.134 25.3367L17.0567 24.2953C19.5944 24.5062 21.5388 24.0191 21.7629 23.9466C22.277 23.7819 25.1778 23.4121 25.6524 19.5621C26.1401 15.5869 25.4151 13.0823 24.11 11.9486L24.1034 11.9473C23.708 11.5847 22.1261 10.4313 18.5866 10.4181C18.5866 10.4181 18.3256 10.4016 17.9024 10.4075ZM17.9466 11.5261C18.3058 11.5241 18.5266 11.5393 18.5266 11.5393C21.519 11.5458 22.95 12.4489 23.2861 12.752C24.3869 13.6939 24.9524 15.9528 24.5385 19.2721C24.143 22.4887 21.7899 22.693 21.3549 22.8314C21.1703 22.8907 19.4566 23.3126 17.3 23.1741C17.3 23.1741 15.6923 25.1126 15.1914 25.6136C15.1123 25.6993 15.02 25.7256 14.9607 25.7124C14.875 25.6927 14.8487 25.5872 14.8553 25.4422L14.8684 22.7932C11.7237 21.9231 11.9083 18.6394 11.9413 16.9256C11.9808 15.2119 12.3038 13.8067 13.2595 12.8575C14.5494 11.6909 16.8682 11.5327 17.9459 11.5261H17.9466ZM18.1838 13.2398C18.1579 13.2397 18.1322 13.2447 18.1082 13.2546C18.0842 13.2645 18.0624 13.279 18.0441 13.2973C18.0257 13.3156 18.0111 13.3374 18.0012 13.3613C17.9912 13.3853 17.9861 13.4109 17.9861 13.4369C17.9861 13.4893 18.0069 13.5396 18.044 13.5767C18.0811 13.6138 18.1314 13.6346 18.1838 13.6346C18.6739 13.6253 19.1609 13.7131 19.6168 13.8929C20.0727 14.0728 20.4885 14.3412 20.8401 14.6826C21.5586 15.3813 21.9086 16.3173 21.9217 17.5432C21.9217 17.5692 21.9269 17.5949 21.9368 17.6189C21.9467 17.6429 21.9613 17.6647 21.9797 17.6831C21.998 17.7014 22.0198 17.716 22.0438 17.7259C22.0678 17.7359 22.0935 17.741 22.1195 17.741V17.735C22.1719 17.735 22.2222 17.7142 22.2593 17.6771C22.2964 17.64 22.3172 17.5897 22.3172 17.5373C22.3417 16.9608 22.2485 16.3853 22.0434 15.8459C21.8383 15.3065 21.5255 14.8145 21.1242 14.3999C20.3398 13.6353 19.3498 13.2398 18.1832 13.2398H18.1838ZM15.5777 13.6946C15.4375 13.6746 15.2947 13.7025 15.1723 13.7737H15.1644C14.8941 13.9319 14.645 14.1296 14.4077 14.3933C14.2297 14.6042 14.1302 14.8145 14.1039 15.0188C14.0883 15.1386 14.0996 15.2604 14.1368 15.3754L14.15 15.382C14.3531 15.9792 14.6182 16.5536 14.9409 17.0957C15.3592 17.8549 15.8731 18.5573 16.4701 19.1858L16.4899 19.2121L16.5163 19.2319L16.536 19.2517L16.5558 19.2715C17.1867 19.8699 17.891 20.386 18.6518 20.8072C19.5219 21.2818 20.0505 21.5059 20.3669 21.5982V21.6048C20.4591 21.6311 20.5435 21.6443 20.6292 21.6443C20.8993 21.6246 21.155 21.5151 21.3556 21.3332C21.6126 21.1025 21.8169 20.8468 21.9685 20.5765V20.5699C22.1201 20.2865 22.0674 20.0156 21.8499 19.8311C21.4115 19.4476 20.9369 19.1076 20.4328 18.816C20.0966 18.6315 19.7539 18.7435 19.6155 18.9281L19.3189 19.3031C19.1673 19.4877 18.8904 19.4613 18.8904 19.4613L18.8825 19.4679C16.826 18.9406 16.279 16.8584 16.279 16.8584C16.279 16.8584 16.2526 16.575 16.4437 16.43L16.8129 16.1334C16.9908 15.9884 17.1161 15.6456 16.9249 15.3095C16.6337 14.8051 16.2937 14.3304 15.9099 13.8923C15.8264 13.7888 15.7085 13.7186 15.5777 13.6946ZM18.5259 14.2812C18.4735 14.2814 18.4233 14.3024 18.3863 14.3396C18.3493 14.3768 18.3287 14.4272 18.3288 14.4796C18.329 14.5321 18.35 14.5823 18.3872 14.6192C18.4244 14.6562 18.4748 14.6769 18.5272 14.6767C19.1869 14.6881 19.815 14.9607 20.2739 15.4347C20.481 15.6631 20.6401 15.9307 20.742 16.2216C20.8439 16.5126 20.8865 16.821 20.8671 17.1286C20.8673 17.181 20.8882 17.2311 20.9253 17.268C20.9624 17.305 21.0125 17.3257 21.0649 17.3257L21.0715 17.3336C21.0975 17.3336 21.1233 17.3285 21.1473 17.3185C21.1713 17.3085 21.1932 17.2939 21.2115 17.2755C21.2299 17.2571 21.2444 17.2352 21.2543 17.2111C21.2642 17.187 21.2693 17.1613 21.2692 17.1352C21.289 16.3509 21.0451 15.6918 20.5639 15.1644C20.0828 14.6371 19.4105 14.3405 18.5536 14.2812C18.5444 14.2806 18.5351 14.2806 18.5259 14.2812ZM18.8489 15.3483C18.8225 15.3476 18.7961 15.352 18.7714 15.3614C18.7467 15.3708 18.724 15.385 18.7048 15.4031C18.6855 15.4213 18.67 15.443 18.6592 15.4672C18.6484 15.4913 18.6424 15.5173 18.6416 15.5438C18.6408 15.5702 18.6453 15.5966 18.6547 15.6213C18.6641 15.646 18.6782 15.6686 18.6964 15.6879C18.7145 15.7071 18.7363 15.7226 18.7604 15.7335C18.7846 15.7443 18.8106 15.7503 18.837 15.7511C19.4896 15.784 19.8059 16.1136 19.8455 16.7925C19.8472 16.8438 19.8688 16.8924 19.9057 16.9281C19.9426 16.9637 19.9919 16.9837 20.0432 16.9836H20.0498C20.0764 16.9828 20.1025 16.9766 20.1266 16.9655C20.1507 16.9544 20.1724 16.9385 20.1902 16.9188C20.208 16.8991 20.2217 16.876 20.2305 16.8509C20.2392 16.8258 20.2428 16.7992 20.241 16.7727C20.1948 15.8895 19.7137 15.3945 18.8568 15.3483C18.8542 15.3483 18.8515 15.3483 18.8489 15.3483Z" fill="white"/>
@@ -620,9 +747,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.linkWats && errors.linkWats)||(values.linkWats===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "linkWats" type="text" value={values.linkWats} placeholder="Ваш Watsup"/>
-                                <svg className={((touched.linkWats && errors.linkWats)||(values.linkWats===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.linkWats && errors.linkWats)||(values.linkWats===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="userOf" style={{marginTop:"11px",marginLeft:"23px"}} width="20" height="20" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <rect opacity="0.3" className="user" width="36" height="36" rx="18"/>
                                     <path d="M23.3797 12.5885C22.6794 11.883 21.8458 11.3237 20.9275 10.9431C20.0092 10.5624 19.0244 10.368 18.0303 10.3711C13.8635 10.3711 10.4721 13.7625 10.4721 17.9322C10.4721 19.2645 10.8212 20.5673 11.4821 21.7118L10.4092 25.6306L14.4176 24.5786C15.5258 25.1823 16.7674 25.499 18.0294 25.4999H18.0322C22.199 25.4999 25.5933 22.1085 25.5933 17.9389C25.5958 16.9451 25.4014 15.9607 25.0213 15.0426C24.6412 14.1244 24.0829 13.2906 23.3788 12.5895L23.3797 12.5885ZM18.0322 24.2239C16.906 24.224 15.8005 23.9213 14.8316 23.3474L14.6017 23.2101L12.2231 23.8328L12.8583 21.5143L12.7095 21.2759C12.078 20.2752 11.7442 19.1155 11.7472 17.9322C11.7493 16.2652 12.4126 14.6671 13.5916 13.4886C14.7706 12.3101 16.369 11.6475 18.036 11.6462C19.7136 11.6462 21.2939 12.3024 22.4794 13.4879C23.0644 14.0708 23.5281 14.7638 23.8437 15.527C24.1593 16.2901 24.3206 17.1083 24.3182 17.9341C24.3153 21.4028 21.4961 24.2229 18.0322 24.2229V24.2239ZM21.478 19.5154C21.2901 19.42 20.3602 18.9641 20.1876 18.9012C20.015 18.8382 19.8891 18.8058 19.7613 18.9965C19.6364 19.1844 19.273 19.6107 19.1624 19.7385C19.0518 19.8635 18.9421 19.8816 18.7542 19.7862C18.5663 19.6908 17.955 19.4915 17.234 18.8478C16.6732 18.3471 16.2927 17.7271 16.182 17.5393C16.0714 17.3514 16.1696 17.2474 16.2659 17.1549C16.3527 17.071 16.4538 16.9346 16.5492 16.824C16.6446 16.7133 16.6741 16.6361 16.7371 16.5083C16.8 16.3834 16.7695 16.2727 16.7218 16.1774C16.6741 16.082 16.2955 15.1521 16.141 14.7735C15.9894 14.4034 15.8311 14.4549 15.7147 14.4483C15.6041 14.4425 15.4791 14.4425 15.3542 14.4425C15.2293 14.4425 15.0233 14.4902 14.8506 14.6781C14.678 14.866 14.1888 15.3247 14.1888 16.2546C14.1888 17.1845 14.8649 18.0819 14.9603 18.2097C15.0557 18.3347 16.2927 20.2449 18.1877 21.0623C18.6378 21.2559 18.9898 21.3722 19.2635 21.4619C19.7165 21.6049 20.1275 21.584 20.4528 21.5363C20.8161 21.4829 21.5705 21.0804 21.7288 20.6388C21.8871 20.1973 21.8871 19.8196 21.8395 19.7414C21.7946 19.6575 21.6697 19.6107 21.479 19.5144L21.478 19.5154Z" fill="white"/>
@@ -631,9 +760,11 @@ const Header = () => {
 
                               <div className="LOGIN">
                                 <Field className={((touched.linkMail && errors.linkMail)||(values.linkMail===""))? "login__error cityArenda":"login cityArenda"} onChange={handleChange} onBlur={handleBlur} name = "linkMail" type="mail" value={values.linkMail} placeholder="Ваша рабочая почта"/>
-                                <svg className={((touched.linkMail && errors.linkMail)||(values.linkMail===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
-                                </svg>
+                                <div className="" style={{position:"relative"}}>
+                                  <svg className={((touched.linkMail && errors.linkMail)||(values.linkMail===""))? "icon__error":"iconHidden"}  width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10.5 0C5 0 0.5 4.5 0.5 10C0.5 15.5 5 20 10.5 20C16 20 20.5 15.5 20.5 10C20.5 4.5 16 0 10.5 0ZM10.5 2C11.6 2 12.4 2.9 12.3 4L11.5 12H9.5L8.7 4C8.6 2.9 9.4 2 10.5 2ZM10.5 18C9.4 18 8.5 17.1 8.5 16C8.5 14.9 9.4 14 10.5 14C11.6 14 12.5 14.9 12.5 16C12.5 17.1 11.6 18 10.5 18Z" fill="#EB5757"/>
+                                  </svg>
+                                </div>
                                 <svg className="MessOf"width="20" height="20" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <g className = "Mess" opacity="0.3" clipPath="url(#clip0_2831_1591)">
                                   <path className="Mess" d="M15.937 15.6252C16.3304 15.6252 16.6713 15.4953 16.961 15.2389L12.003 10.2806C11.8841 10.3658 11.7688 10.4486 11.6598 10.5274C11.2888 10.8008 10.9877 11.0141 10.7564 11.167C10.5252 11.3202 10.2176 11.4763 9.8336 11.6357C9.44935 11.7954 9.09137 11.8749 8.75928 11.8749H8.74956H8.73984C8.40773 11.8749 8.04975 11.7954 7.66552 11.6357C7.2813 11.4763 6.97368 11.3202 6.7427 11.167C6.51149 11.0141 6.21051 10.8008 5.83929 10.5274C5.73584 10.4516 5.62111 10.3684 5.49707 10.2793L0.538086 15.2389C0.827817 15.4953 1.16889 15.6252 1.56223 15.6252H15.937Z" fill="#686868"/>
@@ -840,7 +971,7 @@ const Header = () => {
                           </div>
                         </div>
                         <div className="" style={{display:"flex",justifyContent:"center"}}>
-                            <div style={{width:"fit-content",padding:"9px 16px"}} className={("ErrorEnter" && ((touched.sent && errors.sent) || (touched.square && errors.square) || (touched.mail && errors.mail) || (touched.linkMail && errors.linkMail) || (values.city=="" || values.total=="" || values.rooms=="" || values.linkViber=="" || values.linkWats=="" || values.linkMail=="" || values.mail=="" || values.metro=="" || values.name=="" || values.number=="" || values.square=="" || values.rayon=="" || values.sent=="" || !imgUrl || !imgUrl2)))? "ErrorEnter fix":"ErrorEnter"}>
+                          <div style={{width:"fit-content",padding:"9px 16px"}} className={("ErrorEnter" && ((touched.sent && errors.sent) || (touched.square && errors.square) || (touched.mail && errors.mail) || (touched.linkMail && errors.linkMail) || (values.city=="" || values.total=="" || values.rooms=="" || values.linkViber=="" || values.linkWats=="" || values.linkMail=="" || values.mail=="" || values.metro=="" || values.name=="" || values.number=="" || values.square=="" || values.rayon=="" || values.sent=="" || !imgUrl || !imgUrl2 || values.description=="")))? "ErrorEnter fix":"ErrorEnter"}>
                               <p className="ErrorEnterText">Не все поля заполнены</p>
                               <div className="">
                               <svg style={{marginLeft:"15px",paddingTop:"5px"}} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -850,7 +981,7 @@ const Header = () => {
                             </div>
                         </div>
                         <div className="" style={{display:"flex",justifyContent:"center"}}>
-                          <button className="Voyti choose" type="submit" disabled={(values.city=="" || (errors.mail) || (errors.sent) || (errors.square) || (errors.linkMail) || values.total=="" || values.rooms=="" || values.linkViber=="" || values.linkWats=="" || values.linkMail=="" || values.mail=="" || values.metro=="" || values.name=="" || values.number=="" || values.square=="" || values.rayon=="" || values.sent=="" || (imgUrl && imgUrl2))?!isValid:isValid}  onClick={()=>{handleSubmit}}>Разместить объявление</button>
+                          <button className="Voyti choose" type="submit" disabled={(values.city=="" || (errors.mail) || (errors.sent) || (errors.square) || (errors.linkMail) || values.total=="" || values.rooms=="" || values.linkViber=="" || values.linkWats=="" || values.linkMail=="" || values.mail=="" || values.metro=="" || values.name=="" || values.number=="" || values.square=="" || values.rayon=="" || values.sent=="" || imgUrl || imgUrl2 || values.description=="")?!isValid:isValid}  onClick={()=>{handleSubmit}}>Разместить объявление</button>
                         </div>
                         </Form>
                       )}

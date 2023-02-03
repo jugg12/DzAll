@@ -1,3 +1,7 @@
+.mainCatalogCard{
+  margin-bottom:25px;
+}
+
 .heart{
   height: 34px;
   width: 34px;
@@ -63,5 +67,12 @@
   }
   0%{
     fill: rgba(235, 87, 87, 0.5);
+  }
+}
+
+@media(max-width:1092px){
+  .Naideno{
+    display: flex;
+    justify-content: center;
   }
 }

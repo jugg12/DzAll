@@ -8,8 +8,6 @@ import "./secondaryCatalog.css"
 import ReactPaginate from "react-paginate";
 import { useDispatch, useSelector } from "react-redux";
 import CardSkeleton from "../../Skeletons/arendaWithHeartSkeletonSecond";
-import { decrement, increment, setLengthFavourites, setValue } from "../../../store/actions/favouritesAction";
-import { notifySuccessFavourites,notifyErrorAuthorization, notifyDeleteFavourites } from "../../Toasts/ToastsContent";
 import { ArendaCardProduct } from "../../../interfaces";
 import { cityIn } from "lvovich";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -62,7 +60,7 @@ export default function secondaryCatalog(link){
     const endoffset=itemOffset+CatalogPerPage;
     setCurrentPage(link.children.slice(itemOffset,endoffset));
     setCountPage(Math.ceil(link.children.length/CatalogPerPage));
-  },[Loading,itemOffset,CatalogPerPage,link,login])
+  },[itemOffset,CatalogPerPage,link,login])
 
   useEffect(() => {
     if(login){
@@ -96,12 +94,12 @@ export default function secondaryCatalog(link){
             </div>
           </div>
         :currentPage.map((item)=>( 
-      <Row> 
+      <Row style={{flexDirection:"column"}}> 
         <Col key={item.id} style={{marginBottom:"25px"}}>
-          <Card className="card__style" style={{width:"100%",height:"300px"}}>
+          <Card className="card__style card__style2">
             <div className="ListInformContacts">  
               <div className="CardMain" style={{display: "flex"}}>
-                <div className="Gold" style={{right: "66.1%"}}>
+                <div className="Gold GoldSecond" style={{right: "66.1%"}}>
                   <svg width="66" height="38" viewBox="0 0 66 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0 0.980469H56C61.5229 0.980469 66 5.45762 66 10.9805V27.9805C66 33.5033 61.5228 37.9805 56 37.9805H10C4.47715 37.9805 0 33.5033 0 27.9805L0 0.980469Z" fill="url(#paint0_linear_2831_1891)"/>
                   <g filter="url(#filter0_d_2831_1891)">
@@ -186,7 +184,7 @@ export default function secondaryCatalog(link){
                   <Card.Text className="card__text card__text2">
                     {item.description}
                   </Card.Text>  
-                    <div className="btnContactsMain" style={{border:"none",padding:0,marginTop:"24px",width:"63.15%"}}>
+                    <div className="btnContactsMain btnsSecondary">
                       <div className="btnContactsHeart">
                         <div className="dropdownContacts">
                           <Button variant="primary" className="ContactsBtn ContactsBtn3" id={`${item.id}`} onClick={()=>btnclick(item.id)}>

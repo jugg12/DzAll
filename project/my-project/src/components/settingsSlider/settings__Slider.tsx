@@ -10,7 +10,7 @@ export const settingsHomePage = {
   initialSlide: 0,
   responsive: [
     {
-      breakpoint: 1308,
+      breakpoint: 1325,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
@@ -19,15 +19,14 @@ export const settingsHomePage = {
       }
     },
     {
-      breakpoint: 600,
+      breakpoint: 1151,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
-        initialSlide: 2
       }
     },
     {
-      breakpoint: 480,
+      breakpoint: 785,
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1
@@ -47,7 +46,7 @@ export const settingsSelectPage = {
   initialSlide: 0,
   responsive: [
     {
-      breakpoint: 1308,
+      breakpoint: 1325,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
@@ -56,7 +55,7 @@ export const settingsSelectPage = {
       }
     },
     {
-      breakpoint: 600,
+      breakpoint: 1151,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
@@ -64,7 +63,7 @@ export const settingsSelectPage = {
       }
     },
     {
-      breakpoint: 480,
+      breakpoint: 785,
       settings: {
         slidesToShow: 1,
         slidesToScroll: 1
@@ -83,7 +82,7 @@ export const settingsSelectPage = {
     initialSlide: 0,
     responsive: [
       {
-        breakpoint: 1308,
+        breakpoint: 1325,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
@@ -92,7 +91,7 @@ export const settingsSelectPage = {
         }
       },
       {
-        breakpoint: 600,
+        breakpoint: 1151,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
@@ -100,7 +99,7 @@ export const settingsSelectPage = {
         }
       },
       {
-        breakpoint: 480,
+        breakpoint: 785,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1
